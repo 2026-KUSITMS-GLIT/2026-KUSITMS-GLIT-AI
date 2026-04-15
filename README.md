@@ -101,7 +101,40 @@ experiments/             # 성능 비교·평가 결과 (앱 밖)
 
 1. `app/core/config.py` 의 `Settings`에 타입 힌트와 기본값을 붙여 필드 추가합니다.
 2. `.env.example` 에 같은 키를 주석과 함께 추가합니다 (값은 더미/플레이스홀더).
-3. 코드에서는 `get_settings().field_name` 으로 접근하며, 절대 `os.environ` 직접 읽지 ㅏㅂ니다.않도록 ㅎ
+3. 코드에서는 `get_settings().field_name` 으로 접근하며, 절대 `os.environ` 직접 읽지 않도록 해주세요.
+4. **prod에서 써야 하는 값이면** SSM Parameter Store 에도 같은 키로 추가합니다. (아래 참고)
+
+### prod 환경변수 — SSM Parameter Store
+
+prod는 `.env` 파일을 쓰지 않고, 배포 시 SSM의 `/groute/ai/*` 경로 값들을 끌어와 컨테이너에 env-file 로 주입합니다.
+**파라미터 이름의 마지막 세그먼트가 그대로 env var 이름이 됩니다.**
+(예: `/groute/ai/INTERNAL_API_TOKEN` → 컨테이너 안에서 `INTERNAL_API_TOKEN` 으로 읽힘)
+
+현재 등록되어 있는 값들 (2026-04-15 기준, 필요 시 콘솔에서 직접 확인):
+
+| 파라미터 이름 | Type | 용도 |
+|---|---|---|
+| `/groute/ai/APP_ENV` | String | `prod` 고정 |
+| `/groute/ai/LOG_LEVEL` | String | `INFO` |
+| `/groute/ai/CORS_ORIGINS` | String | 쉼표 구분 origin 목록 |
+| `/groute/ai/INTERNAL_API_TOKEN` | SecureString | Spring Boot ↔ AI 서비스 공유 토큰 |
+
+### 새 설정을 prod에 올릴 때
+
+1. 위 "설정 추가" 1~3번 완료 후,
+2. SSM에 파라미터 등록 — **비밀값은 반드시 `SecureString`**, 일반 값은 `String`:
+   ```bash
+   aws ssm put-parameter --region ap-northeast-2 \
+     --name "/groute/ai/<KEY_UPPER_SNAKE>" \
+     --type String \
+     --value "<value>" --overwrite
+   ```
+3. 배포 파이프라인은 **매 배포마다 `/groute/ai/` 하위 전체를 재귀로 불러옵니다.** 따로 코드 수정 없이 다음 배포부터 자동 주입됩니다.
+
+> 주의
+> - 값에 **줄바꿈 / 공백 포함된 멀티라인 값은 깨집니다.** 한 줄 문자열 기준으로만 넣어주세요.
+> - `/groute/ai/` 경로에 **다른 서비스 값 섞지 말아주세요.** 그대로 컨테이너 env 로 들어갑니다.
+> - 파라미터 이름은 **UPPER_SNAKE_CASE** 로 통일 (`INTERNAL_API_TOKEN` OK, `internal-api-token` X).
 
 ---
 
@@ -112,6 +145,7 @@ experiments/             # 성능 비교·평가 결과 (앱 밖)
 3. `.env.example` 에 `API_KEY=sk-ant-...` 추가
 4. `app/services/` 에 클라이언트 역할 파일 추가
 5. 기능별 service (`tagging_service.py`, `report_service.py` …)에서 호출.
+6. prod에 올릴 경우 SSM에 `SecureString` 으로 등록 — `/groute/ai/ANTHROPIC_API_KEY` 같은 형태. (위 "prod 환경변수" 섹션 참고)
 
 ---
 
@@ -216,4 +250,34 @@ experiments/
 
 - 컨테이너에서 실행할 때: `uvicorn app.main:app --host 0.0.0.0 --port 8000`.
 - **prod는 `.env` 파일을 쓰지 않고,** Parameter Store가 환경변수를 직접 주입합니다.
-health check는 `/healthz` (liveness), `/readyz` (readiness) 사용하도록 맞춰주세요.
+- health check는 `/healthz` (liveness), `/readyz` (readiness) 사용하도록 맞춰주세요.
+
+### CI / CD
+
+워크플로우는 `.github/workflows/` 에 두 개 마련해두었습니다.
+
+- **`ci.yml`** — `main` 대상 PR / push 시 트리거
+  - `ruff check` · `ruff format --check` · `mypy app` · `pytest` (테스트 없으면 skip)
+  - Docker 이미지 빌드 smoke 테스트 (push는 안 함)
+- **`deploy.yml`** — `main` push / `workflow_dispatch` 시 트리거
+  - OIDC 로 `gh-actions-deploy-ai` role AssumeRole
+  - ECR 에 `${GITHUB_SHA}` 태그로 이미지 push (ECR이 Immutable 이므로 SHA 단일 태그)
+  - SSM Run Command 로 태그 `Role=ai` EC2 에서 stop → run 교체
+  - `/readyz` 헬스체크 통과할 때까지 대기 (실패 시 워크플로우 실패 + 컨테이너 로그 출력)
+
+### prod 컨테이너 구성 요약
+
+- 베이스: `python:3.12-slim-bookworm`, non-root (uid 1001)
+- 호스트 포트 8000 ↔ 컨테이너 포트 8000, ALB 뒤
+- 컨테이너 이름: `groute-ai` (단일 인스턴스, blue/green 아님)
+- env 주입: 배포 스크립트가 `aws ssm get-parameters-by-path --path /groute/ai/ --recursive --with-decryption` 결과를 env-file 로 만들어 `docker run --env-file` 로 전달
+
+### 로컬에서 컨테이너 테스트
+
+```bash
+docker build -t glit-ai:local .
+docker run --rm -p 8000:8000 --env-file .env glit-ai:local
+# http://localhost:8000/healthz
+```
+
+> 수동 배포가 필요할 때는 GitHub Actions 의 `Deploy (prod)` → `Run workflow` 로 trigger 하시면 됩니다. (main 기준으로 재빌드·재배포)

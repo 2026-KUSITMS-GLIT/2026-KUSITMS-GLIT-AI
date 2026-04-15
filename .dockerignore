@@ -19,6 +19,9 @@ htmlcov/
 .env.*.local
 .DS_Store
 tests/
+experiments/
 *.md
+Dockerfile
+.dockerignore
 Makefile
 docker-compose.yml

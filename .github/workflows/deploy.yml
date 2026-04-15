@@ -1,0 +1,206 @@
+name: Deploy (prod)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+permissions:
+  id-token: write   # OIDC AssumeRole용
+  contents: read
+
+env:
+  AWS_REGION:       ap-northeast-2
+  ECR_REGISTRY:     092504162781.dkr.ecr.ap-northeast-2.amazonaws.com
+  ECR_REPOSITORY:   groute-ai-ecr
+  DEPLOY_ROLE_ARN:  arn:aws:iam::092504162781:role/gh-actions-deploy-ai
+  EC2_TAG_KEY:      Role
+  EC2_TAG_VALUE:    ai
+  CONTAINER_NAME:   groute-ai
+  HOST_PORT:        "8000"
+  CONTAINER_PORT:   "8000"
+  SSM_PREFIX:       /groute/ai
+
+jobs:
+  build-push:
+    name: Build & Push → ECR
+    runs-on: ubuntu-latest
+    outputs:
+      image_uri: ${{ steps.meta.outputs.image_uri }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve image tag
+        id: meta
+        run: |
+          echo "image_uri=${ECR_REGISTRY}/${ECR_REPOSITORY}:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build & push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.image_uri }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+
+  deploy:
+    name: Deploy to EC2 via SSM
+    needs: build-push
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_URI: ${{ needs.build-push.outputs.image_uri }}
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Resolve target instance IDs (tag Role=ai)
+        id: targets
+        run: |
+          set -euo pipefail
+          IDS=$(aws ec2 describe-instances \
+            --filters "Name=tag:${EC2_TAG_KEY},Values=${EC2_TAG_VALUE}" \
+                     "Name=instance-state-name,Values=running" \
+            --query 'Reservations[].Instances[].InstanceId' --output text)
+          if [ -z "${IDS}" ]; then
+            echo "::error::no running instances matched tag ${EC2_TAG_KEY}=${EC2_TAG_VALUE}"
+            exit 1
+          fi
+          echo "ids=${IDS}" >> "$GITHUB_OUTPUT"
+          echo "targets: ${IDS}"
+
+      - name: Render remote deploy script
+        run: |
+          set -euo pipefail
+          # EC2 위에서 실행될 스크립트. GitHub Actions 시점에 env 값이 전개됨.
+          cat > /tmp/remote-deploy.sh <<REMOTE
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          export AWS_DEFAULT_REGION="${AWS_REGION}"
+          IMAGE_URI="${IMAGE_URI}"
+          CONTAINER_NAME="${CONTAINER_NAME}"
+          SSM_PREFIX="${SSM_PREFIX}"
+          ECR_REGISTRY="${ECR_REGISTRY}"
+          HOST_PORT="${HOST_PORT}"
+          CONTAINER_PORT="${CONTAINER_PORT}"
+
+          echo "[1/5] ECR login"
+          aws ecr get-login-password --region "\$AWS_DEFAULT_REGION" \\
+            | docker login --username AWS --password-stdin "\$ECR_REGISTRY"
+
+          echo "[2/5] Pull image \$IMAGE_URI"
+          docker pull "\$IMAGE_URI"
+
+          echo "[3/5] Load env from SSM (\$SSM_PREFIX)"
+          ENV_FILE=\$(mktemp)
+          chmod 600 "\$ENV_FILE"
+          # SSM Parameter Store: /groute/ai/* → KEY=VALUE 형태로 env-file 생성
+          aws ssm get-parameters-by-path \\
+              --path "\$SSM_PREFIX/" --recursive --with-decryption \\
+              --query 'Parameters[].[Name,Value]' --output text \\
+            | while IFS=\$'\t' read -r name value; do
+                  printf '%s=%s\n' "\${name##*/}" "\$value"
+              done > "\$ENV_FILE"
+
+          echo "[4/5] Replace container (stop & run)"
+          docker rm -f "\$CONTAINER_NAME" 2>/dev/null || true
+          docker run -d \\
+            --name "\$CONTAINER_NAME" \\
+            --restart unless-stopped \\
+            --log-driver json-file --log-opt max-size=10m --log-opt max-file=3 \\
+            -p "\${HOST_PORT}:\${CONTAINER_PORT}" \\
+            --env-file "\$ENV_FILE" \\
+            "\$IMAGE_URI"
+          rm -f "\$ENV_FILE"
+
+          echo "[5/5] Health check (/readyz)"
+          for i in \$(seq 1 30); do
+            if curl -fsS "http://127.0.0.1:\${HOST_PORT}/readyz" >/dev/null; then
+              echo "ready after \${i} tries"
+              break
+            fi
+            if [ "\$i" -eq 30 ]; then
+              echo "::error::health check failed"
+              docker logs --tail 200 "\$CONTAINER_NAME" || true
+              exit 1
+            fi
+            sleep 2
+          done
+
+          docker image prune -f || true
+          echo "deploy done: \$IMAGE_URI"
+          REMOTE
+
+          echo "--- rendered script ---"
+          cat /tmp/remote-deploy.sh
+
+      - name: Send SSM command
+        id: send
+        run: |
+          set -euo pipefail
+          # jq로 멀티라인 스크립트를 JSON 파라미터로 안전하게 인코딩
+          PARAMS=$(jq -Rs '{commands: [.]}' < /tmp/remote-deploy.sh)
+
+          CMD_ID=$(aws ssm send-command \
+            --document-name AWS-RunShellScript \
+            --targets "Key=tag:${EC2_TAG_KEY},Values=${EC2_TAG_VALUE}" \
+            --comment "deploy ${IMAGE_URI}" \
+            --timeout-seconds 600 \
+            --cloud-watch-output-config CloudWatchOutputEnabled=true \
+            --parameters "$PARAMS" \
+            --query 'Command.CommandId' --output text)
+
+          echo "command_id=$CMD_ID" >> "$GITHUB_OUTPUT"
+          echo "CommandId: $CMD_ID"
+
+      - name: Wait & collect logs
+        env:
+          CMD_ID: ${{ steps.send.outputs.command_id }}
+          IDS:    ${{ steps.targets.outputs.ids }}
+        run: |
+          set -euo pipefail
+          FAIL=0
+          for IID in $IDS; do
+            echo "::group::instance ${IID}"
+            # wait는 Success가 아닌 경우 non-zero로 끝나므로 || true
+            aws ssm wait command-executed --command-id "$CMD_ID" --instance-id "$IID" || true
+
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "$CMD_ID" --instance-id "$IID" \
+              --query 'Status' --output text)
+
+            echo "--- stdout ---"
+            aws ssm get-command-invocation \
+              --command-id "$CMD_ID" --instance-id "$IID" \
+              --query 'StandardOutputContent' --output text || true
+
+            echo "--- stderr ---"
+            aws ssm get-command-invocation \
+              --command-id "$CMD_ID" --instance-id "$IID" \
+              --query 'StandardErrorContent' --output text || true
+
+            echo "status=${STATUS}"
+            [ "$STATUS" = "Success" ] || FAIL=1
+            echo "::endgroup::"
+          done
+          exit $FAIL
