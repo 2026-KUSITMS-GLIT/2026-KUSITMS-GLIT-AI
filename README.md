@@ -48,7 +48,16 @@ app/
 │   ├── logging.py       # 로깅 초기화
 │   └── security.py      # X-Internal-Token 검증
 ├── schemas/             # Pydantic 요청/응답 모델 (도메인별 파일 분리 부탁드립니다)
-└── services/            # 비즈니스 로직 — 외부 SDK 호출, 프롬프트 조립 등 (도메인별 파일 분리 부탁드립니다)
+├── services/            # 비즈니스 로직 — 외부 SDK 호출, 프롬프트 조립 등
+│                        #   도메인별 하위 디렉토리 + 버전별 파일 분리
+│                        #   (상세: "프롬프트 / 실험 버전 관리 컨벤션" 참고)
+└── prompts/             # 프롬프트 텍스트 (.md) — 코드와 분리하여 diff 리뷰 용이하게
+    └── {domain}/        #   ex) tagging/v1_baseline.md, report/v1_baseline.md
+
+experiments/             # 성능 비교·평가 결과 (앱 밖)
+├── {domain}/            #   ex) tagging/2026-04-15_v1_vs_v2_vs_v3.md
+│   └── fixtures/        #   평가용 고정 샘플 (.jsonl 등)
+└── README.md
 ```
 
 ### 레이어 규약
@@ -103,6 +112,95 @@ app/
 3. `.env.example` 에 `API_KEY=sk-ant-...` 추가
 4. `app/services/` 에 클라이언트 역할 파일 추가
 5. 기능별 service (`tagging_service.py`, `report_service.py` …)에서 호출.
+
+---
+
+## 프롬프트 / 실험 버전 관리 컨벤션
+
+서비스 특성상, 같은 기능이라도 **여러 프롬프트·전략을 동시에 돌려보고 성능을 비교**할 일이 생길 듯 합니다.
+파일과 코드가 뒤섞이지 않도록 아래 규약을 지켜주세요.
+
+### 1. 네이밍 규칙
+
+`{domain}_v{번호}_{전략}.{확장자}`
+
+- **domain**: 기능 이름 (`tagging`, `report`, `summary` …)
+- **번호**: `v1`, `v2` … 단조 증가. 한 번 붙은 번호는 재사용하지 않습니다.
+- **전략**: 이 버전의 핵심 아이디어를 snake_case 한 단어로.
+  - 예) `baseline`, `fewshot`, `cot`, `json_mode`, `short_ctx`, `role_expert`, `self_consistency`
+
+예시
+- `tagging_v1_baseline.md` — zero-shot 최초 버전
+- `tagging_v2_fewshot.md` — 5-shot 예시 추가
+- `tagging_v3_cot.md` — chain-of-thought 유도
+
+> 모델명(`claude-sonnet-4-6` 등)은 파일명에 넣지 말고 **설정(`Settings`)** 에 두어 분리합니다.
+> 프롬프트 버전과 모델 선택은 축이 다르기 때문입니다.
+
+### 2. 디렉토리 구조
+
+```
+app/
+├── prompts/                      # 프롬프트 텍스트 (코드와 분리)
+│   ├── tagging/
+│   │   ├── v1_baseline.md
+│   │   ├── v2_fewshot.md
+│   │   └── v3_cot.md
+│   └── report/
+│       └── v1_baseline.md
+└── services/
+    └── tagging/
+        ├── __init__.py           # 현재 활성 버전을 export
+        ├── v1_baseline.py
+        ├── v2_fewshot.py
+        └── v3_cot.py
+```
+
+- 프롬프트 본문은 **반드시 `.md`로 분리** 해주세요.
+  코드와 섞여 있으면 "프롬프트만 바뀐 diff"를 리뷰하기 어렵습니다.
+- service 쪽도 버전별 파일로 나눠주세요. 한 파일 안에서 `if variant == "v2"` 분기하지 않습니다.
+
+### 3. 활성 버전 스위치
+
+프로덕션에서 실제로 어느 버전을 쓸지는 **환경변수**로 제어합니다.
+
+1. `app/core/config.py` 의 `Settings` 에 필드 추가
+   ```python
+   tagging_variant: str = "v1_baseline"
+   ```
+2. `.env.example` 에 주석과 함께 키 추가
+   ```
+   # tagging 기능의 활성 프롬프트 버전 (app/prompts/tagging/ 하위)
+   TAGGING_VARIANT=v1_baseline
+   ```
+3. `app/services/tagging/__init__.py` 에서 env 값으로 구현체를 선택해 export
+4. 실험 브랜치에서 default 값을 함부로 바꾸지 않습니다. 실험 시엔 **본인 `.env`만** 수정합니다.
+
+### 4. 실험 결과 기록
+
+성능 비교 결과는 `experiments/` 디렉토리에 남깁니다. 코드와 구분하기 위해 앱 밖입니다.
+
+```
+experiments/
+├── tagging/
+│   ├── 2026-04-15_v1_vs_v2_vs_v3.md
+│   └── fixtures/
+│       └── eval_set_v1.jsonl        # 평가용 고정 샘플
+└── README.md
+```
+
+결과 파일에 최소 아래 네 가지는 포함해주세요.
+
+1. **요약** — 무엇을, 어떤 데이터로 비교했는지 1~2줄
+2. **메트릭 표** — 버전 × (정확도 / 지연 / 토큰·비용) 매트릭스
+3. **관찰** — 어느 케이스에서 어느 버전이 나았는지 주관 소감
+4. **결정** — 프로덕션에 올릴 버전과 사유 (혹은 "결정 보류" + 다음 액션)
+
+### 5. 폐기 정책 (지우지 마세요)
+
+- "이제 안 쓰는" 버전이라도 **바로 지우지 말아주세요**. 다음 실험의 기준선이 됩니다.
+- 완전히 버릴 때는 먼저 `experiments/` 의 결과 파일로 **왜 폐기했는지**를 남긴 뒤 삭제합니다.
+
 ---
 
 ## 로깅
