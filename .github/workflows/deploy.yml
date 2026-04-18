@@ -164,7 +164,7 @@ jobs:
           CMD_ID=$(aws ssm send-command \
             --document-name AWS-RunShellScript \
             --targets "Key=tag:${EC2_TAG_KEY},Values=${EC2_TAG_VALUE}" \
-            --comment "deploy ${IMAGE_URI}" \
+            --comment "deploy ${ECR_REPOSITORY}@${GITHUB_SHA::12}" \
             --timeout-seconds 600 \
             --cloud-watch-output-config CloudWatchOutputEnabled=true \
             --parameters "$PARAMS" \
