@@ -43,9 +43,9 @@ def create_app() -> FastAPI:
         ),
         version=__version__,
         default_response_class=ORJSONResponse,
-        docs_url="/docs" if not settings.is_prod else None,
-        redoc_url="/redoc" if not settings.is_prod else None,
-        openapi_url="/openapi.json" if not settings.is_prod else None,
+        docs_url="/docs",
+        redoc_url="/redoc",
+        openapi_url="/openapi.json",
         lifespan=lifespan,
     )
 
