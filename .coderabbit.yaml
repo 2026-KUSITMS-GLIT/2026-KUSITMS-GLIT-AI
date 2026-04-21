@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: "ko-KR"
+
+tone_instructions: |
+  한국어로 작성하고, 이모지와 마크다운을 활용해 가독성을 높여라.
+  무엇이 문제인지보다 왜 문제인지 이유 중심으로 설명하고, 대안 제시 시 선택 근거도 함께 명시.
+  각 코멘트 앞에 반드시 아래 우선순위 레이블을 표기해라:
+  - **P1** 🔴: 보안/크래시 등 치명적 문제 (반드시 반영)
+  - **P2** 🟠: 성능/아키텍처 위반 (적극 반영)
+  - **P3** 🟡: 컨벤션/가독성 (웬만하면 반영)
+  - **P4** 🔵: 사소한 개선 (선택)
+  - **P5** ⚪: 참고 의견 (무시 가능)
+
+reviews:
+  profile: "chill"
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  poem: true
+  review_status: true
+  collapse_walkthrough: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - "^main$"
+
+  path_filters:
+    - "!uv.lock"
+    - "!.gitignore"
+    - "!.dockerignore"
+    - "!.env.example"
+    - "!**/__pycache__/**"
+    - "!**/*.pyc"
+    - "!**/*.pyo"
+
+  path_instructions:
+    - path: "app/api/**"
+      instructions: |
+        FastAPI 라우터 레이어를 검토한다.
+        - HTTP 상태 코드가 시맨틱에 맞게 사용되는지 확인 (예: 생성은 201, 인증 실패는 401 vs 403 구분)
+        - 라우터에 비즈니스 로직이 섞이지 않고 서비스 레이어에 위임하는지 확인
+        - 응답 스키마(Pydantic)가 정의되어 있는지, ORJSONResponse 일관성 확인
+        - 경로/쿼리 파라미터 검증이 Pydantic으로 처리되는지 확인
+
+    - path: "app/core/security.py"
+      instructions: |
+        인증/보안 코드를 집중 검토한다.
+        - X-Internal-Token 비교 시 타이밍 어택 방지(secrets.compare_digest) 여부 확인
+        - 토큰 값이 로그에 노출되지 않는지 확인
+        - 의존성 주입이 올바르게 구성되어 있는지 확인
+
+    - path: "app/core/config.py"
+      instructions: |
+        설정 및 환경변수 관리를 검토한다.
+        - 시크릿 값이 SecretStr 타입으로 보호되는지 확인
+        - 기본값이 프로덕션에서 안전한 값인지 확인 (예: debug=False)
+        - Pydantic v2 @field_validator / @model_validator로 필수 환경변수 검증이 이루어지는지 확인
+
+    - path: "app/services/**"
+      instructions: |
+        비즈니스 로직 레이어를 검토한다.
+        - 단일 책임 원칙 준수 여부 확인
+        - Anthropic SDK 호출 시 에러 처리(APIError, RateLimitError) 여부 확인
+        - 프롬프트에 사용자 입력이 직접 삽입될 경우 인젝션 위험 검토
+
+    - path: "app/prompts/**"
+      instructions: |
+        AI 프롬프트 파일을 검토한다.
+        - 프롬프트에 민감 정보(예시 토큰, 실제 사용자 데이터)가 하드코딩되어 있지 않은지 확인
+        - 출력 형식 지시가 명확하게 정의되어 있는지 확인
+
+    - path: "tests/**"
+      instructions: |
+        테스트 코드를 검토한다.
+        - 해피 패스뿐 아니라 경계값·실패 케이스도 커버하는지 확인
+        - 외부 API(Anthropic) 모킹이 적절하게 격리되어 있는지 확인 (respx 활용)
+        - pytest-asyncio 마커가 빠진 비동기 테스트 없는지 확인
+
+    - path: ".github/workflows/**"
+      instructions: |
+        CI/CD 워크플로우를 검토한다.
+        - 시크릿이 로그나 커맨드 인자에 노출되지 않는지 확인
+        - OIDC 기반 AWS 인증에서 권한 범위가 최소화되어 있는지 확인
+        - 실패 시 적절한 알림이나 롤백 전략이 있는지 확인
+        - 캐시 키가 lock 파일 기반으로 설정되어 있는지 확인 (uv.lock)
+
+    - path: "Dockerfile"
+      instructions: |
+        컨테이너 이미지 보안 및 최적화를 검토한다.
+        - non-root 유저로 실행되는지 확인
+        - 불필요한 패키지나 빌드 도구가 최종 이미지에 포함되지 않는지 확인 (멀티스테이지)
+        - 민감 파일(.env 등)이 이미지 레이어에 포함되지 않는지 확인
+        - 베이스 이미지 태그가 고정(digest 또는 구체적 버전)되어 있는지 확인
+
+    - path: "pyproject.toml"
+      instructions: |
+        - 의존성 버전 범위가 지나치게 넓어 예기치 않은 업그레이드가 발생할 위험이 없는지 확인
+        - dev 전용 의존성이 프로덕션 그룹에 포함되지 않는지 확인
+
+  finishing_touches:
+    docstrings:
+      enabled: true
+
+  pre_merge_checks:
+    title_check:
+      enabled: true
+    description_check:
+      enabled: true
+    linked_issue_check:
+      enabled: true
+
+chat:
+  auto_reply: true
