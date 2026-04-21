@@ -2,17 +2,16 @@
 
 language: "ko-KR"
 
-tone_instructions: |
-  한국어로 작성하고, 이모지와 마크다운을 활용해 가독성을 높여라.
-  무엇이 문제인지보다 왜 문제인지 이유 중심으로 설명하고, 대안 제시 시 선택 근거도 함께 명시.
-  각 코멘트 앞에 반드시 아래 우선순위 레이블을 표기해라:
-  - **P1** 🔴: 보안/크래시 등 치명적 문제 (반드시 반영)
-  - **P2** 🟠: 성능/아키텍처 위반 (적극 반영)
-  - **P3** 🟡: 컨벤션/가독성 (웬만하면 반영)
-  - **P4** 🔵: 사소한 개선 (선택)
-  - **P5** ⚪: 참고 의견 (무시 가능)
+tone_instructions: "한국어, 이모지·마크다운으로 가독성 높게. 왜 문제인지 이유 중심으로, 대안 제시 시 선택 근거 함께 명시."
 
 reviews:
+  instructions: |
+    각 코멘트 앞에 반드시 우선순위 레이블을 표기해라:
+    - **P1** 🔴: 보안/크래시 등 치명적 문제 (반드시 반영)
+    - **P2** 🟠: 성능/아키텍처 위반 (적극 반영)
+    - **P3** 🟡: 컨벤션/가독성 (웬만하면 반영)
+    - **P4** 🔵: 사소한 개선 (선택)
+    - **P5** ⚪: 참고 의견 (무시 가능)
   profile: "chill"
   high_level_summary: true
   high_level_summary_placeholder: "@coderabbitai summary"
@@ -103,12 +102,12 @@ reviews:
       enabled: true
 
   pre_merge_checks:
-    title_check:
-      enabled: true
-    description_check:
-      enabled: true
-    linked_issue_check:
-      enabled: true
+    title:
+      mode: "warning"
+    description:
+      mode: "warning"
+    issue_assessment:
+      mode: "warning"
 
 chat:
   auto_reply: true
