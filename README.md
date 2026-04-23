@@ -41,8 +41,9 @@ uv run uvicorn app.main:app --reload
 ```
 app/
 ├── main.py              # FastAPI 앱 조립 + 라우터 include + 미들웨어 + lifespan
-├── api/v1/              # HTTP 레이어 — 얇게 유지 (파싱/검증/예외→HTTP 변환만)
-│   └── health.py
+├── api/                 # HTTP 레이어 — 얇게 유지 (파싱/검증/예외→HTTP 변환만)
+│   ├── health.py        # 인프라용 — 버전·토큰 인증 예외
+│   └── v1/              # 버전 붙는 비즈니스 API (X-Internal-Token 으로 전역 보호)
 ├── core/                # 설정, 로깅, 인증
 │   ├── config.py        # pydantic-settings 기반 Settings
 │   ├── logging.py       # 로깅 초기화

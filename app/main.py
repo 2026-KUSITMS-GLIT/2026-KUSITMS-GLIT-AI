@@ -17,7 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 
 from app import __version__
-from app.api.v1 import health
+from app.api import health
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 
