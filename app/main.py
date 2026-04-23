@@ -24,12 +24,31 @@ from app.core.logging import configure_logging, get_logger
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    """앱 전체 생명주기 훅.
+
+    **startup** — 로깅을 먼저 초기화하고 ``Settings`` 를 로드해 검증한다.
+    prod 환경에서 ``INTERNAL_API_TOKEN`` 이 기본값이면 ``Settings`` 가
+    ``ValidationError`` 를 던지며, 이 경우 앱은 부팅되지 않는다 (ASGI lifespan
+    예외는 곧 서버 기동 실패로 이어짐)
+
+    **shutdown** — 현재는 종료 로그만 남긴다. 외부 클라이언트(AI provider HTTP
+    세션, Redis 풀 등)를 붙이게 되면 ``yield`` 뒤 구간에서 ``await client.aclose()``
+    형태로 정리 훅을 추가한다.
+    """
     configure_logging()
     logger = get_logger("app.main")
     settings = get_settings()
-    logger.info("glit-ai starting version=%s env=%s", __version__, settings.app_env)
+    logger.info(
+        "app.started",
+        extra={
+            "version": __version__,
+            "env": settings.app_env,
+            "log_level": settings.log_level,
+        },
+    )
     yield
-    logger.info("glit-ai stopped")
+    # shutdown hooks — 외부 리소스가 생기면 여기에 정리 코드를 추가한다.
+    logger.info("app.stopped")
 
 
 def create_app() -> FastAPI:
