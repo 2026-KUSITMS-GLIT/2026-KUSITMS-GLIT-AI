@@ -17,6 +17,7 @@ from fastapi.responses import ORJSONResponse
 
 from app import __version__
 from app.api import health
+from app.api.v1 import router as v1_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 
@@ -65,9 +66,14 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # Routers — 새 기능은 app/api/v1/<feature>.py 만들어서 여기에 include_router.
-    # CORS 미들웨어는 의도적으로 미포함 - 서버 간 통신이므로 불필요
+    # Routers.
+    # - health: 인프라 probe. 토큰 인증 예외, 버전 prefix 없음.
+    # - v1_router: 비즈니스 API. prefix="/v1" + X-Internal-Token 전역 보호.
+    #   새 기능은 app/api/v1/<feature>.py 만들고 app/api/v1/__init__.py 의
+    #   include_router 목록에 한 줄 추가하는 식으로 붙인다 (여기는 건드리지 않음).
+    # CORS 미들웨어는 의도적으로 미포함 — 서버 간 통신이므로 불필요.
     app.include_router(health.router)
+    app.include_router(v1_router)
 
     return app
 
