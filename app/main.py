@@ -13,7 +13,6 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 
 from app import __version__
@@ -52,8 +51,6 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 
 def create_app() -> FastAPI:
-    settings = get_settings()
-
     app = FastAPI(
         title="Glit AI Service",
         description=(
@@ -68,15 +65,8 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.cors_origin_list,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
     # Routers — 새 기능은 app/api/v1/<feature>.py 만들어서 여기에 include_router.
+    # CORS 미들웨어는 의도적으로 미포함 - 서버 간 통신이므로 불필요
     app.include_router(health.router)
 
     return app
