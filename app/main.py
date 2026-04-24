@@ -13,7 +13,6 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
 
 from app import __version__
 from app.api import health
@@ -59,7 +58,6 @@ def create_app() -> FastAPI:
             "Spring Boot 백엔드와 내부 토큰으로 통신하는 Stateless 서비스."
         ),
         version=__version__,
-        default_response_class=ORJSONResponse,
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_url="/openapi.json",

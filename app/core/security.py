@@ -48,7 +48,12 @@ async def require_internal_token(
         )
 
     settings = get_settings()
-    if not hmac.compare_digest(x_internal_token, settings.internal_api_token):
+    # bytes 로 인코딩해서 비교 — 헤더 값에 non-ASCII 문자가 섞여도 TypeError(500) 대신
+    # 정상적으로 불일치(403)로 떨어지게 한다. timing 안전성은 그대로 유지.
+    if not hmac.compare_digest(
+        x_internal_token.encode("utf-8"),
+        settings.internal_api_token.encode("utf-8"),
+    ):
         _logger.warning(
             "security.denied",
             extra={
