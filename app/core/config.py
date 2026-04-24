@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     )
 
     # ---- Server ----
-    app_env: Literal["local", "dev", "staging", "prod"] = "local"
+    app_env: Literal["local", "prod"] = "local"
     app_host: str = "0.0.0.0"
     app_port: int = 8000
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
