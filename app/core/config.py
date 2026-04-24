@@ -10,13 +10,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _INSECURE_TOKEN_DEFAULTS = {
     "",
-    "dev-insecure-token",
     "change-me-to-a-random-32-byte-token",
 }
-"""prod 환경에서 거부할 INTERNAL_API_TOKEN 기본/플레이스홀더 값 집합.
+"""prod 환경에서 거부할 INTERNAL_API_TOKEN 플레이스홀더 값 집합.
 
-Settings 기본값, ``.env.example`` 템플릿 값, 빈 문자열이 포함된다.
-이 중 하나라도 prod 에서 주입되면 검증 단계에서 raise 되어 부팅이 중단된다.
+``.env.example`` 의 안내 문자열과 빈 문자열이 포함된다. 이 중 하나라도 prod 에서
+주입되면 검증 단계에서 raise 되어 부팅이 중단된다. Settings 자체에는 기본값을 두지
+않으므로 ``.env`` / SSM 에 값이 없으면 애초에 ``ValidationError`` 로 부팅이 실패한다.
 """
 
 _MIN_TOKEN_LENGTH = 32
@@ -49,8 +49,10 @@ class Settings(BaseSettings):
 
     # ---- Auth ----
     internal_api_token: str = Field(
-        default="dev-insecure-token",
-        description="Shared secret between Spring Boot backend and this AI service.",
+        description=(
+            "Spring Boot 백엔드와 공유하는 내부 토큰. "
+            "기본값 없음 — .env 또는 SSM 에서 반드시 주입되어야 한다."
+        ),
     )
 
     @model_validator(mode="after")
