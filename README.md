@@ -41,8 +41,9 @@ uv run uvicorn app.main:app --reload
 ```
 app/
 ├── main.py              # FastAPI 앱 조립 + 라우터 include + 미들웨어 + lifespan
-├── api/v1/              # HTTP 레이어 — 얇게 유지 (파싱/검증/예외→HTTP 변환만)
-│   └── health.py
+├── api/                 # HTTP 레이어 — 얇게 유지 (파싱/검증/예외→HTTP 변환만)
+│   ├── health.py        # 인프라용 — 버전·토큰 인증 예외
+│   └── v1/              # 버전 붙는 비즈니스 API (X-Internal-Token 으로 전역 보호)
 ├── core/                # 설정, 로깅, 인증
 │   ├── config.py        # pydantic-settings 기반 Settings
 │   ├── logging.py       # 로깅 초기화
@@ -116,8 +117,9 @@ prod는 `.env` 파일을 쓰지 않고, 배포 시 SSM의 `/groute/ai/*` 경로 
 |---|---|---|
 | `/groute/ai/APP_ENV` | String | `prod` 고정 |
 | `/groute/ai/LOG_LEVEL` | String | `INFO` |
-| `/groute/ai/CORS_ORIGINS` | String | 쉼표 구분 origin 목록 |
 | `/groute/ai/INTERNAL_API_TOKEN` | SecureString | Spring Boot ↔ AI 서비스 공유 토큰 |
+
+> `/groute/ai/CORS_ORIGINS` 는 더 이상 쓰이지 않습니다. 이 서비스는 Spring Boot 서버 간 호출만 받으므로 CORS 미들웨어가 없습니다. SSM 에 남아 있어도 코드가 무시하지만, 정리하고 싶다면 콘솔에서 해당 파라미터를 삭제하세요.
 
 ### 새 설정을 prod에 올릴 때
 
