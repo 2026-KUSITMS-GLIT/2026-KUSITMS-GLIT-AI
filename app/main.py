@@ -9,7 +9,7 @@ Production (inside container):
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator, AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -24,7 +24,7 @@ from app.services._clients.llm_client import LLMClient
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+async def lifespan(_: FastAPI) -> AsyncGenerator[dict[str, LLMClient], None]:
     """앱 전체 생명주기 훅.
 
     **startup** — 로깅을 먼저 초기화하고 ``Settings`` 를 로드해 검증한다.

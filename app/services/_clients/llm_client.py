@@ -140,7 +140,9 @@ class LLMClient:
                 }
                 if system:
                     kwargs["system"] = system
-                return await self._client.messages.create(**kwargs)
+                result = await self._client.messages.create(**kwargs)
+                assert isinstance(result, anthropic.types.Message)
+                return result
 
         start = time.perf_counter()
         attempt = 0
