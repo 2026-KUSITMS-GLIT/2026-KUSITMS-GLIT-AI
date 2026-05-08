@@ -19,6 +19,7 @@ from app.api import health
 from app.api.v1 import router as v1_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
+from app.middleware.request_context import RequestContextMiddleware
 
 
 @asynccontextmanager
@@ -70,6 +71,8 @@ def create_app() -> FastAPI:
     #   새 기능은 app/api/v1/<feature>.py 만들고 app/api/v1/__init__.py 의
     #   include_router 목록에 한 줄 추가하는 식으로 붙인다 (여기는 건드리지 않음).
     # CORS 미들웨어는 의도적으로 미포함 — 서버 간 통신이므로 불필요.
+    app.add_middleware(RequestContextMiddleware)
+
     app.include_router(health.router)
     app.include_router(v1_router)
 
