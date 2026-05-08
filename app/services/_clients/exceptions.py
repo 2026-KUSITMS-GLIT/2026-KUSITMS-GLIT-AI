@@ -11,15 +11,15 @@ class LLMError(Exception):
     """LLM 호출 실패 베이스 예외."""
 
 
-class LLMUpstreamUnavailable(LLMError):
+class LLMUpstreamUnavailableError(LLMError):
     """5xx, 커넥션 에러, 타임아웃 등 일시적 장애."""
 
 
-class LLMRateLimited(LLMError):
+class LLMRateLimitedError(LLMError):
     """429 요청 쿼타 초과. 재시도 후에도 실패."""
 
 
-class LLMBadRequest(LLMError):
+class LLMBadRequestError(LLMError):
     """400 / 422 우리가 보낸 페이로드 문제."""
 
 

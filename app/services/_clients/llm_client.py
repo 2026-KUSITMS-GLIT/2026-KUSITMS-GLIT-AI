@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import anthropic
@@ -27,15 +27,15 @@ from tenacity import (
 from app.core.logging import get_logger
 from app.services._clients.exceptions import (
     LLMAuthError,
-    LLMBadRequest,
-    LLMRateLimited,
-    LLMUpstreamUnavailable,
+    LLMBadRequestError,
+    LLMRateLimitedError,
+    LLMUpstreamUnavailableError,
 )
 
 logger = get_logger(__name__)
 
 
-class WorkloadType(str, Enum):
+class WorkloadType(StrEnum):
     TAGGING = "tagging"
     REPORT = "report"
 
@@ -59,23 +59,23 @@ def _is_retryable(exc: BaseException) -> bool:
         return True
     if isinstance(exc, anthropic.APIStatusError):
         return exc.status_code in {408, 409, 500, 502, 503, 504}
-    if isinstance(exc, (anthropic.APIConnectionError, httpx.TimeoutException)):
-        return True
-    return False
+    return isinstance(exc, (anthropic.APIConnectionError, httpx.TimeoutException))
 
 
-def _map_exception(exc: Exception) -> LLMUpstreamUnavailable | LLMRateLimited | LLMBadRequest | LLMAuthError:
+def _map_exception(
+    exc: Exception,
+) -> LLMUpstreamUnavailableError | LLMRateLimitedError | LLMBadRequestError | LLMAuthError:
     """Anthropic SDK 예외를 도메인 예외로 변환한다."""
     if isinstance(exc, anthropic.RateLimitError):
-        return LLMRateLimited(str(exc))
+        return LLMRateLimitedError(str(exc))
     if isinstance(exc, anthropic.AuthenticationError):
         logger.error("llm.auth_failed", extra={"error": str(exc)})
         return LLMAuthError(str(exc))
     if isinstance(exc, anthropic.BadRequestError):
-        return LLMBadRequest(str(exc))
+        return LLMBadRequestError(str(exc))
     if isinstance(exc, anthropic.APIStatusError) and exc.status_code in {400, 422}:
-        return LLMBadRequest(str(exc))
-    return LLMUpstreamUnavailable(str(exc))
+        return LLMBadRequestError(str(exc))
+    return LLMUpstreamUnavailableError(str(exc))
 
 
 class LLMClient:
