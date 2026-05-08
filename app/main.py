@@ -20,6 +20,7 @@ from app.api.v1 import router as v1_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 from app.middleware.request_context import RequestContextMiddleware
+from app.services._clients.llm_client import LLMClient
 
 
 @asynccontextmanager
@@ -38,6 +39,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     configure_logging()
     logger = get_logger("app.main")
     settings = get_settings()
+    llm_client = LLMClient(api_key=settings.anthropic_api_key)
     logger.info(
         "app.started",
         extra={
@@ -46,8 +48,8 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
             "log_level": settings.log_level,
         },
     )
-    yield
-    # shutdown hooks — 외부 리소스가 생기면 여기에 정리 코드를 추가한다.
+    yield {"llm_client": llm_client}
+    await llm_client.aclose()
     logger.info("app.stopped")
 
 
