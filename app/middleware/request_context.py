@@ -31,23 +31,25 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
 
         # 2. 요청 처리
         start = time.perf_counter()
-        response = await call_next(request)
-        elapsed_ms = round((time.perf_counter() - start) * 1000)
+        status_code = 500
+        try:
+            response = await call_next(request)
+            status_code = response.status_code
+        finally:
+            elapsed_ms = round((time.perf_counter() - start) * 1000)
+            logger.info(
+                "request.done",
+                extra={
+                    "request_id": get_request_id(),
+                    "method": request.method,
+                    "path": request.url.path,
+                    "status": status_code,
+                    "elapsed_ms": elapsed_ms,
+                },
+            )
 
         # 3. 응답 헤더에 request_id echo
         response.headers["X-Request-ID"] = rid
         response.headers["X-Elapsed-Ms"] = str(elapsed_ms)
-
-        # 4. 액세스 로그
-        logger.info(
-            "request.done",
-            extra={
-                "request_id": get_request_id(),
-                "method": request.method,
-                "path": request.url.path,
-                "status": response.status_code,
-                "elapsed_ms": elapsed_ms,
-            },
-        )
 
         return response

@@ -58,7 +58,7 @@ def _is_retryable(exc: BaseException) -> bool:
     if isinstance(exc, anthropic.RateLimitError):
         return True
     if isinstance(exc, anthropic.APIStatusError):
-        return exc.status_code in {408, 409, 500, 502, 503, 504}
+        return exc.status_code in {408, 409, 500, 502, 503, 504, 529}
     return isinstance(exc, (anthropic.APIConnectionError, httpx.TimeoutException))
 
 
@@ -69,6 +69,9 @@ def _map_exception(
     if isinstance(exc, anthropic.RateLimitError):
         return LLMRateLimitedError(str(exc))
     if isinstance(exc, anthropic.AuthenticationError):
+        logger.error("llm.auth_failed", extra={"error": str(exc)})
+        return LLMAuthError(str(exc))
+    if isinstance(exc, anthropic.PermissionDeniedError):
         logger.error("llm.auth_failed", extra={"error": str(exc)})
         return LLMAuthError(str(exc))
     if isinstance(exc, anthropic.BadRequestError):
