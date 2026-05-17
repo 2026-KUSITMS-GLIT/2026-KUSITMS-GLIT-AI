@@ -55,6 +55,16 @@ class Settings(BaseSettings):
         ),
     )
 
+    # ---- AI provider ----
+    anthropic_api_key: str = Field(
+        default="dev-no-api-key",
+        description="Anthropic Claude API 키. .env 또는 SSM 에서 주입.",
+    )
+    anthropic_model: str = Field(
+        default="claude-haiku-4-5-20251001",
+        description="사용할 Claude 모델명.",
+    )
+
     @model_validator(mode="after")
     def _require_secure_token_in_prod(self) -> Settings:
         """prod 환경에서 ``INTERNAL_API_TOKEN`` 이 안전한 값인지 검증한다.

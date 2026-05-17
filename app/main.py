@@ -9,7 +9,7 @@ Production (inside container):
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -19,10 +19,12 @@ from app.api import health
 from app.api.v1 import router as v1_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
+from app.middleware.request_context import RequestContextMiddleware
+from app.services._clients.llm_client import LLMClient
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+async def lifespan(_: FastAPI) -> AsyncGenerator[dict[str, LLMClient], None]:
     """앱 전체 생명주기 훅.
 
     **startup** — 로깅을 먼저 초기화하고 ``Settings`` 를 로드해 검증한다.
@@ -37,6 +39,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     configure_logging()
     logger = get_logger("app.main")
     settings = get_settings()
+    llm_client = LLMClient(api_key=settings.anthropic_api_key)
     logger.info(
         "app.started",
         extra={
@@ -45,8 +48,8 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
             "log_level": settings.log_level,
         },
     )
-    yield
-    # shutdown hooks — 외부 리소스가 생기면 여기에 정리 코드를 추가한다.
+    yield {"llm_client": llm_client}
+    await llm_client.aclose()
     logger.info("app.stopped")
 
 
@@ -70,6 +73,8 @@ def create_app() -> FastAPI:
     #   새 기능은 app/api/v1/<feature>.py 만들고 app/api/v1/__init__.py 의
     #   include_router 목록에 한 줄 추가하는 식으로 붙인다 (여기는 건드리지 않음).
     # CORS 미들웨어는 의도적으로 미포함 — 서버 간 통신이므로 불필요.
+    app.add_middleware(RequestContextMiddleware)
+
     app.include_router(health.router)
     app.include_router(v1_router)
 
