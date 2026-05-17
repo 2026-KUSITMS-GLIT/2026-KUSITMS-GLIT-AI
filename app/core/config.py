@@ -65,6 +65,16 @@ class Settings(BaseSettings):
         description="사용할 Claude 모델명.",
     )
 
+    # ---- Tagging ----
+    tagging_variant: str = Field(
+        default="v1_baseline",
+        description=(
+            "활성 tagging 프롬프트/구현 버전. "
+            "``app/prompts/tagging/{variant}.md`` 와 ``app/services/tagging/{variant}.py`` 가 "
+            "존재해야 한다. 실험 시에는 본인 ``.env`` 만 바꾸고, 기본값은 함부로 변경 X."
+        ),
+    )
+
     @model_validator(mode="after")
     def _require_secure_token_in_prod(self) -> Settings:
         """prod 환경에서 ``INTERNAL_API_TOKEN`` 이 안전한 값인지 검증한다.
