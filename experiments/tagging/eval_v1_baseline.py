@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import sys
 import time
 from datetime import UTC, datetime
@@ -28,6 +29,12 @@ from typing import Any, cast
 
 from app.core.config import get_settings
 from app.core.logging import configure_logging
+from app.schemas.common import (
+    JOB_ROLE_LABELS_KO,
+    PRIMARY_CATEGORY_LABELS_KO,
+    JobRole,
+    PrimaryCategory,
+)
 from app.schemas.tagging import TaggingRequest, TaggingResponse
 from app.services._clients.exceptions import LLMError
 from app.services._clients.llm_client import LLMClient
@@ -43,8 +50,15 @@ _USD_TO_KRW = 1400  # 대략 환산. 1건/월비용 표시용
 _HERE = Path(__file__).parent
 _FIXTURES = _HERE / "fixtures" / "eval_set_v1.jsonl"
 _RESULTS_DIR = _HERE / "results"
+_TEMPLATE_PATH = _HERE / "_template.md"
 
 _PLACEHOLDER_KEYS = frozenset({"", "dev-no-api-key", "sk-ant-"})
+
+# 마커 사이 메트릭 블록만 in-place 교체 (사람이 적은 "관찰/결정" 보존)
+_METRIC_BLOCK_RE = re.compile(
+    r"<!--\s*AUTO:START METRICS\s*-->.*?<!--\s*AUTO:END METRICS\s*-->",
+    re.DOTALL,
+)
 
 
 class _LLMTracker:
@@ -187,16 +201,179 @@ def _print_summary(results: list[dict[str, Any]]) -> None:
     print(f"  월 1,000건   : ${avg_cost * 1000:.2f}  (≈ {avg_cost * 1000 * _USD_TO_KRW:.0f}원)")
 
 
-def _save_raw(results: list[dict[str, Any]], variant: str, model: str) -> Path:
-    _RESULTS_DIR.mkdir(exist_ok=True)
+def _rel(path: Path) -> Path | str:
+    """cwd 안이면 relative, 밖이면 absolute — 표시 전용 (tmpdir dry-run 호환)."""
+    try:
+        return path.relative_to(Path.cwd())
+    except ValueError:
+        return str(path)
+
+
+def _bold_overlap(tags: list[str], overlap: set[str]) -> str:
+    """expected/actual 표시용 — 교집합 태그만 ``**bold**``."""
+    return "·".join(f"**{t}**" if t in overlap else t for t in tags)
+
+
+def _build_case_table(results: list[dict[str, Any]]) -> str:
+    """케이스별 markdown 표 (헤더 포함)."""
+    lines = [
+        "| id | 직군 | 카테고리 | 일치율 | corrective | latency | tok in/out | expected | actual |",
+        "| --- | --- | --- | ---: | :---: | ---: | --- | --- | --- |",
+    ]
+    for r in results:
+        if r["llm_error"]:
+            score = "LLM_ERR"
+        elif r["parse_error"]:
+            score = "PARSE_ERR"
+        else:
+            score = f"{int(r['match_score'] * 100)}%"
+        corrective = "○" if r["had_corrective"] else "×"  # noqa: RUF001
+        role = JOB_ROLE_LABELS_KO[JobRole(r["job_role"])]
+        cat = PRIMARY_CATEGORY_LABELS_KO[PrimaryCategory(r["primary_category"])]
+        overlap = set(r["expected"]) & set(r["actual"])
+        exp = _bold_overlap(r["expected"], overlap)
+        act = _bold_overlap(r["actual"], overlap) if r["actual"] else "-"
+        lines.append(
+            f"| {r['id']} | {role} | {cat} | {score} | {corrective} | "
+            f"{r['total_latency_ms']}ms | {r['input_tokens']} / {r['output_tokens']} | "
+            f"{exp} | {act} |"
+        )
+    return "\n".join(lines)
+
+
+def _build_group_table(
+    results: list[dict[str, Any]],
+    group_key: str,
+    label_map: dict[Any, str],
+    enum_cls: type[Any],
+) -> str:
+    """직군/카테고리 등 그룹별 평균 일치율 표."""
+    buckets: dict[str, list[float]] = {}
+    case_ids: dict[str, list[str]] = {}
+    for r in results:
+        if r["parse_error"] or r["llm_error"]:
+            continue
+        k = r[group_key]
+        buckets.setdefault(k, []).append(r["match_score"])
+        case_ids.setdefault(k, []).append(r["id"])
+    if not buckets:
+        return "_(파싱 성공 케이스 없음)_"
+    lines = ["| 분류 | 케이스 | 평균 |", "| --- | --- | ---: |"]
+    for k, scores in buckets.items():
+        label = label_map.get(enum_cls(k), k)
+        avg = sum(scores) / len(scores) * 100
+        ids = ", ".join(case_ids[k])
+        lines.append(f"| {label} | {ids} | {avg:.0f}% |")
+    return "\n".join(lines)
+
+
+def _summary_context(
+    results: list[dict[str, Any]],
+    variant: str,
+    model: str,
+    ran_at: str,
+    raw_json_name: str,
+) -> dict[str, str]:
+    """템플릿 placeholder → 값 매핑 dict."""
+    n = len(results)
+    ok = [r for r in results if not r["parse_error"] and not r["llm_error"]]
+    n_ok = len(ok)
+    n_parse = sum(1 for r in results if r["parse_error"])
+    n_llm = sum(1 for r in results if r["llm_error"])
+    n_corrective = sum(1 for r in results if r["had_corrective"])
+
+    if ok:
+        avg_score = sum(r["match_score"] for r in ok) / n_ok
+        exact = sum(1 for r in ok if r["match_score"] >= 1.0)
+        partial = sum(1 for r in ok if 0 < r["match_score"] < 1.0)
+        none_ = sum(1 for r in ok if r["match_score"] == 0)
+        avg_latency = sum(r["total_latency_ms"] for r in ok) / n_ok
+        avg_input = sum(r["input_tokens"] for r in ok) / n_ok
+        avg_output = sum(r["output_tokens"] for r in ok) / n_ok
+        avg_cost = sum(r["cost_usd"] for r in ok) / n_ok
+    else:
+        avg_score = exact = partial = none_ = 0
+        avg_latency = avg_input = avg_output = avg_cost = 0.0
+
+    return {
+        "MODEL": model,
+        "VARIANT": variant,
+        "RAN_AT": ran_at,
+        "DATE": ran_at[:10],
+        "N_CASES": str(n),
+        "AVG_SCORE": f"{avg_score * 100:.1f}",
+        "EXACT": str(exact),
+        "PARTIAL": str(partial),
+        "NONE": str(none_),
+        "AVG_LATENCY": f"{avg_latency:,.0f}",
+        "AVG_INPUT": f"{avg_input:,.0f}",
+        "AVG_OUTPUT": f"{avg_output:,.0f}",
+        "AVG_COST_USD": f"{avg_cost:.4f}",
+        "AVG_COST_KRW": f"{avg_cost * _USD_TO_KRW:.1f}",
+        "MONTHLY_COST_USD": f"{avg_cost * 1000:.2f}",
+        "MONTHLY_COST_KRW": f"{avg_cost * 1000 * _USD_TO_KRW:,.0f}",
+        "N_CORRECTIVE": str(n_corrective),
+        "N_LLM_ERR": str(n_llm),
+        "N_PARSE_FAIL": str(n_parse),
+        "RAW_JSON_NAME": raw_json_name,
+        "CASE_TABLE": _build_case_table(results),
+        "ROLE_TABLE": _build_group_table(results, "job_role", JOB_ROLE_LABELS_KO, JobRole),
+        "CATEGORY_TABLE": _build_group_table(
+            results, "primary_category", PRIMARY_CATEGORY_LABELS_KO, PrimaryCategory
+        ),
+    }
+
+
+def _render_full_md(template: str, ctx: dict[str, str]) -> str:
+    """템플릿의 모든 ``{{KEY}}`` 를 ctx 값으로 치환."""
+    out = template
+    for key, value in ctx.items():
+        out = out.replace(f"{{{{{key}}}}}", value)
+    return out
+
+
+def _upsert_md(out_path: Path, ctx: dict[str, str]) -> str:
+    """결과 .md upsert.
+
+    - 마커 사이 메트릭 블록만 in-place 교체하여 사람이 적은 "관찰/결정" 섹션을 보존한다.
+    - 파일이 없으면 ``_template.md`` 기반으로 새로 작성한다.
+    - 파일은 있지만 마커가 없으면 (옛 수동 작성 .md) 충돌 회피로 ``_<timestamp>`` suffix 의
+      alt 파일을 새로 만들고, 기존 파일은 건드리지 않는다.
+
+    Returns:
+        사용자에게 보여줄 상태 문자열.
+    """
+    rendered = _render_full_md(_TEMPLATE_PATH.read_text(encoding="utf-8"), ctx)
+    new_block_match = _METRIC_BLOCK_RE.search(rendered)
+    assert new_block_match, "_template.md 에 AUTO:START/END METRICS 마커가 있어야 한다"
+    new_block = new_block_match.group(0)
+
+    if not out_path.exists():
+        out_path.write_text(rendered, encoding="utf-8")
+        return f"created → {_rel(out_path)}"
+
+    existing = out_path.read_text(encoding="utf-8")
+    if _METRIC_BLOCK_RE.search(existing):
+        updated = _METRIC_BLOCK_RE.sub(lambda _m: new_block, existing, count=1)
+        out_path.write_text(updated, encoding="utf-8")
+        return f"updated (인사이트 보존) → {_rel(out_path)}"
+
+    # 기존 파일에 마커가 없음 — 옛 수동 작성. 건드리지 않고 alt 생성.
     ts = datetime.now(UTC).strftime("%Y-%m-%dT%H%M%SZ")
-    path = _RESULTS_DIR / f"{ts}_{variant}.json"
+    alt = out_path.with_name(f"{out_path.stem}__autorendered_{ts}{out_path.suffix}")
+    alt.write_text(rendered, encoding="utf-8")
+    return f"conflict (기존 파일에 마커 없음, 건드리지 않음). alt 생성 → {_rel(alt)}"
+
+
+def _save_raw(results: list[dict[str, Any]], variant: str, model: str, ran_at: str) -> Path:
+    _RESULTS_DIR.mkdir(exist_ok=True)
+    path = _RESULTS_DIR / f"{ran_at}_{variant}.json"
     path.write_text(
         json.dumps(
             {
                 "variant": variant,
                 "model": model,
-                "ran_at": ts,
+                "ran_at": ran_at,
                 "n_cases": len(results),
                 "cases": results,
             },
@@ -240,9 +417,22 @@ async def main() -> None:
 
     _print_per_case(results)
     _print_summary(results)
-    saved = _save_raw(results, settings.tagging_variant, settings.anthropic_model)
-    print(f"\nRaw saved → {saved.relative_to(Path.cwd())}")
-    print("Next: write up experiments/tagging/<date>_<variant>.md (README §실험결과기록)")
+
+    ran_at = datetime.now(UTC).strftime("%Y-%m-%dT%H%M%SZ")
+    saved_json = _save_raw(results, settings.tagging_variant, settings.anthropic_model, ran_at)
+    print(f"\nRaw saved → {saved_json.relative_to(Path.cwd())}")
+
+    md_path = _HERE / f"{ran_at[:10]}_{settings.tagging_variant}.md"
+    ctx = _summary_context(
+        results=results,
+        variant=settings.tagging_variant,
+        model=settings.anthropic_model,
+        ran_at=ran_at,
+        raw_json_name=saved_json.name,
+    )
+    status = _upsert_md(md_path, ctx)
+    print(f"MD     → {status}")
+    print("→ '관찰' / '결정' 섹션을 채워서 commit 하면 README §실험결과기록 컨벤션 충족.")
 
 
 if __name__ == "__main__":
