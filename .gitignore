@@ -59,3 +59,6 @@ logs/
 
 # OMC (oh-my-claudecode local state — 개인 작업 파일이므로 레포에 올리지 않음)
 .omc/
+
+# Claude
+.claude
