@@ -1,0 +1,374 @@
+{
+  "variant": "v1_baseline",
+  "model": "claude-haiku-4-5-20251001",
+  "ran_at": "2026-05-17T160028Z",
+  "n_cases": 10,
+  "cases": [
+    {
+      "id": "01",
+      "title": "팀원용 데일리 STAR 기록 DB 제작",
+      "job_role": "PLANNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "expected": [
+        "#요구사항정의",
+        "#기획구조화",
+        "#툴활용"
+      ],
+      "actual": [
+        "#UX설계",
+        "#구조재설계",
+        "#직군간협업"
+      ],
+      "match_score": 0.0,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1146,
+      "input_tokens": 3431,
+      "output_tokens": 31,
+      "cost_usd": 0.003586,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3431,
+          "output_tokens": 31,
+          "latency_ms": 1144,
+          "response_text": "{\"detailTags\": [\"#UX설계\", \"#구조재설계\", \"#직군간협업\"]}"
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "title": "5대 직무 역량 & 세부 역량 태그 설계 재고민",
+      "job_role": "PLANNER",
+      "primary_category": "PROBLEM_SOLVING",
+      "expected": [
+        "#문제정의",
+        "#구조재설계",
+        "#논리보완"
+      ],
+      "actual": [
+        "#문제정의",
+        "#논리보완",
+        "#의견조율"
+      ],
+      "match_score": 0.6666666666666666,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 2220,
+      "input_tokens": 7237,
+      "output_tokens": 59,
+      "cost_usd": 0.0075320000000000005,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3527,
+          "output_tokens": 30,
+          "latency_ms": 837,
+          "response_text": "`{\"detailTags\": [\"#문제정의\", \"#논리보완\", \"#의견조율\"]}`"
+        },
+        {
+          "input_tokens": 3710,
+          "output_tokens": 29,
+          "latency_ms": 1383,
+          "response_text": "{\"detailTags\": [\"#문제정의\", \"#논리보완\", \"#의견조율\"]}"
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "title": "기능명세서 작성 완료",
+      "job_role": "PLANNER",
+      "primary_category": "GROWTH",
+      "expected": [
+        "#툴활용",
+        "#반복개선",
+        "#업무자동화"
+      ],
+      "actual": [
+        "#업무자동화",
+        "#기획구조화",
+        "#학습적용"
+      ],
+      "match_score": 0.3333333333333333,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 2097,
+      "input_tokens": 6841,
+      "output_tokens": 63,
+      "cost_usd": 0.007156,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3328,
+          "output_tokens": 32,
+          "latency_ms": 924,
+          "response_text": "`{\"detailTags\": [\"#업무자동화\", \"#기획구조화\", \"#학습적용\"]}`"
+        },
+        {
+          "input_tokens": 3513,
+          "output_tokens": 31,
+          "latency_ms": 1172,
+          "response_text": "{\"detailTags\": [\"#업무자동화\", \"#기획구조화\", \"#학습적용\"]}"
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "title": "기록 화면 디자인 작업 중 레퍼런스 분석",
+      "job_role": "DESIGNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "expected": [
+        "#경쟁사례분석",
+        "#인사이트도출",
+        "#레퍼런스수집"
+      ],
+      "actual": [
+        "#경쟁사례분석",
+        "#사용성평가",
+        "#학습적용"
+      ],
+      "match_score": 0.3333333333333333,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1005,
+      "input_tokens": 3304,
+      "output_tokens": 34,
+      "cost_usd": 0.003474,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3304,
+          "output_tokens": 34,
+          "latency_ms": 1005,
+          "response_text": "{\"detailTags\": [\"#경쟁사례분석\", \"#사용성평가\", \"#학습적용\"]}"
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "title": "서비스 캐릭터 아이데이션",
+      "job_role": "DESIGNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "expected": [
+        "#브랜드기획",
+        "#비주얼디자인",
+        "#발표및설득"
+      ],
+      "actual": [
+        "#브랜드기획",
+        "#발표및설득",
+        "#프로젝트회고"
+      ],
+      "match_score": 0.6666666666666666,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1977,
+      "input_tokens": 3239,
+      "output_tokens": 35,
+      "cost_usd": 0.003414,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3239,
+          "output_tokens": 35,
+          "latency_ms": 1977,
+          "response_text": "{\"detailTags\": [\"#브랜드기획\", \"#발표및설득\", \"#프로젝트회고\"]}"
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "title": "프론트와 미정의 상태 화면 처리 방향 논의",
+      "job_role": "DESIGNER",
+      "primary_category": "COLLABORATION",
+      "expected": [
+        "#직군간협업",
+        "#의견조율",
+        "#산출물전달"
+      ],
+      "actual": [
+        "#의견조율",
+        "#직군간협업",
+        "#산출물전달"
+      ],
+      "match_score": 1.0,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 2317,
+      "input_tokens": 6735,
+      "output_tokens": 63,
+      "cost_usd": 0.00705,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3275,
+          "output_tokens": 32,
+          "latency_ms": 1520,
+          "response_text": "`{\"detailTags\": [\"#의견조율\", \"#직군간협업\", \"#산출물전달\"]}`"
+        },
+        {
+          "input_tokens": 3460,
+          "output_tokens": 31,
+          "latency_ms": 797,
+          "response_text": "{\"detailTags\": [\"#의견조율\", \"#직군간협업\", \"#산출물전달\"]}"
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "title": "공통 컴포넌트 구현",
+      "job_role": "DEVELOPER",
+      "primary_category": "PLANNING_EXECUTION",
+      "expected": [
+        "#컴포넌트구현",
+        "#기술리서치",
+        "#역량확장"
+      ],
+      "actual": [
+        "#컴포넌트구현",
+        "#아키텍처설계",
+        "#학습적용"
+      ],
+      "match_score": 0.3333333333333333,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1017,
+      "input_tokens": 3261,
+      "output_tokens": 36,
+      "cost_usd": 0.003441,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3261,
+          "output_tokens": 36,
+          "latency_ms": 1017,
+          "response_text": "{\"detailTags\": [\"#컴포넌트구현\", \"#아키텍처설계\", \"#학습적용\"]}"
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "title": "블로그 정리 및 개발 과정 기록",
+      "job_role": "DEVELOPER",
+      "primary_category": "GROWTH",
+      "expected": [
+        "#프로젝트회고",
+        "#자기객관화",
+        "#커리어설계"
+      ],
+      "actual": [
+        "#프로젝트회고",
+        "#레퍼런스수집",
+        "#구조재설계"
+      ],
+      "match_score": 0.3333333333333333,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 4469,
+      "input_tokens": 7045,
+      "output_tokens": 75,
+      "cost_usd": 0.00742,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3427,
+          "output_tokens": 38,
+          "latency_ms": 3604,
+          "response_text": "`{\"detailTags\": [\"#프로젝트회고\", \"#레퍼런스수집\", \"#구조재설계\"]}`"
+        },
+        {
+          "input_tokens": 3618,
+          "output_tokens": 37,
+          "latency_ms": 864,
+          "response_text": "{\"detailTags\": [\"#프로젝트회고\", \"#레퍼런스수집\", \"#구조재설계\"]}"
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "title": "CI 구현",
+      "job_role": "DEVELOPER",
+      "primary_category": "PLANNING_EXECUTION",
+      "expected": [
+        "#검증및테스트",
+        "#성능최적화",
+        "#학습적용"
+      ],
+      "actual": [
+        "#성능최적화",
+        "#검증및테스트",
+        "#학습적용"
+      ],
+      "match_score": 1.0,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 2067,
+      "input_tokens": 6568,
+      "output_tokens": 65,
+      "cost_usd": 0.006893,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3191,
+          "output_tokens": 33,
+          "latency_ms": 863,
+          "response_text": "`{\"detailTags\": [\"#성능최적화\", \"#검증및테스트\", \"#학습적용\"]}`"
+        },
+        {
+          "input_tokens": 3377,
+          "output_tokens": 32,
+          "latency_ms": 1203,
+          "response_text": "{\"detailTags\": [\"#성능최적화\", \"#검증및테스트\", \"#학습적용\"]}"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "title": "배포 후 특정 조건 오류 원인 파악 및 수정",
+      "job_role": "DEVELOPER",
+      "primary_category": "PROBLEM_SOLVING",
+      "expected": [
+        "#원인분석",
+        "#검증및테스트",
+        "#반복개선"
+      ],
+      "actual": [
+        "#원인분석",
+        "#검증및테스트",
+        "#학습적용"
+      ],
+      "match_score": 0.6666666666666666,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 2032,
+      "input_tokens": 6649,
+      "output_tokens": 63,
+      "cost_usd": 0.006964000000000001,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 3232,
+          "output_tokens": 32,
+          "latency_ms": 905,
+          "response_text": "`{\"detailTags\": [\"#원인분석\", \"#검증및테스트\", \"#학습적용\"]}`"
+        },
+        {
+          "input_tokens": 3417,
+          "output_tokens": 31,
+          "latency_ms": 1126,
+          "response_text": "{\"detailTags\": [\"#원인분석\", \"#검증및테스트\", \"#학습적용\"]}"
+        }
+      ]
+    }
+  ]
+}
