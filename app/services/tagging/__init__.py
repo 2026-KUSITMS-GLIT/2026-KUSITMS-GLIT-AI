@@ -30,6 +30,10 @@ def _resolve() -> RunFn:
         from app.services.tagging.v1_baseline import run as _impl  # noqa: PLC0415
 
         return _impl
+    if variant == "v2_postscore":
+        from app.services.tagging.v2_postscore import run as _impl  # noqa: PLC0415
+
+        return _impl
     raise RuntimeError(
         f"Unknown TAGGING_VARIANT={variant!r}. "
         "Add a branch in app/services/tagging/__init__.py::_resolve."

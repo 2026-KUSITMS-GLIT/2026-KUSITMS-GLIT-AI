@@ -21,11 +21,22 @@ from httpx import Response
 
 from app.api.v1.tagging import get_llm_client
 from app.main import app
+from app.schemas.common import JobRole
 from app.services._clients.exceptions import (
     LLMAuthError,
     LLMBadRequestError,
     LLMRateLimitedError,
     LLMUpstreamUnavailableError,
+)
+from app.services.tagging.exceptions import TaggingValidationError
+from app.services.tagging.v2_postscore import (
+    _parse_and_validate as _v2_parse_and_validate,
+)
+from app.services.tagging.v2_postscore import (
+    _select_top3 as _v2_select_top3,
+)
+from app.services.tagging.v2_postscore import (
+    _strip_code_fence as _v2_strip_code_fence,
 )
 
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
@@ -235,6 +246,84 @@ def test_v1_tagging_does_not_log_star_body_on_happy(
     r = client.post("/v1/tagging", json=_PAYLOAD, headers={"X-Internal-Token": token})
     assert r.status_code == 200
     _assert_no_pii_in_logs(caplog)
+
+
+# === v2_postscore — unit tests ===
+
+
+@pytest.mark.parametrize(
+    "wrapped",
+    [
+        '{"detailTags": ["#문제해결"]}',
+        '`{"detailTags": ["#문제해결"]}`',
+        '``{"detailTags": ["#문제해결"]}``',
+        '```\n{"detailTags": ["#문제해결"]}\n```',
+        '```json\n{"detailTags": ["#문제해결"]}\n```',
+    ],
+    ids=["no_fence", "single_backtick", "double_backtick", "triple_backtick", "triple_json"],
+)
+def test_v2_postscore_strips_all_backtick_widths(wrapped: str) -> None:
+    """v2 의 정규식이 1·2·3개 백틱 + 옵션 ``json`` prefix 모두 strip 하는지 검증."""
+    assert _v2_strip_code_fence(wrapped) == '{"detailTags": ["#문제해결"]}'
+
+
+def test_v2_postscore_parse_accepts_5_to_7_candidates() -> None:
+    """후보 갯수 5~7 범위는 통과."""
+    five = '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결","#디버깅"]}'
+    seven = (
+        '{"detailTags": '
+        '["#원인분석","#검증및테스트","#반복개선","#문제해결","#디버깅","#가설검증","#성능최적화"]}'
+    )
+    assert len(_v2_parse_and_validate(five)) == 5
+    assert len(_v2_parse_and_validate(seven)) == 7
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결"]}',
+        ('{"detailTags": ["#A","#B","#C","#D","#E","#F","#G","#H"]}'),
+    ],
+    ids=["four_tags_under_min", "eight_tags_over_max"],
+)
+def test_v2_postscore_parse_rejects_out_of_range_candidate_count(raw: str) -> None:
+    """후보 갯수가 [5, 7] 범위 밖이면 TaggingValidationError."""
+    with pytest.raises(TaggingValidationError, match="후보 갯수 위반"):
+        _v2_parse_and_validate(raw)
+
+
+def test_v2_postscore_select_top3_sorts_by_weight_then_input_order() -> None:
+    """가중치 점수 내림차순, 동점은 입력 인덱스 작은 게 먼저."""
+    # 개발자(DEVELOPER) 기준 점수:
+    #   #기술리서치=High(3) · #UX설계=Low(1) · #API연동=High(3) · #디버깅=High(3)
+    #   · #비주얼디자인=Low(1) · #피드백수용=High(3)
+    # 입력 순서: 기술리서치 / UX설계 / API연동 / 디버깅 / 비주얼디자인 / 피드백수용
+    # 점수 동점(3) 셋 — 입력 순서로 기술리서치 / API연동 / 디버깅 이 top 3.
+    candidates = ["#기술리서치", "#UX설계", "#API연동", "#디버깅", "#비주얼디자인", "#피드백수용"]
+    top = _v2_select_top3(candidates, JobRole.DEVELOPER)
+    assert top == ["#기술리서치", "#API연동", "#디버깅"]
+
+
+def test_v2_postscore_select_top3_respects_role_switch() -> None:
+    """같은 후보 list 라도 직군 바뀌면 다른 top3 가 나온다 (가중치가 도메인 점수)."""
+    # PLANNER 기준:
+    #   #기술리서치=Mid(2) · #UX설계=High(3) · #API연동=Low(1) · #디버깅=Low(1)
+    #   · #비주얼디자인=Low(1) · #피드백수용=High(3)
+    # → top3: #UX설계(3, idx 1) · #피드백수용(3, idx 5) · #기술리서치(2, idx 0)
+    candidates = ["#기술리서치", "#UX설계", "#API연동", "#디버깅", "#비주얼디자인", "#피드백수용"]
+    top = _v2_select_top3(candidates, JobRole.PLANNER)
+    assert top == ["#UX설계", "#피드백수용", "#기술리서치"]
+
+
+def test_v2_postscore_select_top3_handles_fewer_than_three_candidates() -> None:
+    """후보가 3개 미만이면 그 갯수 그대로 정렬해 반환."""
+    candidates = ["#UX설계", "#기술리서치"]
+    top = _v2_select_top3(candidates, JobRole.DEVELOPER)
+    # 개발자 점수: UX설계=1, 기술리서치=3 → 기술리서치가 먼저
+    assert top == ["#기술리서치", "#UX설계"]
+
+
+# === /v1/tagging — 로그 PII 안전성 (검증 실패 path) ===
 
 
 @respx.mock
