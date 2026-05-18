@@ -26,10 +26,15 @@ from typing import Any
 import orjson
 
 from app.core.logging import get_logger
-from app.schemas.common import JOB_ROLE_LABELS_KO, PRIMARY_CATEGORY_LABELS_KO, JobRole
+from app.schemas.common import (
+    JOB_ROLE_LABELS_KO,
+    PRIMARY_CATEGORY_LABELS_KO,
+    JobRole,
+    PrimaryCategory,
+)
 from app.schemas.tagging import TaggingRequest, TaggingResponse
 from app.services._clients.llm_client import LLMClient, WorkloadType
-from app.services.tagging.data import ALL_TAGS, tag_score
+from app.services.tagging.data import ALL_TAGS, TAGS_BY_CATEGORY, tag_score
 from app.services.tagging.exceptions import TaggingValidationError
 from app.services.tagging.v1_baseline import _extract_text
 
@@ -90,11 +95,21 @@ def _strip_code_fence(text: str) -> str:
     return text
 
 
-def _parse_and_validate(raw: str) -> list[str]:
+def _allowed_tags_for(category: PrimaryCategory) -> frozenset[str]:
+    """선택된 ``primaryCategory`` 안에서 허용되는 태그 셋.
+
+    카테고리 외 태그를 후보 단계에서 걸러내 contract (선택 역량 내 태그만 출력)
+    를 보장한다.
+    """
+    return TAGS_BY_CATEGORY[category]
+
+
+def _parse_and_validate(raw: str, allowed_tags: frozenset[str] = ALL_TAGS) -> list[str]:
     """후보 검증 — 갯수 :data:`_CANDIDATE_MIN`~:data:`_CANDIDATE_MAX`, 풀 내, 중복 X.
 
     실패 시 :class:`TaggingValidationError`. 후처리에서 ``_FINAL_TOP`` 으로 자르므로
-    여기서는 후보 단계 갯수만 검증한다.
+    여기서는 후보 단계 갯수만 검증한다. ``allowed_tags`` 는 카테고리별 허용 셋을
+    좁혀 넘길 수 있다 (기본 ``ALL_TAGS``).
     """
     text = _strip_code_fence(raw)
     try:
@@ -122,9 +137,9 @@ def _parse_and_validate(raw: str) -> list[str]:
     if len(set(str_tags)) != len(str_tags):
         raise TaggingValidationError("detailTags 중복 포함")
 
-    out_of_pool = [t for t in str_tags if t not in ALL_TAGS]
+    out_of_pool = [t for t in str_tags if t not in allowed_tags]
     if out_of_pool:
-        raise TaggingValidationError(f"태그 풀 외 태그 포함: {out_of_pool}")
+        raise TaggingValidationError(f"허용 태그 풀 외 태그 포함: {out_of_pool}")
 
     return str_tags
 
@@ -154,6 +169,7 @@ def _build_corrective_user_message(reason: str) -> str:
 async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingResponse:
     """Tagging v2_postscore 실행."""
     system = _render_prompt(req)
+    allowed = _allowed_tags_for(req.selected_competency)
     log_ctx: dict[str, Any] = {
         "job_role": req.job_role.value,
         "primary_category": req.selected_competency.value,
@@ -169,7 +185,7 @@ async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingRespons
     first_raw = _extract_text(first_msg.content)
 
     try:
-        candidates = _parse_and_validate(first_raw)
+        candidates = _parse_and_validate(first_raw, allowed)
     except TaggingValidationError as first_err:
         logger.warning(
             "tagging.validation_failed",
@@ -188,7 +204,7 @@ async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingRespons
         )
         retry_raw = _extract_text(retry_msg.content)
         try:
-            candidates = _parse_and_validate(retry_raw)
+            candidates = _parse_and_validate(retry_raw, allowed)
         except TaggingValidationError as retry_err:
             logger.warning(
                 "tagging.validation_failed",
