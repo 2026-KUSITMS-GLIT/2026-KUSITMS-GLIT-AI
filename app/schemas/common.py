@@ -17,6 +17,14 @@ class JobRole(StrEnum):
     DESIGNER = "DESIGNER"
 
 
+class UserStatus(StrEnum):
+    """유저 상태 — Spring 측 enum 코드와 동일."""
+
+    STUDENT = "STUDENT"
+    JOB_SEEKER = "JOB_SEEKER"
+    EMPLOYED = "EMPLOYED"
+
+
 class PrimaryCategory(StrEnum):
     """5대 직무 역량 — Spring 측 enum 코드와 동일."""
 

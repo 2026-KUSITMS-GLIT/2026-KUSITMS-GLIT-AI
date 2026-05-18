@@ -7,15 +7,19 @@ FastAPI 앱 전체를 부팅해 lifespan 까지 도는 ``client`` 픽스처를 �
 
 from __future__ import annotations
 
+import os
 from collections.abc import Iterator
 
 import pytest
 from fastapi.testclient import TestClient
 
-from app.core.config import get_settings
-from app.main import app
-
+# app.main 임포트 전에 필수 환경변수를 주입 — CI처럼 .env가 없는 환경에서도 동작하도록.
 _TEST_TOKEN = "test-token-" + "a" * 32
+os.environ.setdefault("APP_ENV", "local")
+os.environ.setdefault("INTERNAL_API_TOKEN", _TEST_TOKEN)
+
+from app.core.config import get_settings  # noqa: E402
+from app.main import app  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
