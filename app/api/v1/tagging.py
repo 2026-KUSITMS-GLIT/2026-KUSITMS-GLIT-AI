@@ -44,8 +44,9 @@ def get_llm_client(request: Request) -> LLMClient:
     이 함수는 그 접근을 한 곳으로 모아 두어 테스트 시 ``dependency_overrides`` 로 mock
     주입을 가능케 한다.
     """
-    client = request.state.llm_client
-    assert isinstance(client, LLMClient), "lifespan 에서 llm_client 가 주입되어야 한다"
+    client = getattr(request.state, "llm_client", None)
+    if not isinstance(client, LLMClient):
+        raise RuntimeError("lifespan 에서 llm_client 가 올바르게 주입되어야 한다")
     return client
 
 
