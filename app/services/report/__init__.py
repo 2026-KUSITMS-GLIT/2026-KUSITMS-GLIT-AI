@@ -24,8 +24,7 @@ def _get_impl() -> ModuleType:
     variant = get_settings().report_variant
     if variant not in _VARIANTS:
         raise RuntimeError(
-            f"REPORT_VARIANT='{variant}' 는 유효하지 않습니다. "
-            f"사용 가능한 값: {sorted(_VARIANTS)}"
+            f"REPORT_VARIANT='{variant}' 는 유효하지 않습니다. 사용 가능한 값: {sorted(_VARIANTS)}"
         )
     return importlib.import_module(f"app.services.report.{variant}")
 
