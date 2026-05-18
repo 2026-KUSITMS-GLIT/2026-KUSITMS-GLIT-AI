@@ -46,18 +46,25 @@ _MAX_TOKENS = 200
 """tagging 응답은 짧으니 출력 토큰을 빠듯하게."""
 
 
+_TOKEN_RE = re.compile(r"\{(jobRole|primaryCategory|situationTask|action|result)\}")
+"""프롬프트 템플릿의 치환 토큰 — 1패스 ``re.sub`` 로만 매치된다."""
+
+
 def _render_prompt(req: TaggingRequest) -> str:
     """변수 토큰을 한글 라벨/STAR 본문으로 치환한 시스템 프롬프트를 반환.
 
-    JSON 예시의 중괄호와 충돌하지 않도록 ``.format()`` 이 아닌 ``.replace()`` 를 쓴다.
+    1패스 정규식 치환 — 사용자 본문에 ``{result}`` 같은 토큰 문자열이 섞여도
+    재치환되지 않는다. STAR 본문은 ``<situationTask>...</situationTask>`` 등
+    XML-like 태그로 경계화해 프롬프트 인젝션 저항성을 높인다.
     """
-    return (
-        _PROMPT_TEMPLATE.replace("{jobRole}", JOB_ROLE_LABELS_KO[req.job_role])
-        .replace("{primaryCategory}", PRIMARY_CATEGORY_LABELS_KO[req.selected_competency])
-        .replace("{situationTask}", req.situation_task)
-        .replace("{action}", req.action)
-        .replace("{result}", req.result)
-    )
+    values = {
+        "jobRole": JOB_ROLE_LABELS_KO[req.job_role],
+        "primaryCategory": PRIMARY_CATEGORY_LABELS_KO[req.selected_competency],
+        "situationTask": f"<situationTask>\n{req.situation_task}\n</situationTask>",
+        "action": f"<action>\n{req.action}\n</action>",
+        "result": f"<result>\n{req.result}\n</result>",
+    }
+    return _TOKEN_RE.sub(lambda m: values[m.group(1)], _PROMPT_TEMPLATE)
 
 
 def _extract_text(content: Any) -> str:
