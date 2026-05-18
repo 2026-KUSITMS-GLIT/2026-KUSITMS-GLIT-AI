@@ -8,10 +8,8 @@ from app.core.config import get_settings
 from app.schemas.report import (
     AiCareerBrandingResponse,
     AiCareerHighlightsResponse,
-    AiCareerInterviewRequest,
-    AiCareerInterviewResponse,
     AiCareerNarrativeResponse,
-    AiCareerStrengthsResponse,
+    AiCareerStrengthsAndInterviewResponse,
     AiMiniReportResponse,
     AiReportRequest,
 )
@@ -40,13 +38,11 @@ async def run_narrative(req: AiReportRequest) -> AiCareerNarrativeResponse:
     return await _impl.run_narrative(req)  # type: ignore[no-any-return]
 
 
-async def run_strengths(req: AiReportRequest) -> AiCareerStrengthsResponse:
-    return await _impl.run_strengths(req)  # type: ignore[no-any-return]
+async def run_strengths_and_interview(
+    req: AiReportRequest,
+) -> AiCareerStrengthsAndInterviewResponse:
+    return await _impl.run_strengths_and_interview(req)  # type: ignore[no-any-return]
 
 
 async def run_highlights(req: AiReportRequest) -> AiCareerHighlightsResponse:
     return await _impl.run_highlights(req)  # type: ignore[no-any-return]
-
-
-async def run_interview(req: AiCareerInterviewRequest) -> AiCareerInterviewResponse:
-    return await _impl.run_interview(req)  # type: ignore[no-any-return]
