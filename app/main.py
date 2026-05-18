@@ -15,7 +15,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app import __version__
-from app.api import health
+from app.api import health, report_public
 from app.api.v1 import router as v1_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
@@ -76,6 +76,7 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestContextMiddleware)
 
     app.include_router(health.router)
+    app.include_router(report_public.router)
     app.include_router(v1_router)
 
     return app
