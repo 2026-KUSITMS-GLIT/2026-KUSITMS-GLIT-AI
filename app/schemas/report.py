@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from typing import Annotated
+
+from pydantic import BaseModel, Field, StringConstraints
 from pydantic.alias_generators import to_camel
 
 from app.schemas.common import JobRole, UserStatus
@@ -100,8 +102,11 @@ class AiCareerStrengthsResponse(_CamelModel):
     strengths: list[StrengthItem] = Field(min_length=2, max_length=3)
 
 
+_Highlight = Annotated[str, StringConstraints(max_length=80)]
+
+
 class AiCareerHighlightsResponse(_CamelModel):
-    experience_highlights: list[str] = Field(min_length=2, max_length=3)
+    experience_highlights: list[_Highlight] = Field(min_length=2, max_length=3)
 
 
 class InterviewQuestion(_CamelModel):
