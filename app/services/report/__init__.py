@@ -2,26 +2,51 @@
 
 from __future__ import annotations
 
+import importlib
+
 from app.core.config import get_settings
-from app.services.report import v1_baseline
+from app.schemas.report import (
+    AiCareerBrandingResponse,
+    AiCareerHighlightsResponse,
+    AiCareerInterviewRequest,
+    AiCareerInterviewResponse,
+    AiCareerNarrativeResponse,
+    AiCareerStrengthsResponse,
+    AiMiniReportResponse,
+    AiReportRequest,
+)
 
-_VARIANTS = {
-    "v1_baseline": v1_baseline,
-}
+_VARIANTS = {"v1_baseline"}
 
-_settings = get_settings()
-_variant = _settings.report_variant
+_variant = get_settings().report_variant
 
 if _variant not in _VARIANTS:
     raise RuntimeError(
-        f"REPORT_VARIANT='{_variant}' 는 유효하지 않습니다. 사용 가능한 값: {list(_VARIANTS)}"
+        f"REPORT_VARIANT='{_variant}' 는 유효하지 않습니다. 사용 가능한 값: {sorted(_VARIANTS)}"
     )
 
-_impl = _VARIANTS[_variant]
+_impl = importlib.import_module(f"app.services.report.{_variant}")
 
-run_mini = _impl.run_mini
-run_branding = _impl.run_branding
-run_narrative = _impl.run_narrative
-run_strengths = _impl.run_strengths
-run_highlights = _impl.run_highlights
-run_interview = _impl.run_interview
+
+async def run_mini(req: AiReportRequest) -> AiMiniReportResponse:
+    return await _impl.run_mini(req)  # type: ignore[no-any-return]
+
+
+async def run_branding(req: AiReportRequest) -> AiCareerBrandingResponse:
+    return await _impl.run_branding(req)  # type: ignore[no-any-return]
+
+
+async def run_narrative(req: AiReportRequest) -> AiCareerNarrativeResponse:
+    return await _impl.run_narrative(req)  # type: ignore[no-any-return]
+
+
+async def run_strengths(req: AiReportRequest) -> AiCareerStrengthsResponse:
+    return await _impl.run_strengths(req)  # type: ignore[no-any-return]
+
+
+async def run_highlights(req: AiReportRequest) -> AiCareerHighlightsResponse:
+    return await _impl.run_highlights(req)  # type: ignore[no-any-return]
+
+
+async def run_interview(req: AiCareerInterviewRequest) -> AiCareerInterviewResponse:
+    return await _impl.run_interview(req)  # type: ignore[no-any-return]
