@@ -20,10 +20,14 @@ from typing import Any
 import orjson
 
 from app.core.logging import get_logger
-from app.schemas.common import JOB_ROLE_LABELS_KO, PRIMARY_CATEGORY_LABELS_KO
+from app.schemas.common import (
+    JOB_ROLE_LABELS_KO,
+    PRIMARY_CATEGORY_LABELS_KO,
+    PrimaryCategory,
+)
 from app.schemas.tagging import TaggingRequest, TaggingResponse
 from app.services._clients.llm_client import LLMClient, WorkloadType
-from app.services.tagging.data import ALL_TAGS
+from app.services.tagging.data import ALL_TAGS, TAGS_BY_CATEGORY
 from app.services.tagging.exceptions import TaggingValidationError
 
 logger = get_logger(__name__)
@@ -67,6 +71,15 @@ def _render_prompt(req: TaggingRequest) -> str:
     return _TOKEN_RE.sub(lambda m: values[m.group(1)], _PROMPT_TEMPLATE)
 
 
+def _allowed_tags_for(category: PrimaryCategory) -> frozenset[str]:
+    """선택된 ``primaryCategory`` 안에서 허용되는 태그 셋.
+
+    ``TAGS_BY_CATEGORY`` 의 카테고리별 부분집합을 그대로 반환. 카테고리 외 태그를
+    검증 단계에서 걸러내 contract (선택 역량 내 태그만 출력) 를 보장한다.
+    """
+    return TAGS_BY_CATEGORY[category]
+
+
 def _extract_text(content: Any) -> str:
     """Anthropic Message ``content`` 블록에서 텍스트만 모아 strip 후 반환.
 
@@ -89,10 +102,13 @@ def _strip_code_fence(text: str) -> str:
     return text
 
 
-def _parse_and_validate(raw: str) -> list[str]:
+def _parse_and_validate(
+    raw: str, allowed_tags: frozenset[str] = ALL_TAGS
+) -> list[str]:
     """LLM 응답 텍스트 → 검증된 ``detail_tags`` 리스트.
 
     형식·갯수·중복·풀 외 태그 모두 검사. 실패 시 :class:`TaggingValidationError`.
+    ``allowed_tags`` 는 카테고리별 허용 셋을 좁혀 넘길 수 있다 (기본 ``ALL_TAGS``).
     """
     text = _strip_code_fence(raw)
     try:
@@ -118,9 +134,9 @@ def _parse_and_validate(raw: str) -> list[str]:
     if len(set(str_tags)) != len(str_tags):
         raise TaggingValidationError("detailTags 중복 포함")
 
-    out_of_pool = [t for t in str_tags if t not in ALL_TAGS]
+    out_of_pool = [t for t in str_tags if t not in allowed_tags]
     if out_of_pool:
-        raise TaggingValidationError(f"태그 풀 외 태그 포함: {out_of_pool}")
+        raise TaggingValidationError(f"허용 태그 풀 외 태그 포함: {out_of_pool}")
 
     return str_tags
 
@@ -153,6 +169,7 @@ async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingRespons
             여기서는 그대로 propagate.
     """
     system = _render_prompt(req)
+    allowed = _allowed_tags_for(req.selected_competency)
     log_ctx = {
         "job_role": req.job_role.value,
         "primary_category": req.selected_competency.value,
@@ -169,7 +186,7 @@ async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingRespons
     first_raw = _extract_text(first_msg.content)
 
     try:
-        tags = _parse_and_validate(first_raw)
+        tags = _parse_and_validate(first_raw, allowed)
     except TaggingValidationError as first_err:
         logger.warning(
             "tagging.validation_failed",
@@ -189,7 +206,7 @@ async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingRespons
         )
         retry_raw = _extract_text(retry_msg.content)
         try:
-            tags = _parse_and_validate(retry_raw)
+            tags = _parse_and_validate(retry_raw, allowed)
         except TaggingValidationError as retry_err:
             logger.warning(
                 "tagging.validation_failed",
