@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 
-from app.api.v1 import ping, report
+from app.api.v1 import ping, report, tagging
 from app.core.security import require_internal_token
 
 router = APIRouter(
@@ -19,4 +19,5 @@ router = APIRouter(
 
 # Feature 라우터 등록 — 새 기능은 한 줄씩 여기에 추가.
 router.include_router(ping.router)
+router.include_router(tagging.router)
 router.include_router(report.router)
