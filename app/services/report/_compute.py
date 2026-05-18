@@ -43,12 +43,12 @@ def build_evidences(req: AiReportRequest, record_ids: list[int]) -> list[Evidenc
         record = record_map.get(rid)
         if record is None:
             continue
-        scrum = record_to_scrum.get(rid)
+        matched_scrum = record_to_scrum.get(rid)
         evidences.append(
             EvidenceItem(
                 id=rid,
-                project_name=scrum.project_name if scrum else "",
-                scrum_title=scrum.scrum_title if scrum else "",
+                project_name=matched_scrum.project_name if matched_scrum else "",
+                scrum_title=matched_scrum.scrum_title if matched_scrum else "",
                 created_at=record.completed_at[5:].replace("-", "."),  # "2026-04-09" → "04.09"
             )
         )
