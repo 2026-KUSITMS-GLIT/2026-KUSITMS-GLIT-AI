@@ -105,8 +105,7 @@ def _parse_and_validate(raw: str) -> list[str]:
 
     if not _CANDIDATE_MIN <= len(str_tags) <= _CANDIDATE_MAX:
         raise TaggingValidationError(
-            f"detailTags 후보 갯수 위반: {len(str_tags)} "
-            f"(허용 {_CANDIDATE_MIN}~{_CANDIDATE_MAX})"
+            f"detailTags 후보 갯수 위반: {len(str_tags)} (허용 {_CANDIDATE_MIN}~{_CANDIDATE_MAX})"
         )
 
     if len(set(str_tags)) != len(str_tags):
@@ -126,9 +125,7 @@ def _select_top3(candidates: list[str], role: JobRole) -> list[str]:
 
     sort key 는 ``(-score, index)`` ascending — score 높은 순, 같은 score 면 index 작은 순.
     """
-    scored = sorted(
-        (-tag_score(t, role), i, t) for i, t in enumerate(candidates)
-    )
+    scored = sorted((-tag_score(t, role), i, t) for i, t in enumerate(candidates))
     return [t for _, _, t in scored[:_FINAL_TOP]]
 
 
