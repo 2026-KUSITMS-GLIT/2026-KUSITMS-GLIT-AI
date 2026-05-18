@@ -102,9 +102,7 @@ def _strip_code_fence(text: str) -> str:
     return text
 
 
-def _parse_and_validate(
-    raw: str, allowed_tags: frozenset[str] = ALL_TAGS
-) -> list[str]:
+def _parse_and_validate(raw: str, allowed_tags: frozenset[str] = ALL_TAGS) -> list[str]:
     """LLM 응답 텍스트 → 검증된 ``detail_tags`` 리스트.
 
     형식·갯수·중복·풀 외 태그 모두 검사. 실패 시 :class:`TaggingValidationError`.
