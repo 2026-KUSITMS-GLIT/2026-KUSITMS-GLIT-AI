@@ -33,17 +33,22 @@ router = APIRouter(
 async def create_mini_report(req: AiReportRequest) -> AiMiniReportResponse:
     return AiMiniReportResponse(
         activity_summary=(
-            f"{req.competency_stats.total_count}개의 기록을 분석했어요. "
-            "다양한 프로젝트에서 역량을 꾸준히 쌓아오고 있습니다."
+            "글릿님은 KOPLE, 밋업 프로젝트 등 복수의 프로젝트를 동시에 진행하며 "
+            "각 과제를 구조화하는 작업을 반복해왔어요. 특히 복잡한 요구사항이 주어졌을 때 "
+            "먼저 전체 흐름을 정의하고 실행하는 방식이 기록 전반에서 일관되게 나타나요. "
+            "설계 중 의문이 생기면 진행을 멈추고 재검토하는 패턴도 눈에 띄어요."
         ),
-        next_focus_point="다양한 역량 영역의 경험을 골고루 기록해보세요.",
+        next_focus_point=(
+            "아직 협업·조율 영역 기록이 적어요. 팀원과 의견을 조율했던 경험이나 "
+            "피드백을 주고받은 순간을 기록해보면 더 입체적인 커리어 서사가 만들어질 거예요."
+        ),
     )
 
 
 @router.post("/career/branding", response_model=AiCareerBrandingResponse)
 async def create_career_branding(req: AiReportRequest) -> AiCareerBrandingResponse:
     return AiCareerBrandingResponse(
-        branding_statement="복잡한 문제를 구조로 풀어내는 '설계형 인재'입니다.",
+        branding_statement="글릿님은 복잡한 문제를 구조로 풀어내는 '설계형 기획자'입니다.",
         branding_pattern="복잡한 상황에서 먼저 구조를 정의하는 행동 방식",
     )
 
@@ -52,26 +57,33 @@ async def create_career_branding(req: AiReportRequest) -> AiCareerBrandingRespon
 async def create_career_narrative(req: AiReportRequest) -> AiCareerNarrativeResponse:
     return AiCareerNarrativeResponse(
         narrative_summary=(
-            "여러 프로젝트를 거치며 각 과제를 먼저 구조화하고 실행하는 방식을 "
-            "일관되게 유지해왔습니다. 협업 상황에서도 전체 흐름을 먼저 정의한 뒤 "
-            "팀원과 역할을 나누는 방식으로 성과를 만들어냈습니다."
+            "글릿님은 복수의 프로젝트를 동시에 진행하면서도 각 과제를 먼저 구조화하고 "
+            "실행하는 방식을 일관되게 유지해왔어요. 기획 중 설계적 의문이 생기면 진행을 "
+            "멈추고 재검토하는 패턴이 반복되며, 이는 완성도에 대한 높은 기준을 반영해요. "
+            "#기획_구조화와 #구조_개선이 다른 역량 태그보다 유독 많이 나온 건 이 방식의 증거예요."
         ),
     )
 
 
 @router.post("/career/strengths", response_model=AiCareerStrengthsResponse)
 async def create_career_strengths(req: AiReportRequest) -> AiCareerStrengthsResponse:
-    record_ids = [r.star_record_id for r in req.records[:2]]
+    ids = [r.star_record_id for r in req.records[:2]]
+    record_ids = ids if len(ids) >= 2 else ids * 2
     return AiCareerStrengthsResponse(
         strengths=[
             StrengthItem(
                 title="구조 먼저 잡는 기획력",
-                description="요구사항이 복잡할수록 전체 흐름을 먼저 정의하고 실행해요.",
+                description=(
+                    "요구사항이 복잡할수록 전체 흐름을 먼저 정의하고 실행해요. "
+                    "설계 중 의문이 생기면 멈추고 재검토하는 패턴이 일관돼요."
+                ),
                 evidence_ids=record_ids,
             ),
             StrengthItem(
-                title="이해관계자 조율 능력",
-                description="복수의 의견이 충돌할 때 공통 기준을 만들어 합의를 이끌어요.",
+                title="시스템으로 해결하는 협업",
+                description=(
+                    "커뮤니케이션 문제를 개인 노력이 아닌 구조와 규칙으로 풀려는 접근이 반복돼요."
+                ),
                 evidence_ids=record_ids,
             ),
         ]
@@ -82,8 +94,14 @@ async def create_career_strengths(req: AiReportRequest) -> AiCareerStrengthsResp
 async def create_career_highlights(req: AiReportRequest) -> AiCareerHighlightsResponse:
     return AiCareerHighlightsResponse(
         experience_highlights=[
-            "이해관계자 요구가 충돌하는 상황에서 PRD를 작성해 단기간에 합의를 이끌어냈습니다.",
-            "프로젝트 구조를 먼저 정의해 팀원과 역할을 나누고 일정 내 목표를 달성했습니다.",
+            (
+                "복수의 이해관계자 요구가 충돌하는 KOPLE 프로젝트에서, "
+                "전체 흐름을 구조화해 PRD와 기능명세서를 단기간에 완성했습니다."
+            ),
+            (
+                "설계 중 구조적 의문이 생겼을 때 진행을 멈추고 재검토함으로써, "
+                "개발 착수 전 핵심 설계 이슈를 선제 해결했습니다."
+            ),
         ]
     )
 
@@ -97,16 +115,13 @@ async def create_career_interview(
         interview_questions=[
             InterviewQuestion(
                 question=(
-                    "단기간에 합의를 이끌어냈다고 하셨는데, "
+                    "KOPLE 프로젝트에서 단기간에 완성했다고 하셨는데, "
                     "구체적으로 얼마 만이었고 어떤 트레이드오프가 있었나요?"
                 ),
                 evidence_ids=evidence_ids,
             ),
             InterviewQuestion(
-                question=(
-                    "구조를 먼저 정의한다고 하셨는데, "
-                    "그 구조가 틀렸다고 느꼈을 때는 어떻게 대응하셨나요?"
-                ),
+                question="진행을 멈추고 재검토하는 판단을 팀원들에게 어떻게 설득하셨나요?",
                 evidence_ids=evidence_ids,
             ),
         ]
