@@ -66,12 +66,13 @@ class Settings(BaseSettings):
     )
 
     # ---- Tagging ----
-    tagging_variant: str = Field(
+    tagging_variant: Literal["v1_baseline", "v2_postscore"] = Field(
         default="v1_baseline",
         description=(
             "활성 tagging 프롬프트/구현 버전. "
             "``app/prompts/tagging/{variant}.md`` 와 ``app/services/tagging/{variant}.py`` 가 "
-            "존재해야 한다. 실험 시에는 본인 ``.env`` 만 바꾸고, 기본값은 함부로 변경 X."
+            "존재해야 한다. 실험 시에는 본인 ``.env`` 만 바꾸고, 기본값은 함부로 변경 X. "
+            "허용값 외 문자열이 주입되면 부팅 시점에 ValidationError 로 실패한다."
         ),
     )
 
