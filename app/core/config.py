@@ -55,6 +55,12 @@ class Settings(BaseSettings):
         ),
     )
 
+    # ---- Feature variants ----
+    report_variant: str = Field(
+        default="v1_baseline",
+        description="리포트 생성 서비스의 활성 구현체 버전 (app/services/report/ 하위).",
+    )
+
     # ---- AI provider ----
     anthropic_api_key: str = Field(
         default="dev-no-api-key",
