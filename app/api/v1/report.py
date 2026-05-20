@@ -6,8 +6,12 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+from typing import Annotated, NoReturn
 
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+
+from app.core.config import get_settings
+from app.core.logging import get_logger
 from app.schemas.report import (
     AiCareerBrandingResponse,
     AiCareerHighlightsResponse,
@@ -17,27 +21,98 @@ from app.schemas.report import (
     AiReportRequest,
 )
 from app.services import report as report_service
+from app.services._clients.exceptions import (
+    LLMAuthError,
+    LLMBadRequestError,
+    LLMRateLimitedError,
+    LLMUpstreamUnavailableError,
+)
+from app.services._clients.llm_client import LLMClient
+from app.services.report.exceptions import ReportValidationError
+
+logger = get_logger(__name__)
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 
+_LLM_ERRORS = (LLMRateLimitedError, LLMUpstreamUnavailableError, LLMBadRequestError, LLMAuthError)
+
+
+def get_llm_client(request: Request) -> LLMClient:
+    """lifespan 에서 yield 한 ``LLMClient`` 싱글턴을 dependency 로 노출한다."""
+    client = getattr(request.state, "llm_client", None)
+    if not isinstance(client, LLMClient):
+        raise RuntimeError("lifespan 에서 llm_client 가 올바르게 주입되어야 한다")
+    return client
+
+
+def _handle_llm_exc(exc: Exception) -> NoReturn:
+    if isinstance(exc, LLMRateLimitedError):
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="LLM rate limited",
+        ) from exc
+    raise HTTPException(
+        status_code=status.HTTP_502_BAD_GATEWAY,
+        detail="LLM upstream unavailable",
+    ) from exc
+
 
 @router.post("/mini", response_model=AiMiniReportResponse, summary="미니 리포트 생성")
-async def create_mini_report(req: AiReportRequest) -> AiMiniReportResponse:
-    return await report_service.run_mini(req)
+async def create_mini_report(
+    req: AiReportRequest,
+    llm: Annotated[LLMClient, Depends(get_llm_client)],
+) -> AiMiniReportResponse:
+    settings = get_settings()
+    try:
+        return await report_service.run_mini(req, llm, settings.anthropic_model)
+    except ReportValidationError as exc:
+        logger.warning("report.mini.failed", extra={"stage": "validation", "reason": str(exc)})
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+        ) from exc
+    except _LLM_ERRORS as exc:
+        _handle_llm_exc(exc)
 
 
 @router.post(
     "/career/branding", response_model=AiCareerBrandingResponse, summary="커리어 브랜딩 생성"
 )
-async def create_career_branding(req: AiReportRequest) -> AiCareerBrandingResponse:
-    return await report_service.run_branding(req)
+async def create_career_branding(
+    req: AiReportRequest,
+    llm: Annotated[LLMClient, Depends(get_llm_client)],
+) -> AiCareerBrandingResponse:
+    settings = get_settings()
+    try:
+        return await report_service.run_branding(req, llm, settings.anthropic_model)
+    except ReportValidationError as exc:
+        logger.warning("report.branding.failed", extra={"stage": "validation", "reason": str(exc)})
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+        ) from exc
+    except _LLM_ERRORS as exc:
+        _handle_llm_exc(exc)
 
 
 @router.post(
     "/career/narrative", response_model=AiCareerNarrativeResponse, summary="커리어 내러티브 생성"
 )
-async def create_career_narrative(req: AiReportRequest) -> AiCareerNarrativeResponse:
-    return await report_service.run_narrative(req)
+async def create_career_narrative(
+    req: AiReportRequest,
+    llm: Annotated[LLMClient, Depends(get_llm_client)],
+) -> AiCareerNarrativeResponse:
+    settings = get_settings()
+    try:
+        return await report_service.run_narrative(req, llm, settings.anthropic_model)
+    except ReportValidationError as exc:
+        logger.warning("report.narrative.failed", extra={"stage": "validation", "reason": str(exc)})
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+        ) from exc
+    except _LLM_ERRORS as exc:
+        _handle_llm_exc(exc)
 
 
 @router.post(
@@ -47,8 +122,19 @@ async def create_career_narrative(req: AiReportRequest) -> AiCareerNarrativeResp
 )
 async def create_career_strengths_and_interview(
     req: AiReportRequest,
+    llm: Annotated[LLMClient, Depends(get_llm_client)],
 ) -> AiCareerStrengthsAndInterviewResponse:
-    return await report_service.run_strengths_and_interview(req)
+    settings = get_settings()
+    try:
+        return await report_service.run_strengths_and_interview(req, llm, settings.anthropic_model)
+    except ReportValidationError as exc:
+        logger.warning("report.strengths.failed", extra={"stage": "validation", "reason": str(exc)})
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+        ) from exc
+    except _LLM_ERRORS as exc:
+        _handle_llm_exc(exc)
 
 
 @router.post(
@@ -56,5 +142,20 @@ async def create_career_strengths_and_interview(
     response_model=AiCareerHighlightsResponse,
     summary="커리어 하이라이트 생성",
 )
-async def create_career_highlights(req: AiReportRequest) -> AiCareerHighlightsResponse:
-    return await report_service.run_highlights(req)
+async def create_career_highlights(
+    req: AiReportRequest,
+    llm: Annotated[LLMClient, Depends(get_llm_client)],
+) -> AiCareerHighlightsResponse:
+    settings = get_settings()
+    try:
+        return await report_service.run_highlights(req, llm, settings.anthropic_model)
+    except ReportValidationError as exc:
+        logger.warning(
+            "report.highlights.failed", extra={"stage": "validation", "reason": str(exc)}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+        ) from exc
+    except _LLM_ERRORS as exc:
+        _handle_llm_exc(exc)

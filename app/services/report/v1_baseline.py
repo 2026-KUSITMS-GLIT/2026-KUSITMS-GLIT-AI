@@ -15,6 +15,7 @@ from app.schemas.report import (
     InterviewQuestion,
     StrengthItem,
 )
+from app.services._clients.llm_client import LLMClient
 from app.services.report._compute import (
     build_evidences,
     competency_frequency,
@@ -26,7 +27,7 @@ _TODO = "[TODO: Claude API 구현 예정]"
 _TODO_SHORT = "[TODO]"  # max_length 제약이 있는 필드용
 
 
-async def run_mini(req: AiReportRequest) -> AiMiniReportResponse:
+async def run_mini(req: AiReportRequest, llm: LLMClient, model: str) -> AiMiniReportResponse:
     return AiMiniReportResponse(
         activity_summary=_TODO,
         next_focus_point=_TODO,
@@ -35,7 +36,9 @@ async def run_mini(req: AiReportRequest) -> AiMiniReportResponse:
     )
 
 
-async def run_branding(req: AiReportRequest) -> AiCareerBrandingResponse:
+async def run_branding(
+    req: AiReportRequest, llm: LLMClient, model: str
+) -> AiCareerBrandingResponse:
     return AiCareerBrandingResponse(
         branding_statement=_TODO,
         branding_pattern=_TODO,
@@ -43,12 +46,14 @@ async def run_branding(req: AiReportRequest) -> AiCareerBrandingResponse:
     )
 
 
-async def run_narrative(_req: AiReportRequest) -> AiCareerNarrativeResponse:
+async def run_narrative(
+    _req: AiReportRequest, llm: LLMClient, model: str
+) -> AiCareerNarrativeResponse:
     return AiCareerNarrativeResponse(narrative_summary=_TODO)
 
 
 async def run_strengths_and_interview(
-    req: AiReportRequest,
+    req: AiReportRequest, llm: LLMClient, model: str
 ) -> AiCareerStrengthsAndInterviewResponse:
     record_ids = [r.star_record_id for r in req.records[:2]]
     evidences = build_evidences(req, record_ids)
@@ -64,5 +69,7 @@ async def run_strengths_and_interview(
     )
 
 
-async def run_highlights(_req: AiReportRequest) -> AiCareerHighlightsResponse:
+async def run_highlights(
+    _req: AiReportRequest, llm: LLMClient, model: str
+) -> AiCareerHighlightsResponse:
     return AiCareerHighlightsResponse(experience_highlights=[_TODO, _TODO])
