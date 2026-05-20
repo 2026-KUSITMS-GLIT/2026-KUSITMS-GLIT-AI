@@ -5,6 +5,30 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
+from app.api.v1.report import get_llm_client
+from app.main import app as _app
+from tests.conftest import make_mock_llm
+
+# ── v1 LLM mock 응답 ─────────────────────────────────────────────────────────
+
+_MINI_RESP = (
+    '{"activitySummary": "기획·실행 역량을 중심으로 다양한 활동을 이어왔습니다.'
+    ' 반복적인 구조화 작업을 통해 역량을 쌓아왔습니다.",'
+    '"nextFocusPoint": "데이터 기반 가설 검증 활동을 추가해 보세요."}'
+)
+_STRENGTHS_RESP = (
+    '{"strengths": ['
+    '{"title": "구조화 기획력", "description": "PRD로 합의를 이끌어냈습니다.", "evidenceIds": [1]},'
+    '{"title": "협업 조율력", "description": "산출물로 설득하는 패턴이 반복됩니다.", "evidenceIds": [1]}'  # noqa: E501
+    "]}"
+)
+_INTERVIEW_RESP = (
+    '{"interviewQuestions": ['
+    '{"question": "이해관계자 요구가 충돌했을 때 기획 방향을 잡은 경험을 말씀해 주세요.", "evidenceIds": [1]},'  # noqa: E501
+    '{"question": "다양한 직군과 협업하면서 의견 차이를 좁혔던 경험을 말씀해 주세요.", "evidenceIds": [1]}'  # noqa: E501
+    "]}"
+)
+
 # ── 공용 더미 요청 바디 ──────────────────────────────────────────────────────
 
 _RECORD = {
@@ -187,11 +211,16 @@ class TestV1Reports:
         assert r.status_code == 403
 
     def test_mini_returns_200(self, client: TestClient, token: str) -> None:
-        r = client.post(
-            "/v1/reports/mini",
-            json=_BASE_BODY,
-            headers={"X-Internal-Token": token},
-        )
+        llm = make_mock_llm(_MINI_RESP)
+        _app.dependency_overrides[get_llm_client] = lambda: llm
+        try:
+            r = client.post(
+                "/v1/reports/mini",
+                json=_BASE_BODY,
+                headers={"X-Internal-Token": token},
+            )
+        finally:
+            _app.dependency_overrides.pop(get_llm_client, None)
         assert r.status_code == 200
         data = r.json()
         assert "activitySummary" in data
@@ -200,11 +229,16 @@ class TestV1Reports:
         assert "topDetailTags" in data
 
     def test_strengths_and_interview_returns_200(self, client: TestClient, token: str) -> None:
-        r = client.post(
-            "/v1/reports/career/strengths-and-interview",
-            json=_BASE_BODY,
-            headers={"X-Internal-Token": token},
-        )
+        llm = make_mock_llm(_STRENGTHS_RESP, _INTERVIEW_RESP)
+        _app.dependency_overrides[get_llm_client] = lambda: llm
+        try:
+            r = client.post(
+                "/v1/reports/career/strengths-and-interview",
+                json=_BASE_BODY,
+                headers={"X-Internal-Token": token},
+            )
+        finally:
+            _app.dependency_overrides.pop(get_llm_client, None)
         assert r.status_code == 200
         data = r.json()
         assert "strengths" in data
