@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Iterator
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -49,3 +50,31 @@ def client() -> Iterator[TestClient]:
     """전체 앱을 부팅해 lifespan 이벤트까지 도는 ``TestClient``."""
     with TestClient(app) as c:
         yield c
+
+
+# ── LLM mock 헬퍼 ─────────────────────────────────────────────────────────────
+
+
+class _FakeBlock:
+    """Anthropic content 블록의 최소 구현체."""
+
+    def __init__(self, text: str) -> None:
+        self.text = text
+
+
+class _FakeMessage:
+    """Anthropic Message 의 최소 구현체."""
+
+    def __init__(self, text: str) -> None:
+        self.content = [_FakeBlock(text)]
+
+
+def make_mock_llm(*responses: str) -> MagicMock:
+    """순서대로 응답을 반환하는 LLMClient mock 을 생성한다.
+
+    각 ``response`` 는 ``create_message`` 한 번 호출에 대한 응답 텍스트.
+    corrective 재시도를 포함한 호출 순서와 일치하도록 넘긴다.
+    """
+    mock = MagicMock()
+    mock.create_message = AsyncMock(side_effect=[_FakeMessage(r) for r in responses])
+    return mock
