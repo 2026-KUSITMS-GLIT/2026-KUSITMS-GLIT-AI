@@ -15,6 +15,7 @@ from app.schemas.report import (
     AiMiniReportResponse,
     AiReportRequest,
 )
+from app.services._clients.llm_client import LLMClient
 
 _VARIANTS = {"v1_baseline"}
 
@@ -29,23 +30,29 @@ def _get_impl() -> ModuleType:
     return importlib.import_module(f"app.services.report.{variant}")
 
 
-async def run_mini(req: AiReportRequest) -> AiMiniReportResponse:
-    return await _get_impl().run_mini(req)  # type: ignore[no-any-return]
+async def run_mini(req: AiReportRequest, llm: LLMClient, model: str) -> AiMiniReportResponse:
+    return await _get_impl().run_mini(req, llm, model)  # type: ignore[no-any-return]
 
 
-async def run_branding(req: AiReportRequest) -> AiCareerBrandingResponse:
-    return await _get_impl().run_branding(req)  # type: ignore[no-any-return]
+async def run_branding(
+    req: AiReportRequest, llm: LLMClient, model: str
+) -> AiCareerBrandingResponse:
+    return await _get_impl().run_branding(req, llm, model)  # type: ignore[no-any-return]
 
 
-async def run_narrative(req: AiReportRequest) -> AiCareerNarrativeResponse:
-    return await _get_impl().run_narrative(req)  # type: ignore[no-any-return]
+async def run_narrative(
+    req: AiReportRequest, llm: LLMClient, model: str
+) -> AiCareerNarrativeResponse:
+    return await _get_impl().run_narrative(req, llm, model)  # type: ignore[no-any-return]
 
 
 async def run_strengths_and_interview(
-    req: AiReportRequest,
+    req: AiReportRequest, llm: LLMClient, model: str
 ) -> AiCareerStrengthsAndInterviewResponse:
-    return await _get_impl().run_strengths_and_interview(req)  # type: ignore[no-any-return]
+    return await _get_impl().run_strengths_and_interview(req, llm, model)  # type: ignore[no-any-return]
 
 
-async def run_highlights(req: AiReportRequest) -> AiCareerHighlightsResponse:
-    return await _get_impl().run_highlights(req)  # type: ignore[no-any-return]
+async def run_highlights(
+    req: AiReportRequest, llm: LLMClient, model: str
+) -> AiCareerHighlightsResponse:
+    return await _get_impl().run_highlights(req, llm, model)  # type: ignore[no-any-return]
