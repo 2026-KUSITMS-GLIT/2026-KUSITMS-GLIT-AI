@@ -51,6 +51,11 @@ _PAYLOAD: dict[str, Any] = {
 
 _PII_MARKERS = ("MAGICPII-ST-1234", "MAGICPII-A-5678", "MAGICPII-R-9012")
 
+# v2_postscore happy LLM 응답 — 5개 후보(모두 풀 내·중복 없음). DEVELOPER 가중치로
+# 5개 모두 High(3) 동점 → tie-break 입력 순서 top3 = ["#원인분석","#검증및테스트","#반복개선"].
+_HAPPY_LLM_RAW = '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결","#디버깅"]}'
+_HAPPY_TOP3 = ["#원인분석", "#검증및테스트", "#반복개선"]
+
 
 def _anthropic_msg(text: str) -> dict[str, Any]:
     """Anthropic Messages API 응답 형태 (단일 text block)."""
@@ -118,17 +123,11 @@ def test_v1_tagging_300char_overflow_returns_422_and_skips_llm(
 @respx.mock
 def test_v1_tagging_happy_path(client: TestClient, token: str) -> None:
     route = respx.post(ANTHROPIC_URL).mock(
-        return_value=Response(
-            200, json=_anthropic_msg('{"detailTags": ["#원인분석", "#검증및테스트"]}')
-        )
+        return_value=Response(200, json=_anthropic_msg(_HAPPY_LLM_RAW))
     )
     r = client.post("/v1/tagging", json=_PAYLOAD, headers={"X-Internal-Token": token})
     assert r.status_code == 200
-    body = r.json()
-    assert body == {
-        "primaryCategory": "PROBLEM_SOLVING",
-        "detailTags": ["#원인분석", "#검증및테스트"],
-    }
+    assert r.json() == {"primaryCategory": "PROBLEM_SOLVING", "detailTags": _HAPPY_TOP3}
     assert route.call_count == 1
 
 
@@ -137,15 +136,16 @@ def test_v1_tagging_happy_path(client: TestClient, token: str) -> None:
 
 @respx.mock
 def test_v1_tagging_corrective_retry_recovers(client: TestClient, token: str) -> None:
+    # 1차: 풀-외 + 갯수 미달 → 검증 실패. 2차: 풀 내 5개 → top3 자르고 응답.
     route = respx.post(ANTHROPIC_URL).mock(
         side_effect=[
             Response(200, json=_anthropic_msg('{"detailTags": ["#존재하지않는태그"]}')),
-            Response(200, json=_anthropic_msg('{"detailTags": ["#원인분석"]}')),
+            Response(200, json=_anthropic_msg(_HAPPY_LLM_RAW)),
         ]
     )
     r = client.post("/v1/tagging", json=_PAYLOAD, headers={"X-Internal-Token": token})
     assert r.status_code == 200
-    assert r.json()["detailTags"] == ["#원인분석"]
+    assert r.json()["detailTags"] == _HAPPY_TOP3
     assert route.call_count == 2
 
 
@@ -175,8 +175,9 @@ def test_v1_tagging_double_validation_failure_returns_422(client: TestClient, to
     [
         '{"detailTags": []}',
         '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결"]}',
+        '{"detailTags": ["#A","#B","#C","#D","#E","#F","#G","#H"]}',
     ],
-    ids=["empty", "four_tags"],
+    ids=["empty_under_min", "four_tags_under_min", "eight_tags_over_max"],
 )
 @respx.mock
 def test_v1_tagging_count_violation_then_recovers_via_corrective(
@@ -185,7 +186,7 @@ def test_v1_tagging_count_violation_then_recovers_via_corrective(
     route = respx.post(ANTHROPIC_URL).mock(
         side_effect=[
             Response(200, json=_anthropic_msg(bad_response)),
-            Response(200, json=_anthropic_msg('{"detailTags": ["#원인분석"]}')),
+            Response(200, json=_anthropic_msg(_HAPPY_LLM_RAW)),
         ]
     )
     r = client.post("/v1/tagging", json=_PAYLOAD, headers={"X-Internal-Token": token})
@@ -239,9 +240,7 @@ def test_v1_tagging_maps_llm_exception_to_http(
 def test_v1_tagging_does_not_log_star_body_on_happy(
     client: TestClient, token: str, caplog: pytest.LogCaptureFixture
 ) -> None:
-    respx.post(ANTHROPIC_URL).mock(
-        return_value=Response(200, json=_anthropic_msg('{"detailTags": ["#원인분석"]}'))
-    )
+    respx.post(ANTHROPIC_URL).mock(return_value=Response(200, json=_anthropic_msg(_HAPPY_LLM_RAW)))
     caplog.set_level(logging.INFO)
     r = client.post("/v1/tagging", json=_PAYLOAD, headers={"X-Internal-Token": token})
     assert r.status_code == 200
@@ -321,6 +320,24 @@ def test_v2_postscore_select_top3_handles_fewer_than_three_candidates() -> None:
     top = _v2_select_top3(candidates, JobRole.DEVELOPER)
     # 개발자 점수: UX설계=1, 기술리서치=3 → 기술리서치가 먼저
     assert top == ["#기술리서치", "#UX설계"]
+
+
+def test_v2_postscore_accepts_cross_category_candidates() -> None:
+    """카테고리 좁힘 제거 — 풀 전체에서 자유롭게 선택 가능.
+
+    프롬프트 명세 "카테고리 무관, 풀 전체 열려 있다" 와 정합. eval_set_v2 의
+    must/accept 가 selectedCompetency 외 카테고리 태그도 자유롭게 섞는 구조라
+    카테고리 좁힘이 남아 있으면 정상 응답이 풀-외로 reject 된다 (regression guard).
+    """
+    # 5 tags spanning 발견·분석 + 협업·조율 + 문제해결·개선 + 기획·실행
+    raw = '{"detailTags": ["#트렌드리서치","#의견조율","#원인분석","#디버깅","#기술리서치"]}'
+    assert _v2_parse_and_validate(raw) == [
+        "#트렌드리서치",
+        "#의견조율",
+        "#원인분석",
+        "#디버깅",
+        "#기술리서치",
+    ]
 
 
 # === /v1/tagging — 로그 PII 안전성 (검증 실패 path) ===

@@ -24,9 +24,15 @@ from app.main import app  # noqa: E402
 
 @pytest.fixture(autouse=True)
 def _clean_settings(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
-    """각 테스트에 공통 env 를 주입하고 Settings lru_cache 를 리셋한다."""
+    """각 테스트에 공통 env 를 주입하고 Settings lru_cache 를 리셋한다.
+
+    ``TAGGING_VARIANT`` 도 명시적으로 핀 — 로컬 ``.env`` 와 CI(.env 없음) 간 활성
+    variant 가 달라져 테스트 결과가 갈리는 사고를 막는다 (CI 는 default ``v1_baseline``
+    으로 떨어졌지만 로컬은 ``v2_postscore`` 였던 잠재 디바이드).
+    """
     monkeypatch.setenv("APP_ENV", "local")
     monkeypatch.setenv("INTERNAL_API_TOKEN", _TEST_TOKEN)
+    monkeypatch.setenv("TAGGING_VARIANT", "v2_postscore")
     get_settings.cache_clear()
     yield
     get_settings.cache_clear()
