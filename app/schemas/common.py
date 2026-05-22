@@ -32,7 +32,7 @@ class PrimaryCategory(StrEnum):
     PLANNING_EXECUTION = "PLANNING_EXECUTION"
     COLLABORATION = "COLLABORATION"
     PROBLEM_SOLVING = "PROBLEM_SOLVING"
-    GROWTH = "GROWTH"
+    REFLECTION_GROWTH = "REFLECTION_GROWTH"
 
 
 JOB_ROLE_LABELS_KO: dict[JobRole, str] = {
@@ -48,6 +48,6 @@ PRIMARY_CATEGORY_LABELS_KO: dict[PrimaryCategory, str] = {
     PrimaryCategory.PLANNING_EXECUTION: "기획·실행",
     PrimaryCategory.COLLABORATION: "협업·조율",
     PrimaryCategory.PROBLEM_SOLVING: "문제해결·개선",
-    PrimaryCategory.GROWTH: "성찰·성장",
+    PrimaryCategory.REFLECTION_GROWTH: "성찰·성장",
 }
 """프롬프트 변수 치환에서 쓰는 한글 라벨. tags.txt 카테고리 표기와 동일."""
