@@ -160,6 +160,22 @@ def _format_records(records: list[StarRecord]) -> str:
     return "\n\n".join(lines)
 
 
+def _format_scrums(req: AiReportRequest) -> str:
+    lines: list[str] = []
+    for day in req.scrums_by_date:
+        day_lines = [f"[{day.date}]"]
+        for scrum in day.scrums:
+            ref = (
+                f"심화기록 #{scrum.star_record_id}"
+                if scrum.star_record_id is not None
+                else "심화기록 없음"
+            )
+            line = f"  - {scrum.project_name} / {scrum.scrum_title} ({ref}): {scrum.content}"
+            day_lines.append(line)
+        lines.append("\n".join(day_lines))
+    return "\n".join(lines)
+
+
 def _base_vars(req: AiReportRequest) -> dict[str, str]:
     return {
         "nickname": req.nickname,
@@ -167,6 +183,7 @@ def _base_vars(req: AiReportRequest) -> dict[str, str]:
         "period": f"{req.record_period.from_} ~ {req.record_period.to}",
         "totalCount": str(req.total_count),
         "records": _format_records(req.records),
+        "scrums": _format_scrums(req),
     }
 
 
