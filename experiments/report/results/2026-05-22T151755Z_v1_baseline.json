@@ -1,0 +1,378 @@
+{
+  "variant": "v1_baseline",
+  "model": "claude-haiku-4-5-20251001",
+  "ran_at": "2026-05-22T151755Z",
+  "cases": [
+    {
+      "id": "case-mini-01",
+      "title": "기획자 — 초기 커리어 균형 10개 기록",
+      "type": "mini",
+      "endpoints": [
+        {
+          "endpoint": "mini",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 6435,
+          "input_tokens": 9525,
+          "output_tokens": 659,
+          "cost_usd": 0.01282,
+          "output": {
+            "activitySummary": "서연님은 신규 기능 기획부터 데이터 분석, 팀 간 조율까지 전 과정에서 체계적인 구조화를 앞세워왔어요. 불확실한 상황에서도 프레임워크를 먼저 설계하고, 필요한 역량이 부족하면 즉시 학습해 문제를 자력으로 해결하는 주도성이 돋보입니다. 팀 간 의견 충돌도 공통 기준을 만들어 합의점을 찾는 방식으로 풀어내는 모습이 일관되게 나타나요.",
+            "nextFocusPoint": "비즈니스 지표나 사용자 데이터 기반 의사결정은 자주 기록되지만, 팀 피드백이나 멘토링을 받으며 성장한 순간들을 기록해보면 어떨까요? 자신의 약점을 어떻게 인식하고 개선했는지 담아보면 좋겠어요.",
+            "competencyFrequency": [
+              {
+                "competency": "PLANNING_EXECUTION",
+                "count": 2
+              },
+              {
+                "competency": "DISCOVERY_ANALYSIS",
+                "count": 2
+              },
+              {
+                "competency": "COLLABORATION",
+                "count": 2
+              },
+              {
+                "competency": "PROBLEM_SOLVING",
+                "count": 2
+              },
+              {
+                "competency": "GROWTH",
+                "count": 2
+              }
+            ],
+            "topDetailTags": [
+              "#우선순위설정",
+              "#기획구조화",
+              "#인사이트도출"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-mini-02",
+      "title": "개발자 — 초기 커리어 균형 10개 기록",
+      "type": "mini",
+      "endpoints": [
+        {
+          "endpoint": "mini",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 3985,
+          "input_tokens": 4449,
+          "output_tokens": 296,
+          "cost_usd": 0.005929,
+          "output": {
+            "activitySummary": "민준님은 성능 병목을 체계적으로 추적하고 개선하는 일에 능숙해왔어요. APM 도구, 쿼리 분석, 프로파일러 같은 진단 수단을 활용해 근본 원인을 찾고, 설계 단계부터 확장성을 고려한 구조로 재구축하는 방식이 일관되게 나타나요. 동시에 팀 전체의 개발 경험을 개선하려는 의지도 두드러져 있습니다.",
+            "nextFocusPoint": "발견·분석 역량은 풍부하지만 기획 단계의 요구사항 수집이나 이해관계자 협의 과정 기록이 아직 부족해요. 새로운 기능을 구상하거나 팀의 우선순위를 함께 정한 경험을 기록해보면 어때요?",
+            "competencyFrequency": [
+              {
+                "competency": "PROBLEM_SOLVING",
+                "count": 2
+              },
+              {
+                "competency": "DISCOVERY_ANALYSIS",
+                "count": 2
+              },
+              {
+                "competency": "PLANNING_EXECUTION",
+                "count": 2
+              },
+              {
+                "competency": "COLLABORATION",
+                "count": 2
+              },
+              {
+                "competency": "GROWTH",
+                "count": 2
+              }
+            ],
+            "topDetailTags": [
+              "#성과개선",
+              "#가설검증",
+              "#데이터해석"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-mini-03",
+      "title": "디자이너 — 초기 커리어 균형 10개 기록",
+      "type": "mini",
+      "endpoints": [
+        {
+          "endpoint": "mini",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 6108,
+          "input_tokens": 9402,
+          "output_tokens": 629,
+          "cost_usd": 0.012547,
+          "output": {
+            "activitySummary": "유나님은 요구사항 변화에 대응하고 사용자 중심으로 화면을 검증한 뒤, 팀 전체가 따를 수 있는 기준과 시스템을 만드는 방식으로 일해왔어요. 단순한 디자인 작업을 넘어 프로토타입 테스트·히트맵 분석·접근성 기준 수립 등으로 설계 근거를 만들고, Figma 자동화·디자인 시스템·컴포넌트 명세처럼 팀의 생산성을 높이는 기초를 구축하는 패턴이 일관되게 나타나요.",
+            "nextFocusPoint": "기획·실행과 성찰·성장 영역이 주를 이루는 반면, 예상치 못한 제약 속에서 즉흥적으로 대응했거나 실패 경험을 통해 배운 순간들을 기록해보면 어떨까요?",
+            "competencyFrequency": [
+              {
+                "competency": "PLANNING_EXECUTION",
+                "count": 2
+              },
+              {
+                "competency": "DISCOVERY_ANALYSIS",
+                "count": 2
+              },
+              {
+                "competency": "COLLABORATION",
+                "count": 2
+              },
+              {
+                "competency": "PROBLEM_SOLVING",
+                "count": 2
+              },
+              {
+                "competency": "GROWTH",
+                "count": 2
+              }
+            ],
+            "topDetailTags": [
+              "#UX설계",
+              "#정보구조설계",
+              "#사용성테스트"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-career-01",
+      "title": "기획자 — 복수 프로젝트 20개 기록",
+      "type": "career",
+      "endpoints": [
+        {
+          "endpoint": "branding",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 1851,
+          "input_tokens": 7174,
+          "output_tokens": 116,
+          "cost_usd": 0.007754,
+          "output": {
+            "brandingStatement": "지민님은 불명확한 상황에서 체계를 만들고 팀을 움직이는 '구조화 기획자'입니다.",
+            "brandingPattern": "모호한 문제를 데이터와 프레임으로 정의하고 모든 이해관계자를 동일 기준으로 정렬하는 방식",
+            "topDetailTags": [
+              {
+                "tag": "#기획구조화",
+                "count": 4
+              },
+              {
+                "tag": "#관계자소통",
+                "count": 4
+              },
+              {
+                "tag": "#데이터해석",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "narrative",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 3249,
+          "input_tokens": 7207,
+          "output_tokens": 263,
+          "cost_usd": 0.008522,
+          "output": {
+            "narrativeSummary": "지민님은 불확실성이 높은 상황에서 먼저 체계를 만들고 그것을 표준으로 확산시키는 방식으로 일해왔어요. 이해관계자 정렬, 데이터 분석, 팀 간 협업 과정에서 반복적으로 #기획구조화와 #프로세스정립을 통해 혼란을 정돈했고, 이것이 조직 전체의 일하는 방식을 바꾸는 결과로 이어졌어요. 동시에 SQL, GA4, OKR 같은 새로운 도구와 방법론을 빠르게 습득해 스스로를 기획자에서 #데이터기반의사결정을 주도하는 역할로 확장해나갔습니다."
+          }
+        },
+        {
+          "endpoint": "strengths_and_interview",
+          "ok": false,
+          "parse_error": "'title' 길이 초과(16자 > 15자): \"데이터로 가설을 검증하는 분석\" — 15자 이내로 줄여라",
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 5664,
+          "input_tokens": 15649,
+          "output_tokens": 686,
+          "cost_usd": 0.019079,
+          "output": null
+        },
+        {
+          "endpoint": "highlights",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 3124,
+          "input_tokens": 7216,
+          "output_tokens": 201,
+          "cost_usd": 0.008221000000000001,
+          "output": {
+            "experienceHighlights": [
+              "6명의 이해관계자 요구를 5가지로 압축해 우선순위 매트릭스를 작성하고 2주 만에 전원 서면 합의를 이끌어냈습니다.",
+              "리텐션 하락 원인을 GA·Mixpanel 분석과 사용자 인터뷰로 특정해 개선안 적용 후 12%p 상승을 달성했습니다.",
+              "개발·디자인팀 간 산출물 기준을 통일한 가이드를 작성해 이후 수정 요청을 60% 감소시켰습니다."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-career-03",
+      "title": "디자이너 — 복수 프로젝트 20개 기록",
+      "type": "career",
+      "endpoints": [
+        {
+          "endpoint": "branding",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 2270,
+          "input_tokens": 7229,
+          "output_tokens": 103,
+          "cost_usd": 0.007744,
+          "output": {
+            "brandingStatement": "다은님은 불명확한 상황에서 데이터로 검증하고 구조화하는 '분석형 디자이너'입니다.",
+            "brandingPattern": "문제 상황을 먼저 분석·검증한 후 체계적으로 설계하는 일하는 방식",
+            "topDetailTags": [
+              {
+                "tag": "#UX설계",
+                "count": 5
+              },
+              {
+                "tag": "#정보구조설계",
+                "count": 3
+              },
+              {
+                "tag": "#사용자리서치",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "narrative",
+          "ok": false,
+          "parse_error": null,
+          "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq2sevXMTEBDkfSs8iM'}",
+          "had_corrective": false,
+          "latency_ms": 923,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "output": null
+        },
+        {
+          "endpoint": "strengths_and_interview",
+          "ok": false,
+          "parse_error": null,
+          "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq32mc5FjW832gu9nod'}",
+          "had_corrective": false,
+          "latency_ms": 2352,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "output": null
+        },
+        {
+          "endpoint": "highlights",
+          "ok": false,
+          "parse_error": null,
+          "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq3GgmHKYF2RdZatiGD'}",
+          "had_corrective": false,
+          "latency_ms": 3485,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "output": null
+        }
+      ]
+    },
+    {
+      "id": "case-career-02",
+      "title": "개발자 — 백엔드 기술 역량 20개 기록",
+      "type": "career",
+      "endpoints": [
+        {
+          "endpoint": "branding",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 3432,
+          "input_tokens": 7120,
+          "output_tokens": 111,
+          "cost_usd": 0.0076749999999999995,
+          "output": {
+            "brandingStatement": "준혁님은 성능 병목을 파악하고 구조적으로 개선하는 '시스템 최적화 엔지니어'입니다.",
+            "brandingPattern": "성능 문제를 정량적으로 분석하고 근본 원인을 제거하는 방식으로 안정성을 확보",
+            "topDetailTags": [
+              {
+                "tag": "#데이터해석",
+                "count": 4
+              },
+              {
+                "tag": "#리스크관리",
+                "count": 4
+              },
+              {
+                "tag": "#프로세스개선",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "narrative",
+          "ok": false,
+          "parse_error": null,
+          "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq6xnMbFscmSZfqpnpg'}",
+          "had_corrective": false,
+          "latency_ms": 1150,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "output": null
+        },
+        {
+          "endpoint": "strengths_and_interview",
+          "ok": false,
+          "parse_error": null,
+          "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq72dXstpnpgnKJxE8M'}",
+          "had_corrective": false,
+          "latency_ms": 998,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "output": null
+        },
+        {
+          "endpoint": "highlights",
+          "ok": false,
+          "parse_error": null,
+          "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq76vzfKjgHRusqYq17'}",
+          "had_corrective": false,
+          "latency_ms": 921,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "output": null
+        }
+      ]
+    }
+  ]
+}
