@@ -44,12 +44,13 @@ _PROMPT_HIGHLIGHTS = (_PROMPTS_DIR / "highlights.md").read_text(encoding="utf-8"
 _CODE_FENCE_RE = re.compile(r"^```(?:json)?\s*\n?(.*?)\n?\s*```$", re.DOTALL)
 _USER_TRIGGER = "위 지침에 따라 JSON 한 줄을 출력해."
 
-_MAX_TOKENS_MINI = 700
-_MAX_TOKENS_BRANDING = 600
-_MAX_TOKENS_NARRATIVE = 500
-_MAX_TOKENS_STRENGTHS = 900
-_MAX_TOKENS_INTERVIEW = 700
-_MAX_TOKENS_HIGHLIGHTS = 400
+# 한국어 1자 ≈ 1~2 토큰 + JSON 구조 오버헤드 고려 (eval 실측값 기준으로 산정)
+_MAX_TOKENS_MINI = 800        # activitySummary 300자 + nextFocusPoint 150자 (실측 618~631)
+_MAX_TOKENS_BRANDING = 250    # brandingStatement 60자 + brandingPattern 짧음 (실측 101~113)
+_MAX_TOKENS_NARRATIVE = 600   # narrativeSummary 300자 (실측 507~525)
+_MAX_TOKENS_STRENGTHS = 700   # strengths 2~3개 × (title 15 + desc 100 + ids) (실측 624)
+_MAX_TOKENS_INTERVIEW = 500   # interviewQuestions 2~3개 × (question + ids)
+_MAX_TOKENS_HIGHLIGHTS = 600  # experienceHighlights 2~3개 × 80자 (실측 474~490)
 
 
 # ── 공용 헬퍼 ────────────────────────────────────────────────────────────────
@@ -80,12 +81,18 @@ def _parse_json(raw: str) -> dict[str, Any]:
     return payload
 
 
-def _require_str(payload: dict[str, Any], key: str, max_len: int | None = None) -> str:
+def _require_str(
+    payload: dict[str, Any],
+    key: str,
+    max_len: int | None = None,
+) -> str:
     val = payload.get(key)
     if not isinstance(val, str) or not val:
         raise ReportValidationError(f"'{key}' 키 누락 또는 빈 문자열")
     if max_len is not None and len(val) > max_len:
-        raise ReportValidationError(f"'{key}' 길이 초과: {len(val)} > {max_len}")
+        raise ReportValidationError(
+            f"'{key}' 길이 초과({len(val)}자 > {max_len}자): \"{val}\" — {max_len}자 이내로 줄여라"
+        )
     return val
 
 
