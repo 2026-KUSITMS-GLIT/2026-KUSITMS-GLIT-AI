@@ -71,6 +71,15 @@ _LEN_BUCKETS: tuple[str, str, str] = ("짧음", "중간", "긺")
 """ST+A+R 글자수 tertile 버킷 라벨. 실측 분포에서 동적으로 분할."""
 
 
+_INTER_CASE_SLEEP_S = 2.0
+"""케이스 사이 sleep — Anthropic 분당 입력 토큰 한도(50,000) 회피.
+
+48 케이스 x 평균 2,300 입력 토큰 ≈ 110,000 토큰이라 무지연 호출 시 마지막 ~10건이
+429 (LLM_ERR) 로 빠진다. 2초 / 케이스 = 약 21 케이스/분 페이스로 한도 안에 들어옴.
+전체 측정 시간은 ~100초 추가되지만 케이스 모두 정상 측정.
+"""
+
+
 class _LLMTracker:
     """``LLMClient`` 를 감싸 각 호출의 토큰·지연·응답 텍스트를 기록한다 (v1 동일)."""
 
@@ -537,7 +546,7 @@ async def main() -> None:
     llm = LLMClient(api_key=settings.anthropic_api_key)
     try:
         results: list[dict[str, Any]] = []
-        for case in cases:
+        for i, case in enumerate(cases):
             short = (case.get("title") or "")[:40]
             print(f"  [{case['id']}] {short}...", flush=True, end=" ")
             r = await _eval_one(llm, settings.anthropic_model, case)
@@ -549,6 +558,8 @@ async def main() -> None:
                 tag = f"must {r['must_hit']}/{len(r['must_tags'])}  +oof {r['oof_count']}"
             print(f"{tag:>28}  {r['total_latency_ms']}ms")
             results.append(r)
+            if i < len(cases) - 1:
+                await asyncio.sleep(_INTER_CASE_SLEEP_S)
     finally:
         await llm.aclose()
 
