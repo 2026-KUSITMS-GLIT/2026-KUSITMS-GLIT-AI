@@ -158,8 +158,9 @@ async def _call_with_retry(
 def _format_records(records: list[StarRecord]) -> str:
     lines: list[str] = []
     for r in records:
+        tags = ", ".join(r.detail_tags)
         lines.append(
-            f"[id: {r.star_record_id}] 역량: {r.competency} | 작성일: {r.completed_at}\n"
+            f"[id: {r.star_record_id}] 역량: {r.competency} | 태그: {tags} | 작성일: {r.completed_at}\n"
             f"S/T: {r.situation_task}\n"
             f"A: {r.action}\n"
             f"R: {r.result}"
