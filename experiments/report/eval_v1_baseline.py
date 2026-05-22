@@ -48,6 +48,7 @@ _RESULTS_DIR = _HERE / "results"
 _TEMPLATE_PATH = _HERE / "_template.md"
 
 _PLACEHOLDER_KEYS = frozenset({"", "dev-no-api-key", "sk-ant-"})
+_CASE_DELAY_SECS = 75  # 케이스 간 대기 — Tier-1 Haiku 50K TPM 초과 방지
 
 import re  # noqa: E402
 
@@ -56,7 +57,8 @@ _METRIC_BLOCK_RE = re.compile(
     re.DOTALL,
 )
 
-_ENDPOINTS = ["mini", "branding", "narrative", "strengths_and_interview", "highlights"]
+_MINI_ENDPOINTS = ["mini"]
+_CAREER_ENDPOINTS = ["branding", "narrative", "strengths_and_interview", "highlights"]
 
 
 # ── LLM 호출 추적기 ───────────────────────────────────────────────────────────
@@ -143,15 +145,18 @@ async def _eval_one(
 ) -> dict[str, Any]:
     req = AiReportRequest.model_validate(case["input"])
     tracker = _LLMTracker(inner_llm)
+    case_type = case.get("type", "career")
+    endpoints = _MINI_ENDPOINTS if case_type == "mini" else _CAREER_ENDPOINTS
 
     endpoint_results: list[dict[str, Any]] = []
-    for name in _ENDPOINTS:
+    for name in endpoints:
         r = await _run_endpoint(name, req, tracker, model)
         endpoint_results.append(r)
 
     return {
         "id": case["id"],
         "title": case.get("title", ""),
+        "type": case_type,
         "endpoints": endpoint_results,
     }
 
@@ -170,7 +175,7 @@ def _status(ep: dict[str, Any]) -> str:
 def _print_results(case_results: list[dict[str, Any]]) -> None:
     for case in case_results:
         print(f"\n{'='*60}")
-        print(f"[{case['id']}] {case['title']}")
+        print(f"[{case['id']}] ({case.get('type', 'career')}) {case['title']}")
         print(f"{'='*60}")
 
         for ep in case["endpoints"]:
@@ -248,14 +253,19 @@ def _save_raw(
     return path
 
 
-def _build_endpoint_table(case_results: list[dict[str, Any]]) -> str:
+def _build_endpoint_subtable(
+    case_results: list[dict[str, Any]], endpoints: list[str]
+) -> str:
+    n = len(case_results)
     agg: dict[str, dict[str, Any]] = {
         ep: {"ok": 0, "lat": [], "in": [], "out": [], "cost": [], "corrective": 0}
-        for ep in _ENDPOINTS
+        for ep in endpoints
     }
     for case in case_results:
         for ep in case["endpoints"]:
             name = ep["endpoint"]
+            if name not in agg:
+                continue
             if ep["ok"]:
                 agg[name]["ok"] += 1
                 agg[name]["lat"].append(ep["latency_ms"])
@@ -265,12 +275,11 @@ def _build_endpoint_table(case_results: list[dict[str, Any]]) -> str:
             if ep["had_corrective"]:
                 agg[name]["corrective"] += 1
 
-    n = len(case_results)
     lines = [
         "| 엔드포인트 | 성공 | corrective | latency | 입력tok | 출력tok | 1건 비용 |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
-    for ep in _ENDPOINTS:
+    for ep in endpoints:
         a = agg[ep]
         ok = a["ok"]
         if ok:
@@ -289,12 +298,30 @@ def _build_endpoint_table(case_results: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def _build_endpoint_table(case_results: list[dict[str, Any]]) -> str:
+    mini = [c for c in case_results if c.get("type") == "mini"]
+    career = [c for c in case_results if c.get("type", "career") == "career"]
+    parts = []
+    if mini:
+        parts.append(f"**Mini** ({len(mini)}케이스)")
+        parts.append(_build_endpoint_subtable(mini, _MINI_ENDPOINTS))
+    if career:
+        parts.append(f"**Career** ({len(career)}케이스)")
+        parts.append(_build_endpoint_subtable(career, _CAREER_ENDPOINTS))
+    return "\n\n".join(parts)
+
+
 def _build_case_table(case_results: list[dict[str, Any]]) -> str:
-    lines = ["| id | mini | branding | narrative | strengths | highlights |",
-             "| --- | :---: | :---: | :---: | :---: | :---: |"]
+    all_eps = ["mini", "branding", "narrative", "strengths_and_interview", "highlights"]
+    lines = [
+        "| id | type | " + " | ".join(all_eps) + " |",
+        "| --- | --- | " + " | ".join([":---:"] * len(all_eps)) + " |",
+    ]
     for case in case_results:
-        statuses = [_status(ep) for ep in case["endpoints"]]
-        lines.append(f"| {case['id']} | " + " | ".join(statuses) + " |")
+        ep_map = {ep["endpoint"]: _status(ep) for ep in case["endpoints"]}
+        case_type = case.get("type", "career")
+        cols = " | ".join(ep_map.get(ep, "—") for ep in all_eps)
+        lines.append(f"| {case['id']} | {case_type} | {cols} |")
     return "\n".join(lines)
 
 
@@ -384,7 +411,10 @@ async def main() -> None:
     llm = LLMClient(api_key=settings.anthropic_api_key)
     try:
         case_results: list[dict[str, Any]] = []
-        for case in cases:
+        for i, case in enumerate(cases):
+            if i > 0:
+                print(f"  (rate limit 방지 {_CASE_DELAY_SECS}s 대기...)", flush=True)
+                await asyncio.sleep(_CASE_DELAY_SECS)
             print(f"\n[{case['id']}] {case.get('title', '')[:50]} ...", flush=True)
             r = await _eval_one(llm, settings.anthropic_model, case)
             case_results.append(r)
