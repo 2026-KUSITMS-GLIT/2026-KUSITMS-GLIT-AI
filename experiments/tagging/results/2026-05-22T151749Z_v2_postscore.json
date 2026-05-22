@@ -1,0 +1,2190 @@
+{
+  "variant": "v2_postscore",
+  "model": "claude-haiku-4-5-20251001",
+  "ran_at": "2026-05-22T151749Z",
+  "n_cases": 48,
+  "cases": [
+    {
+      "id": "P-DA-01",
+      "title": "경쟁 앱 온보딩 플로우 벤치마킹",
+      "job_role": "PLANNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 249,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#경쟁사례분석",
+        "#인사이트도출"
+      ],
+      "accept_tags": [
+        "#문제정의",
+        "#우선순위설정",
+        "#가설검증"
+      ],
+      "actual": [
+        "#경쟁사례분석",
+        "#인사이트도출",
+        "#사용성평가"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1768,
+      "input_tokens": 2129,
+      "output_tokens": 50,
+      "cost_usd": 0.002379,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2129,
+          "output_tokens": 50,
+          "latency_ms": 1764,
+          "response_text": "`{\"detailTags\": [\"#경쟁사례분석\", \"#인사이트도출\", \"#사용성평가\", \"#발표및설득\", \"#지표설계\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-DA-02",
+      "title": "설문 응답 데이터 패턴 분석",
+      "job_role": "PLANNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 234,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#데이터해석",
+        "#인사이트도출"
+      ],
+      "accept_tags": [
+        "#유저리서치",
+        "#문제정의",
+        "#가설검증"
+      ],
+      "actual": [
+        "#데이터해석",
+        "#인사이트도출",
+        "#문제정의"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1367,
+      "input_tokens": 2104,
+      "output_tokens": 46,
+      "cost_usd": 0.002334,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2104,
+          "output_tokens": 46,
+          "latency_ms": 1366,
+          "response_text": "`{\"detailTags\": [\"#데이터해석\", \"#인사이트도출\", \"#문제정의\", \"#가설검증\", \"#기획구조화\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-DA-03",
+      "title": "취준 커뮤니티 트렌드 리서치",
+      "job_role": "PLANNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 356,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#트렌드리서치",
+        "#데이터해석"
+      ],
+      "accept_tags": [
+        "#시장분석",
+        "#인사이트도출",
+        "#문제정의"
+      ],
+      "actual": [
+        "#트렌드리서치",
+        "#데이터해석",
+        "#인사이트도출"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1335,
+      "input_tokens": 2236,
+      "output_tokens": 57,
+      "cost_usd": 0.0025210000000000002,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2236,
+          "output_tokens": 57,
+          "latency_ms": 1335,
+          "response_text": "`{\"detailTags\": [\"#트렌드리서치\", \"#데이터해석\", \"#인사이트도출\", \"#문제정의\", \"#유저인터뷰\", \"#시장분석\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-PA-01",
+      "title": "STAR 심화 기록 UX 플로우 설계",
+      "job_role": "PLANNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 379,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#UX설계",
+        "#플로우설계"
+      ],
+      "accept_tags": [
+        "#기획구조화",
+        "#요구사항정의",
+        "#서비스기획"
+      ],
+      "actual": [
+        "#UX설계",
+        "#플로우설계",
+        "#기획구조화"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1184,
+      "input_tokens": 2252,
+      "output_tokens": 46,
+      "cost_usd": 0.0024820000000000003,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2252,
+          "output_tokens": 46,
+          "latency_ms": 1184,
+          "response_text": "`{\"detailTags\": [\"#UX설계\", \"#플로우설계\", \"#기획구조화\", \"#피드백수용\", \"#직군간협업\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-PA-02",
+      "title": "리텐션 전략 설계 및 문서화",
+      "job_role": "PLANNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 239,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#서비스기획",
+        "#지표설계"
+      ],
+      "accept_tags": [
+        "#기획구조화",
+        "#산출물전달",
+        "#레퍼런스수집"
+      ],
+      "actual": [
+        "#기획구조화",
+        "#지표설계",
+        "#서비스기획"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1393,
+      "input_tokens": 2109,
+      "output_tokens": 53,
+      "cost_usd": 0.0023740000000000002,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2109,
+          "output_tokens": 53,
+          "latency_ms": 1392,
+          "response_text": "{\"detailTags\": [\"#기획구조화\", \"#지표설계\", \"#서비스기획\", \"#직군간협업\", \"#산출물전달\", \"#인사이트도출\"]}"
+        }
+      ]
+    },
+    {
+      "id": "P-PA-03",
+      "title": "비즈니스 모델 시즌 패스 구조 정리",
+      "job_role": "PLANNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 151,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#기획구조화",
+        "#서비스기획"
+      ],
+      "accept_tags": [
+        "#우선순위설정",
+        "#발표및설득",
+        "#시장분석"
+      ],
+      "actual": [
+        "#기획구조화",
+        "#서비스기획",
+        "#발표및설득"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1716,
+      "input_tokens": 2019,
+      "output_tokens": 57,
+      "cost_usd": 0.002304,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2019,
+          "output_tokens": 57,
+          "latency_ms": 1700,
+          "response_text": "`{\"detailTags\": [\"#기획구조화\", \"#서비스기획\", \"#발표및설득\", \"#의견조율\", \"#지표설계\", \"#팀커뮤니케이션\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-PA-04",
+      "title": "팀 기록용 노션 DB 자동화 세팅",
+      "job_role": "PLANNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": true,
+      "body_len": 268,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#업무자동화",
+        "#툴활용"
+      ],
+      "accept_tags": [
+        "#기획구조화",
+        "#요구사항정의",
+        "#팀커뮤니케이션"
+      ],
+      "actual": [
+        "#기획구조화",
+        "#UX설계",
+        "#프로세스개선"
+      ],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 2,
+      "oof_rate": 0.6666666666666666,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1620,
+      "input_tokens": 2142,
+      "output_tokens": 60,
+      "cost_usd": 0.0024419999999999997,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2142,
+          "output_tokens": 60,
+          "latency_ms": 1615,
+          "response_text": "`{\"detailTags\": [\"#아키텍처설계\", \"#기획구조화\", \"#UX설계\", \"#프로세스개선\", \"#팀커뮤니케이션\", \"#툴활용\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-CO-01",
+      "title": "개발팀과 AI 태깅 API 요구사항 정의 회의",
+      "job_role": "PLANNER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 252,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#요구사항정의",
+        "#직군간협업"
+      ],
+      "accept_tags": [
+        "#의견조율",
+        "#산출물전달",
+        "#관계자소통"
+      ],
+      "actual": [
+        "#요구사항정의",
+        "#의견조율",
+        "#직군간협업"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1456,
+      "input_tokens": 2120,
+      "output_tokens": 63,
+      "cost_usd": 0.002435,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2120,
+          "output_tokens": 63,
+          "latency_ms": 1456,
+          "response_text": "```json\n{\"detailTags\": [\"#요구사항정의\", \"#의견조율\", \"#직군간협업\", \"#발표및설득\", \"#팀커뮤니케이션\", \"#기획구조화\"]}\n```"
+        }
+      ]
+    },
+    {
+      "id": "P-CO-02",
+      "title": "주간 스프린트 회의 설계",
+      "job_role": "PLANNER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 171,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#팀커뮤니케이션",
+        "#프로세스개선"
+      ],
+      "accept_tags": [
+        "#의견조율",
+        "#발표및설득",
+        "#역할분담"
+      ],
+      "actual": [
+        "#프로세스개선",
+        "#팀커뮤니케이션",
+        "#의견조율"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1236,
+      "input_tokens": 2040,
+      "output_tokens": 57,
+      "cost_usd": 0.0023250000000000002,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2040,
+          "output_tokens": 57,
+          "latency_ms": 1236,
+          "response_text": "`{\"detailTags\": [\"#프로세스개선\", \"#팀커뮤니케이션\", \"#산출물전달\", \"#의견조율\", \"#역할분담\", \"#지식공유\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-CO-03",
+      "title": "디자인-기획 간 GUI 피드백 세션 운영",
+      "job_role": "PLANNER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 316,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#팀커뮤니케이션",
+        "#의견조율"
+      ],
+      "accept_tags": [
+        "#직군간협업",
+        "#관계자소통",
+        "#피드백제공"
+      ],
+      "actual": [
+        "#의견조율",
+        "#피드백제공",
+        "#팀커뮤니케이션"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1341,
+      "input_tokens": 2195,
+      "output_tokens": 59,
+      "cost_usd": 0.00249,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2195,
+          "output_tokens": 59,
+          "latency_ms": 1340,
+          "response_text": "`{\"detailTags\": [\"#의견조율\", \"#피드백제공\", \"#팀커뮤니케이션\", \"#직군간협업\", \"#발표및설득\", \"#프로세스개선\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-PS-01",
+      "title": "역량 잔디 로직 재설계",
+      "job_role": "PLANNER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 177,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#구조재설계",
+        "#문제정의"
+      ],
+      "accept_tags": [
+        "#불편개선",
+        "#논리보완",
+        "#사용자흐름개선"
+      ],
+      "actual": [
+        "#문제정의",
+        "#프로세스개선",
+        "#구조재설계"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": true,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 2567,
+      "input_tokens": 4389,
+      "output_tokens": 169,
+      "cost_usd": 0.005234,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2049,
+          "output_tokens": 118,
+          "latency_ms": 1413,
+          "response_text": "```json\n{\"detailTags\": [\"#문제정의\", \"#프로세스개선\", \"#구조재설계\", \"#발표및설득\", \"#논리보완\", \"#의견조율\"]}\n```\n\nWait, let me reconsider without the code block:\n\n{\"detailTags\": [\"#문제정의\", \"#프로세스개선\", \"#구조재설계\", \"#발표및설득\", \"#논리보완\", \"#의견조율\"]}"
+        },
+        {
+          "input_tokens": 2340,
+          "output_tokens": 51,
+          "latency_ms": 1153,
+          "response_text": "{\"detailTags\": [\"#문제정의\", \"#프로세스개선\", \"#구조재설계\", \"#발표및설득\", \"#의견조율\", \"#논리보완\"]}"
+        }
+      ]
+    },
+    {
+      "id": "P-PS-02",
+      "title": "커리어 서사 리포트 단계별 발행 조건 재검토",
+      "job_role": "PLANNER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 321,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#구조재설계",
+        "#논리보완"
+      ],
+      "accept_tags": [
+        "#문제정의",
+        "#우선순위설정",
+        "#서비스기획"
+      ],
+      "actual": [
+        "#문제정의",
+        "#기획구조화",
+        "#논리보완"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2226,
+      "input_tokens": 2189,
+      "output_tokens": 52,
+      "cost_usd": 0.002449,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2189,
+          "output_tokens": 52,
+          "latency_ms": 2226,
+          "response_text": "`{\"detailTags\": [\"#문제정의\", \"#기획구조화\", \"#논리보완\", \"#발표및설득\", \"#프로세스개선\", \"#의견조율\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-PS-03",
+      "title": "온보딩 이탈 지점 가설 수립 및 개선안 제시",
+      "job_role": "PLANNER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 235,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#사용자흐름개선",
+        "#가설검증"
+      ],
+      "accept_tags": [
+        "#문제정의",
+        "#불편개선",
+        "#반복개선"
+      ],
+      "actual": [
+        "#가설검증",
+        "#문제정의",
+        "#사용성평가"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2246,
+      "input_tokens": 2115,
+      "output_tokens": 52,
+      "cost_usd": 0.002375,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2115,
+          "output_tokens": 52,
+          "latency_ms": 2245,
+          "response_text": "`{\"detailTags\": [\"#가설검증\", \"#문제정의\", \"#사용성평가\", \"#프로세스개선\", \"#데이터해석\", \"#UX설계\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "P-GR-01",
+      "title": "PRD v0.2 작성 완료 후 셀프 리뷰",
+      "job_role": "PLANNER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 221,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#자기객관화",
+        "#프로젝트회고"
+      ],
+      "accept_tags": [
+        "#논리보완",
+        "#업무방식개선",
+        "#역량확장"
+      ],
+      "actual": [
+        "#자기객관화",
+        "#논리보완",
+        "#프로젝트회고"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1642,
+      "input_tokens": 2097,
+      "output_tokens": 54,
+      "cost_usd": 0.0023669999999999997,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2097,
+          "output_tokens": 54,
+          "latency_ms": 1641,
+          "response_text": "{\"detailTags\": [\"#자기객관화\", \"#논리보완\", \"#프로젝트회고\", \"#문제정의\", \"#피드백수용\", \"#업무방식개선\"]}"
+        }
+      ]
+    },
+    {
+      "id": "P-GR-02",
+      "title": "타 팀의 B2B SaaS 기획 사례 스터디",
+      "job_role": "PLANNER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 165,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#레퍼런스수집",
+        "#학습적용"
+      ],
+      "accept_tags": [
+        "#시장분석",
+        "#커리어설계",
+        "#도메인학습"
+      ],
+      "actual": [
+        "#레퍼런스수집",
+        "#경쟁사례분석",
+        "#인사이트도출"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 2,
+      "oof_rate": 0.6666666666666666,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1788,
+      "input_tokens": 2035,
+      "output_tokens": 60,
+      "cost_usd": 0.002335,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2035,
+          "output_tokens": 60,
+          "latency_ms": 1787,
+          "response_text": "{\"detailTags\": [\"#레퍼런스수집\", \"#경쟁사례분석\", \"#인사이트도출\", \"#기획구조화\", \"#발표및설득\", \"#도메인학습\"]}"
+        }
+      ]
+    },
+    {
+      "id": "P-GR-03",
+      "title": "팀 내 기획 프로세스 개선 제안",
+      "job_role": "PLANNER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 339,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#업무방식개선",
+        "#팀문화기여"
+      ],
+      "accept_tags": [
+        "#프로세스개선",
+        "#지식공유",
+        "#주도적기여"
+      ],
+      "actual": [
+        "#프로세스개선",
+        "#발표및설득",
+        "#문제정의"
+      ],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 2,
+      "oof_rate": 0.6666666666666666,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1545,
+      "input_tokens": 2214,
+      "output_tokens": 59,
+      "cost_usd": 0.002509,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2214,
+          "output_tokens": 59,
+          "latency_ms": 1542,
+          "response_text": "`{\"detailTags\": [\"#프로세스개선\", \"#산출물전달\", \"#발표및설득\", \"#문제정의\", \"#주도적기여\", \"#팀커뮤니케이션\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "D-DA-01",
+      "title": "AI 태깅 모델 선택을 위한 기술 리서치",
+      "job_role": "DEVELOPER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 306,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#기술리서치",
+        "#데이터해석"
+      ],
+      "accept_tags": [
+        "#가설검증",
+        "#우선순위설정",
+        "#도메인학습"
+      ],
+      "actual": [
+        "#기술리서치",
+        "#데이터해석",
+        "#의견조율"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": true,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 2521,
+      "input_tokens": 4513,
+      "output_tokens": 113,
+      "cost_usd": 0.005077999999999999,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2141,
+          "output_tokens": 57,
+          "latency_ms": 1193,
+          "response_text": "```json\n{\"detailTags\": [\"#기술리서치\", \"#데이터해석\", \"#비교분석\", \"#의견조율\", \"#프로세스개선\", \"#발표및설득\"]}\n```"
+        },
+        {
+          "input_tokens": 2372,
+          "output_tokens": 56,
+          "latency_ms": 1327,
+          "response_text": "{\"detailTags\": [\"#기술리서치\", \"#데이터해석\", \"#경쟁사례분석\", \"#의견조율\", \"#프로세스개선\", \"#발표및설득\"]}"
+        }
+      ]
+    },
+    {
+      "id": "D-DA-02",
+      "title": "프론트엔드 상태 관리 라이브러리 기술 검토",
+      "job_role": "DEVELOPER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 313,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#기술리서치",
+        "#가설검증"
+      ],
+      "accept_tags": [
+        "#데이터해석",
+        "#우선순위설정",
+        "#도메인학습"
+      ],
+      "actual": [
+        "#기술리서치",
+        "#데이터해석",
+        "#의견조율"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1648,
+      "input_tokens": 2158,
+      "output_tokens": 55,
+      "cost_usd": 0.0024330000000000003,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2158,
+          "output_tokens": 55,
+          "latency_ms": 1648,
+          "response_text": "`{\"detailTags\": [\"#기술리서치\", \"#경쟁사례분석\", \"#데이터해석\", \"#의견조율\", \"#지식공유\", \"#성능최적화\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "D-DA-03",
+      "title": "데이터베이스 스키마 설계 전 유사 서비스 구조 분석",
+      "job_role": "DEVELOPER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 194,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#기술리서치",
+        "#데이터해석"
+      ],
+      "accept_tags": [
+        "#도메인학습",
+        "#가설검증",
+        "#우선순위설정"
+      ],
+      "actual": [
+        "#기술리서치",
+        "#도메인학습",
+        "#아키텍처설계"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1990,
+      "input_tokens": 2065,
+      "output_tokens": 62,
+      "cost_usd": 0.002375,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2065,
+          "output_tokens": 62,
+          "latency_ms": 1989,
+          "response_text": "`{\"detailTags\": [\"#기술리서치\", \"#레퍼런스수집\", \"#경쟁사례분석\", \"#도메인학습\", \"#기획구조화\", \"#아키텍처설계\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "D-PA-01",
+      "title": "역량 태깅 API 설계 및 구현",
+      "job_role": "DEVELOPER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 392,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#기능구현",
+        "#API연동"
+      ],
+      "accept_tags": [
+        "#아키텍처설계",
+        "#검증및테스트",
+        "#성능최적화"
+      ],
+      "actual": [
+        "#API연동",
+        "#문제해결",
+        "#피드백수용"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 2,
+      "oof_rate": 0.6666666666666666,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 9776,
+      "input_tokens": 2210,
+      "output_tokens": 53,
+      "cost_usd": 0.002475,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2210,
+          "output_tokens": 53,
+          "latency_ms": 9775,
+          "response_text": "{\"detailTags\": [\"#기획구조화\", \"#API연동\", \"#문제해결\", \"#프로토타입제작\", \"#피드백수용\", \"#검증및테스트\"]}"
+        }
+      ]
+    },
+    {
+      "id": "D-PA-02",
+      "title": "알림 시스템 카카오 알림톡 연동",
+      "job_role": "DEVELOPER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 180,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#API연동",
+        "#기능구현"
+      ],
+      "accept_tags": [
+        "#기술리서치",
+        "#검증및테스트",
+        "#업무자동화"
+      ],
+      "actual": [
+        "#API연동",
+        "#기능구현",
+        "#검증및테스트"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1750,
+      "input_tokens": 2041,
+      "output_tokens": 55,
+      "cost_usd": 0.002316,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2041,
+          "output_tokens": 55,
+          "latency_ms": 1749,
+          "response_text": "```json\n{\"detailTags\": [\"#API연동\", \"#기능구현\", \"#검증및테스트\", \"#기술리서치\", \"#문제해결\", \"#도메인학습\"]}\n```"
+        }
+      ]
+    },
+    {
+      "id": "D-PA-03",
+      "title": "심화 STAR 기록 화면 프론트 마크업 구현",
+      "job_role": "DEVELOPER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 282,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#기능구현",
+        "#컴포넌트구현"
+      ],
+      "accept_tags": [
+        "#UX설계",
+        "#인터랙션설계",
+        "#검증및테스트"
+      ],
+      "actual": [
+        "#아키텍처설계",
+        "#기능구현",
+        "#컴포넌트구현"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": true,
+      "n_llm_calls": 2,
+      "had_corrective": true,
+      "total_latency_ms": 3161,
+      "input_tokens": 4499,
+      "output_tokens": 127,
+      "cost_usd": 0.0051340000000000005,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2131,
+          "output_tokens": 63,
+          "latency_ms": 1935,
+          "response_text": "{\"detailTags\": [\"#아키텍처설계\", \"#기능구현\", \"#인터랙션설계\", \"#컴포넌트구현\", \"#상태관리\", \"#API연동\", \"#피드백수용\"]}"
+        },
+        {
+          "input_tokens": 2368,
+          "output_tokens": 64,
+          "latency_ms": 1220,
+          "response_text": "{\"detailTags\": [\"#아키텍처설계\", \"#기능구현\", \"#인터랙션설계\", \"#컴포넌트구현\", \"#API연동\", \"#피드백수용\", \"#플로우설계\"]}"
+        }
+      ]
+    },
+    {
+      "id": "D-PA-04",
+      "title": "미니 리포트 생성 API 구현",
+      "job_role": "DEVELOPER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 309,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#API연동",
+        "#기능구현"
+      ],
+      "accept_tags": [
+        "#아키텍처설계",
+        "#검증및테스트",
+        "#성능최적화"
+      ],
+      "actual": [
+        "#아키텍처설계",
+        "#API연동",
+        "#검증및테스트"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 2,
+      "accept_recall": 0.6666666666666666,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1780,
+      "input_tokens": 2156,
+      "output_tokens": 55,
+      "cost_usd": 0.002431,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2156,
+          "output_tokens": 55,
+          "latency_ms": 1779,
+          "response_text": "{\"detailTags\": [\"#아키텍처설계\", \"#API연동\", \"#검증및테스트\", \"#기획구조화\", \"#프로세스개선\", \"#성능최적화\"]}"
+        }
+      ]
+    },
+    {
+      "id": "D-CO-01",
+      "title": "프론트-백엔드 API 명세 정합성 검토",
+      "job_role": "DEVELOPER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 239,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#직군간협업",
+        "#산출물전달"
+      ],
+      "accept_tags": [
+        "#의견조율",
+        "#프로세스개선",
+        "#팀커뮤니케이션"
+      ],
+      "actual": [
+        "#의견조율",
+        "#팀커뮤니케이션",
+        "#직군간협업"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 2,
+      "accept_recall": 0.6666666666666666,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1057,
+      "input_tokens": 2111,
+      "output_tokens": 60,
+      "cost_usd": 0.002411,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2111,
+          "output_tokens": 60,
+          "latency_ms": 1056,
+          "response_text": "`{\"detailTags\": [\"#의견조율\", \"#팀커뮤니케이션\", \"#직군간협업\", \"#프로세스개선\", \"#산출물전달\", \"#요구사항정의\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "D-CO-02",
+      "title": "코드 리뷰 문화 제안 및 가이드 작성",
+      "job_role": "DEVELOPER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 169,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#지식공유",
+        "#팀문화기여"
+      ],
+      "accept_tags": [
+        "#의견조율",
+        "#주도적기여",
+        "#업무방식개선"
+      ],
+      "actual": [
+        "#피드백제공",
+        "#팀커뮤니케이션",
+        "#프로세스개선"
+      ],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 3,
+      "oof_rate": 1.0,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1360,
+      "input_tokens": 2053,
+      "output_tokens": 59,
+      "cost_usd": 0.0023480000000000003,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2053,
+          "output_tokens": 59,
+          "latency_ms": 1359,
+          "response_text": "{\"detailTags\": [\"#피드백제공\", \"#팀커뮤니케이션\", \"#프로세스개선\", \"#지식공유\", \"#발표및설득\", \"#팀문화기여\"]}"
+        }
+      ]
+    },
+    {
+      "id": "D-CO-03",
+      "title": "기획-개발 간 기능 범위 조율 (MVP 컷 협의)",
+      "job_role": "DEVELOPER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 326,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#의견조율",
+        "#관계자소통"
+      ],
+      "accept_tags": [
+        "#직군간협업",
+        "#우선순위설정",
+        "#발표및설득"
+      ],
+      "actual": [
+        "#의견조율",
+        "#문제해결",
+        "#관계자소통"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1102,
+      "input_tokens": 2192,
+      "output_tokens": 54,
+      "cost_usd": 0.0024619999999999998,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2192,
+          "output_tokens": 54,
+          "latency_ms": 1102,
+          "response_text": "`{\"detailTags\": [\"#의견조율\", \"#관계자소통\", \"#발표및설득\", \"#요구사항정의\", \"#문제해결\", \"#우선순위설정\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "D-PS-01",
+      "title": "잔디 히트맵 렌더링 성능 이슈 해결",
+      "job_role": "DEVELOPER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 299,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#성능최적화",
+        "#디버깅"
+      ],
+      "accept_tags": [
+        "#원인분석",
+        "#반복개선",
+        "#검증및테스트"
+      ],
+      "actual": [],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 0,
+      "had_corrective": false,
+      "total_latency_ms": 2137,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "parse_error": null,
+      "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq2rFLhWk7D7rcVshE1'}",
+      "raw_calls": []
+    },
+    {
+      "id": "D-PS-02",
+      "title": "AI 태깅 응답 파싱 오류 수정",
+      "job_role": "DEVELOPER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 239,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#디버깅",
+        "#원인분석"
+      ],
+      "accept_tags": [
+        "#검증및테스트",
+        "#반복개선",
+        "#QA테스트"
+      ],
+      "actual": [],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 0,
+      "had_corrective": false,
+      "total_latency_ms": 2090,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "parse_error": null,
+      "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq31RFHkdefLemNKVUL'}",
+      "raw_calls": []
+    },
+    {
+      "id": "D-PS-03",
+      "title": "로컬-스테이징 환경 변수 불일치 해결",
+      "job_role": "DEVELOPER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 180,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#디버깅",
+        "#프로세스개선"
+      ],
+      "accept_tags": [
+        "#원인분석",
+        "#검증및테스트",
+        "#업무방식개선"
+      ],
+      "actual": [],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 0,
+      "had_corrective": false,
+      "total_latency_ms": 1915,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "parse_error": null,
+      "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq39HXPDmhdf442y3U7'}",
+      "raw_calls": []
+    },
+    {
+      "id": "D-GR-01",
+      "title": "프롬프트 엔지니어링 학습 및 적용",
+      "job_role": "DEVELOPER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 311,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#학습적용",
+        "#역량확장"
+      ],
+      "accept_tags": [
+        "#도메인학습",
+        "#지식공유",
+        "#검증및테스트"
+      ],
+      "actual": [],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 0,
+      "had_corrective": false,
+      "total_latency_ms": 1945,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "parse_error": null,
+      "llm_error": "LLMRateLimitedError: Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 50,000 input tokens per minute (org: d08a7297-c121-462b-bb40-0bbda96668a9, model: claude-haiku-4-5-20251001). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CbHq3HdpTpnqjsboWSHbg'}",
+      "raw_calls": []
+    },
+    {
+      "id": "D-GR-02",
+      "title": "개인 기술 블로그 트러블슈팅 포스팅",
+      "job_role": "DEVELOPER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 180,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#프로젝트회고",
+        "#지식공유"
+      ],
+      "accept_tags": [
+        "#자기객관화",
+        "#역량확장",
+        "#커리어설계"
+      ],
+      "actual": [
+        "#프로젝트회고",
+        "#지식공유",
+        "#원인분석"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2164,
+      "input_tokens": 2056,
+      "output_tokens": 53,
+      "cost_usd": 0.002321,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2056,
+          "output_tokens": 53,
+          "latency_ms": 2164,
+          "response_text": "`{\"detailTags\": [\"#프로젝트회고\", \"#지식공유\", \"#원인분석\", \"#성능최적화\", \"#발표및설득\", \"#학습적용\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "D-GR-03",
+      "title": "스프린트 종료 후 개발 파트 회고 진행",
+      "job_role": "DEVELOPER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 247,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#프로젝트회고",
+        "#업무방식개선"
+      ],
+      "accept_tags": [
+        "#자기객관화",
+        "#팀문화기여",
+        "#반복개선"
+      ],
+      "actual": [
+        "#프로젝트회고",
+        "#원인분석",
+        "#프로세스개선"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 0,
+      "accept_recall": 0.0,
+      "oof_count": 2,
+      "oof_rate": 0.6666666666666666,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2546,
+      "input_tokens": 2125,
+      "output_tokens": 59,
+      "cost_usd": 0.0024200000000000003,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2125,
+          "output_tokens": 59,
+          "latency_ms": 2546,
+          "response_text": "{\"detailTags\": [\"#프로젝트회고\", \"#원인분석\", \"#프로세스개선\", \"#팀커뮤니케이션\", \"#반복개선\", \"#주도적기여\"]}"
+        }
+      ]
+    },
+    {
+      "id": "DS-DA-04",
+      "title": "웹앱 PWA 환경 제약 조사",
+      "job_role": "DESIGNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": true,
+      "body_len": 283,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#기술리서치",
+        "#인사이트도출"
+      ],
+      "accept_tags": [
+        "#도메인학습",
+        "#문제정의",
+        "#직군간협업"
+      ],
+      "actual": [
+        "#문제정의",
+        "#직군간협업",
+        "#산출물전달"
+      ],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 2,
+      "accept_recall": 0.6666666666666666,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 4858,
+      "input_tokens": 2146,
+      "output_tokens": 53,
+      "cost_usd": 0.002411,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2146,
+          "output_tokens": 53,
+          "latency_ms": 4849,
+          "response_text": "`{\"detailTags\": [\"#기술리서치\", \"#문제정의\", \"#직군간협업\", \"#산출물전달\", \"#발표및설득\", \"#도메인학습\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-DA-01",
+      "title": "기록 앱 UX 패턴 리서치",
+      "job_role": "DESIGNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 297,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#경쟁사례분석",
+        "#인사이트도출"
+      ],
+      "accept_tags": [
+        "#레퍼런스수집",
+        "#사용성평가",
+        "#UX설계"
+      ],
+      "actual": [
+        "#경쟁사례분석",
+        "#레퍼런스수집",
+        "#인사이트도출"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1663,
+      "input_tokens": 2177,
+      "output_tokens": 59,
+      "cost_usd": 0.0024720000000000002,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2177,
+          "output_tokens": 59,
+          "latency_ms": 1662,
+          "response_text": "`{\"detailTags\": [\"#경쟁사례분석\", \"#레퍼런스수집\", \"#인사이트도출\", \"#문제정의\", \"#UX설계\", \"#도메인학습\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-DA-02",
+      "title": "역량 잔디 색상 시스템 리서치",
+      "job_role": "DESIGNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 261,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#레퍼런스수집",
+        "#인사이트도출"
+      ],
+      "accept_tags": [
+        "#경쟁사례분석",
+        "#브랜드기획",
+        "#데이터해석"
+      ],
+      "actual": [
+        "#경쟁사례분석",
+        "#레퍼런스수집",
+        "#인사이트도출"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1333,
+      "input_tokens": 2137,
+      "output_tokens": 62,
+      "cost_usd": 0.002447,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2137,
+          "output_tokens": 62,
+          "latency_ms": 1333,
+          "response_text": "`{\"detailTags\": [\"#경쟁사례분석\", \"#레퍼런스수집\", \"#데이터해석\", \"#인사이트도출\", \"#발표및설득\", \"#프로세스개선\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-DA-03",
+      "title": "타겟 유저 페르소나 시각화",
+      "job_role": "DESIGNER",
+      "primary_category": "DISCOVERY_ANALYSIS",
+      "is_ambiguous": false,
+      "body_len": 182,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#유저리서치",
+        "#인사이트도출"
+      ],
+      "accept_tags": [
+        "#시각화작업",
+        "#문제정의",
+        "#UX설계"
+      ],
+      "actual": [
+        "#시각화작업",
+        "#유저리서치",
+        "#인사이트도출"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 3210,
+      "input_tokens": 2059,
+      "output_tokens": 47,
+      "cost_usd": 0.002294,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2059,
+          "output_tokens": 47,
+          "latency_ms": 3209,
+          "response_text": "{\"detailTags\": [\"#시각화작업\", \"#유저리서치\", \"#인사이트도출\", \"#직군간협업\", \"#발표및설득\"]}"
+        }
+      ]
+    },
+    {
+      "id": "DS-PA-01",
+      "title": "홈화면 레이더 차트 컴포넌트 디자인",
+      "job_role": "DESIGNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 263,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#시각화작업",
+        "#비주얼디자인"
+      ],
+      "accept_tags": [
+        "#인터랙션설계",
+        "#산출물전달",
+        "#컴포넌트구현"
+      ],
+      "actual": [
+        "#시각화작업",
+        "#비주얼디자인",
+        "#인터랙션설계"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1795,
+      "input_tokens": 2136,
+      "output_tokens": 61,
+      "cost_usd": 0.002441,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2136,
+          "output_tokens": 61,
+          "latency_ms": 1792,
+          "response_text": "`{\"detailTags\": [\"#시각화작업\", \"#비주얼디자인\", \"#인터랙션설계\", \"#컴포넌트구현\", \"#직군간협업\", \"#산출물전달\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-PA-02",
+      "title": "온보딩 플로우 4단계 화면 디자인",
+      "job_role": "DESIGNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 183,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#UX설계",
+        "#프로토타입제작"
+      ],
+      "accept_tags": [
+        "#인터랙션설계",
+        "#플로우설계",
+        "#비주얼디자인"
+      ],
+      "actual": [
+        "#비주얼디자인",
+        "#인터랙션설계",
+        "#UX설계"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 2,
+      "accept_recall": 0.6666666666666666,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 3529,
+      "input_tokens": 2057,
+      "output_tokens": 61,
+      "cost_usd": 0.002362,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2057,
+          "output_tokens": 61,
+          "latency_ms": 3528,
+          "response_text": "```json\n{\"detailTags\": [\"#비주얼디자인\", \"#인터랙션설계\", \"#UX설계\", \"#플로우설계\", \"#직군간협업\", \"#산출물전달\"]}\n```"
+        }
+      ]
+    },
+    {
+      "id": "DS-PA-03",
+      "title": "디자인 시스템 컴포넌트 라이브러리 구축",
+      "job_role": "DESIGNER",
+      "primary_category": "PLANNING_EXECUTION",
+      "is_ambiguous": false,
+      "body_len": 347,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#컴포넌트구현",
+        "#산출물전달"
+      ],
+      "accept_tags": [
+        "#UX설계",
+        "#직군간협업",
+        "#비주얼디자인"
+      ],
+      "actual": [
+        "#컴포넌트구현",
+        "#직군간협업",
+        "#산출물전달"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1551,
+      "input_tokens": 2207,
+      "output_tokens": 55,
+      "cost_usd": 0.0024820000000000003,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2207,
+          "output_tokens": 55,
+          "latency_ms": 1551,
+          "response_text": "{\"detailTags\": [\"#컴포넌트구현\", \"#직군간협업\", \"#산출물전달\", \"#프로세스개선\", \"#지식공유\", \"#UX설계\"]}"
+        }
+      ]
+    },
+    {
+      "id": "DS-CO-01",
+      "title": "기획-디자인 방향 싱크 미팅",
+      "job_role": "DESIGNER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 238,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#피드백수용",
+        "#의견조율"
+      ],
+      "accept_tags": [
+        "#직군간협업",
+        "#팀커뮤니케이션",
+        "#반복개선"
+      ],
+      "actual": [
+        "#피드백수용",
+        "#의견조율",
+        "#팀커뮤니케이션"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2985,
+      "input_tokens": 2112,
+      "output_tokens": 56,
+      "cost_usd": 0.002392,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2112,
+          "output_tokens": 56,
+          "latency_ms": 2984,
+          "response_text": "{\"detailTags\": [\"#피드백수용\", \"#의견조율\", \"#원인분석\", \"#팀커뮤니케이션\", \"#관계자소통\", \"#자기객관화\"]}"
+        }
+      ]
+    },
+    {
+      "id": "DS-CO-02",
+      "title": "프론트에 디자인 핸드오프 및 QA 진행",
+      "job_role": "DESIGNER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 301,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#산출물전달",
+        "#QA테스트"
+      ],
+      "accept_tags": [
+        "#직군간협업",
+        "#피드백제공",
+        "#반복개선"
+      ],
+      "actual": [
+        "#산출물전달",
+        "#피드백제공",
+        "#직군간협업"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 2,
+      "accept_recall": 0.6666666666666666,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2181,
+      "input_tokens": 2178,
+      "output_tokens": 53,
+      "cost_usd": 0.002443,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2178,
+          "output_tokens": 53,
+          "latency_ms": 2179,
+          "response_text": "`{\"detailTags\": [\"#산출물전달\", \"#QA테스트\", \"#피드백제공\", \"#직군간협업\", \"#사용성평가\", \"#의견조율\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-CO-03",
+      "title": "팀 전체 디자인 가이드 공유 세션 진행",
+      "job_role": "DESIGNER",
+      "primary_category": "COLLABORATION",
+      "is_ambiguous": false,
+      "body_len": 228,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#지식공유",
+        "#팀커뮤니케이션"
+      ],
+      "accept_tags": [
+        "#직군간협업",
+        "#산출물전달",
+        "#발표및설득"
+      ],
+      "actual": [
+        "#지식공유",
+        "#직군간협업",
+        "#산출물전달"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 2,
+      "accept_recall": 0.6666666666666666,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2801,
+      "input_tokens": 2108,
+      "output_tokens": 60,
+      "cost_usd": 0.002408,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2108,
+          "output_tokens": 60,
+          "latency_ms": 2800,
+          "response_text": "`{\"detailTags\": [\"#지식공유\", \"#직군간협업\", \"#산출물전달\", \"#팀커뮤니케이션\", \"#프로세스개선\", \"#사용자테스트\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-PS-01",
+      "title": "모바일 가독성 이슈 개선",
+      "job_role": "DESIGNER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 266,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#접근성개선",
+        "#반복개선"
+      ],
+      "accept_tags": [
+        "#사용자테스트",
+        "#불편개선",
+        "#검증및테스트"
+      ],
+      "actual": [
+        "#사용자테스트",
+        "#접근성개선",
+        "#반복개선"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1920,
+      "input_tokens": 2124,
+      "output_tokens": 53,
+      "cost_usd": 0.002389,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2124,
+          "output_tokens": 53,
+          "latency_ms": 1920,
+          "response_text": "{\"detailTags\": [\"#사용자테스트\", \"#접근성개선\", \"#반복개선\", \"#문제해결\", \"#도메인학습\", \"#프로세스개선\"]}"
+        }
+      ]
+    },
+    {
+      "id": "DS-PS-02",
+      "title": "빈 상태 화면 디자인 누락 대응",
+      "job_role": "DESIGNER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 214,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#불편개선",
+        "#사용자흐름개선"
+      ],
+      "accept_tags": [
+        "#UX설계",
+        "#반복개선",
+        "#직군간협업"
+      ],
+      "actual": [
+        "#문제정의",
+        "#UX설계",
+        "#피드백수용"
+      ],
+      "must_hit": 0,
+      "must_recall": 0.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 2,
+      "oof_rate": 0.6666666666666666,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2590,
+      "input_tokens": 2094,
+      "output_tokens": 55,
+      "cost_usd": 0.002369,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2094,
+          "output_tokens": 55,
+          "latency_ms": 2589,
+          "response_text": "`{\"detailTags\": [\"#문제정의\", \"#UX설계\", \"#프로세스개선\", \"#피드백수용\", \"#프로젝트회고\", \"#직군간협업\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-PS-03",
+      "title": "역량 태그 색상 접근성 문제 해결",
+      "job_role": "DESIGNER",
+      "primary_category": "PROBLEM_SOLVING",
+      "is_ambiguous": false,
+      "body_len": 293,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#접근성개선",
+        "#구조재설계"
+      ],
+      "accept_tags": [
+        "#사용자테스트",
+        "#학습적용",
+        "#반복개선"
+      ],
+      "actual": [
+        "#접근성개선",
+        "#문제해결",
+        "#학습적용"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2759,
+      "input_tokens": 2174,
+      "output_tokens": 54,
+      "cost_usd": 0.002444,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2174,
+          "output_tokens": 54,
+          "latency_ms": 2759,
+          "response_text": "`{\"detailTags\": [\"#접근성개선\", \"#문제해결\", \"#기술리서치\", \"#검증및테스트\", \"#학습적용\", \"#프로세스개선\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-GR-01",
+      "title": "피그마 오토레이아웃 활용법 스터디",
+      "job_role": "DESIGNER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 226,
+      "len_bucket": "짧음",
+      "must_tags": [
+        "#툴활용",
+        "#학습적용"
+      ],
+      "accept_tags": [
+        "#역량확장",
+        "#업무방식개선",
+        "#지식공유"
+      ],
+      "actual": [
+        "#역량확장",
+        "#학습적용",
+        "#자기객관화"
+      ],
+      "must_hit": 1,
+      "must_recall": 0.5,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 1,
+      "oof_rate": 0.3333333333333333,
+      "full_must": false,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 2466,
+      "input_tokens": 2111,
+      "output_tokens": 50,
+      "cost_usd": 0.0023610000000000003,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2111,
+          "output_tokens": 50,
+          "latency_ms": 2466,
+          "response_text": "`{\"detailTags\": [\"#역량확장\", \"#학습적용\", \"#도메인학습\", \"#자기객관화\", \"#지식공유\", \"#문제해결\"]}`"
+        }
+      ]
+    },
+    {
+      "id": "DS-GR-02",
+      "title": "서비스 디자인 방향성 셀프 리뷰",
+      "job_role": "DESIGNER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 295,
+      "len_bucket": "긺",
+      "must_tags": [
+        "#자기객관화",
+        "#프로젝트회고"
+      ],
+      "accept_tags": [
+        "#반복개선",
+        "#업무방식개선",
+        "#비주얼디자인"
+      ],
+      "actual": [
+        "#자기객관화",
+        "#프로젝트회고",
+        "#비주얼디자인"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 3146,
+      "input_tokens": 2182,
+      "output_tokens": 58,
+      "cost_usd": 0.002472,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2182,
+          "output_tokens": 58,
+          "latency_ms": 3144,
+          "response_text": "{\"detailTags\": [\"#자기객관화\", \"#프로젝트회고\", \"#비주얼디자인\", \"#프로세스개선\", \"#업무방식개선\", \"#학습적용\"]}"
+        }
+      ]
+    },
+    {
+      "id": "DS-GR-03",
+      "title": "디자이너로서 커리어 방향성 고민 정리",
+      "job_role": "DESIGNER",
+      "primary_category": "GROWTH",
+      "is_ambiguous": false,
+      "body_len": 249,
+      "len_bucket": "중간",
+      "must_tags": [
+        "#커리어설계",
+        "#자기객관화"
+      ],
+      "accept_tags": [
+        "#프로젝트회고",
+        "#변화대응",
+        "#역량확장"
+      ],
+      "actual": [
+        "#자기객관화",
+        "#커리어설계",
+        "#프로젝트회고"
+      ],
+      "must_hit": 2,
+      "must_recall": 1.0,
+      "accept_hit": 1,
+      "accept_recall": 0.3333333333333333,
+      "oof_count": 0,
+      "oof_rate": 0.0,
+      "full_must": true,
+      "n_llm_calls": 1,
+      "had_corrective": false,
+      "total_latency_ms": 1954,
+      "input_tokens": 2131,
+      "output_tokens": 48,
+      "cost_usd": 0.0023710000000000003,
+      "parse_error": null,
+      "llm_error": null,
+      "raw_calls": [
+        {
+          "input_tokens": 2131,
+          "output_tokens": 48,
+          "latency_ms": 1954,
+          "response_text": "`{\"detailTags\": [\"#자기객관화\", \"#커리어설계\", \"#프로젝트회고\", \"#UX설계\", \"#플로우설계\"]}`"
+        }
+      ]
+    }
+  ]
+}
