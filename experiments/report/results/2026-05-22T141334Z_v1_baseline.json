@@ -1,0 +1,128 @@
+{
+  "variant": "v1_baseline",
+  "model": "claude-haiku-4-5-20251001",
+  "ran_at": "2026-05-22T141334Z",
+  "cases": [
+    {
+      "id": "case-01",
+      "title": "기획자 — 복수 프로젝트 기획·협업 혼합",
+      "endpoints": [
+        {
+          "endpoint": "mini",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 6122,
+          "input_tokens": 6300,
+          "output_tokens": 618,
+          "cost_usd": 0.009389999999999999,
+          "output": {
+            "activitySummary": "지민님은 불명확한 상황에서 데이터와 인터뷰를 기반으로 핵심을 압축하고 실행하는 방식으로 일해왔어요. 이해관계자 합의부터 리텐션 개선, 팀 간 협업 체계화, A/B 테스트 기반 최적화까지 각 단계에서 구조적 접근과 빠른 합의 도출을 반복하고 있으며, 필요할 때 스스로 새로운 기술을 습득해 팀의 병목을 해소하는 모습도 나타나요.",
+            "nextFocusPoint": "협업·조율 역량은 개발-디자인팀 간 가이드 작성 한 건만 기록되어 있어요. 스테이크홀더와의 이견 조율 과정이나 팀 내 반발을 극복했던 순간을 담아보면 좋겠어요.",
+            "competencyFrequency": [
+              {
+                "competency": "PLANNING_EXECUTION",
+                "count": 1
+              },
+              {
+                "competency": "DISCOVERY_ANALYSIS",
+                "count": 1
+              },
+              {
+                "competency": "COLLABORATION",
+                "count": 1
+              },
+              {
+                "competency": "PROBLEM_SOLVING",
+                "count": 1
+              },
+              {
+                "competency": "GROWTH",
+                "count": 1
+              }
+            ],
+            "topDetailTags": [
+              "#기획구조화",
+              "#관계자소통",
+              "#우선순위설정"
+            ]
+          }
+        },
+        {
+          "endpoint": "branding",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 4095,
+          "input_tokens": 2592,
+          "output_tokens": 113,
+          "cost_usd": 0.003157,
+          "output": {
+            "brandingStatement": "지민님은 복잡한 상황에서 데이터로 검증하고 실행하는 '데이터 기반 기획자'입니다.",
+            "brandingPattern": "불명확한 문제를 분석과 테스트로 구조화한 뒤 이해관계자 합의를 이끌어내는 방식",
+            "topDetailTags": [
+              {
+                "tag": "#기획구조화",
+                "count": 1
+              },
+              {
+                "tag": "#관계자소통",
+                "count": 1
+              },
+              {
+                "tag": "#우선순위설정",
+                "count": 1
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "narrative",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 5529,
+          "input_tokens": 5445,
+          "output_tokens": 507,
+          "cost_usd": 0.007980000000000001,
+          "output": {
+            "narrativeSummary": "지민님은 불명확한 상황을 마주할 때마다 먼저 정보를 수집·정리해 구조를 만드는 방식으로 일해왔어요. 이해관계자의 산발적 요구를 압축하고, 데이터로 문제 원인을 특정하고, 팀 간 기준을 문서화하는 일련의 과정에서 #DISCOVERY_ANALYSIS와 #PLANNING_EXECUTION을 반복적으로 활용했어요. 동시에 낮은 리소스 상황에서도 스스로 학습하고 실행하는 주도성을 보였으며, 결과물을 팀 표준이나 스터디로 확산시키는 임팩트까지 만들어내는 성장을 보여줬어요."
+          }
+        },
+        {
+          "endpoint": "strengths_and_interview",
+          "ok": false,
+          "parse_error": "'title' 길이 초과: 16 > 15",
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 7918,
+          "input_tokens": 6400,
+          "output_tokens": 624,
+          "cost_usd": 0.00952,
+          "output": null
+        },
+        {
+          "endpoint": "highlights",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 5825,
+          "input_tokens": 5623,
+          "output_tokens": 490,
+          "cost_usd": 0.008073,
+          "output": {
+            "experienceHighlights": [
+              "6명 이해관계자의 상충하는 요구를 우선순위 매트릭스로 압축해 2주 내 전원 서면 합의를 이끌어내고 개발 착수를 3일 앞당겼습니다.",
+              "GA·Mixpanel 분석과 사용자 인터뷰를 통해 리텐션 이탈 원인을 특정하고 온보딩 개선안을 제안해 리텐션을 12%p 상승시켰습니다.",
+              "SQL 독학으로 데이터 자립화를 달성해 주간 리포트를 자력으로 생성하게 되었고 팀 내 SQL 스터디를 제안해 5명의 참여를 이끌어냈습니다."
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
