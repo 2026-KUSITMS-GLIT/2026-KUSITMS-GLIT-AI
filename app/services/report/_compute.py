@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 
-from app.schemas.common import JobRole
+from app.schemas.common import JobRole, PrimaryCategory
 from app.schemas.report import (
     AiReportRequest,
     CompetencyCount,
@@ -13,7 +13,7 @@ from app.schemas.report import (
     ScrumItem,
     StarRecord,
 )
-from app.services.tagging.data import TagWeight, WEIGHTS_BY_TAG
+from app.services.tagging.data import TAG_TO_CATEGORY, WEIGHTS_BY_TAG, TagWeight
 
 
 def competency_frequency(records: list[StarRecord]) -> list[CompetencyCount]:
@@ -21,7 +21,7 @@ def competency_frequency(records: list[StarRecord]) -> list[CompetencyCount]:
     return [CompetencyCount(competency=c, count=n) for c, n in counter.most_common()]
 
 
-def _sorted_tag_items(counter: Counter, top_n: int) -> list[tuple[str, int]]:
+def _sorted_tag_items(counter: Counter[str], top_n: int) -> list[tuple[str, int]]:
     return sorted(counter.items(), key=lambda x: (-x[1], x[0]))[:top_n]
 
 
@@ -36,13 +36,11 @@ def top_detail_tag_stats(records: list[StarRecord], top_n: int = 3) -> list[Deta
 
 
 def missing_high_tags(records: list[StarRecord], role: JobRole) -> list[str]:
-    from app.schemas.common import PrimaryCategory
-    from app.services.tagging.data import TAG_TO_CATEGORY
-
     freq = Counter(r.competency for r in records)
     weakest = min(PrimaryCategory, key=lambda c: freq.get(c, 0))
     high_in_weakest = {
-        t for t, w in WEIGHTS_BY_TAG.items()
+        t
+        for t, w in WEIGHTS_BY_TAG.items()
         if w.get(role) == TagWeight.HIGH and TAG_TO_CATEGORY.get(t) == weakest
     }
     seen = {tag for r in records for tag in r.detail_tags}

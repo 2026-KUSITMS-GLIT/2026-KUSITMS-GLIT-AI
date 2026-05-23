@@ -46,12 +46,12 @@ _CODE_FENCE_RE = re.compile(r"^```(?:json)?\s*\n?(.*?)\n?\s*```$", re.DOTALL)
 _USER_TRIGGER = "위 지침에 따라 JSON 한 줄을 출력해."
 
 # 한국어 1자 ≈ 1~2 토큰 + JSON 구조 오버헤드 고려 (eval 실측값 기준으로 산정)
-_MAX_TOKENS_MINI = 800        # activitySummary 300자 + nextFocusPoint 150자 (실측 618~631)
-_MAX_TOKENS_BRANDING = 250    # brandingStatement 60자 + brandingPattern 짧음 (실측 101~113)
-_MAX_TOKENS_NARRATIVE = 600   # narrativeSummary 300자 (실측 507~525)
-_MAX_TOKENS_STRENGTHS = 700   # strengths 2~3개 × (title 15 + desc 100 + ids) (실측 624)
-_MAX_TOKENS_INTERVIEW = 500   # interviewQuestions 2~3개 × (question + ids)
-_MAX_TOKENS_HIGHLIGHTS = 600  # experienceHighlights 2~3개 × 80자 (실측 474~490)
+_MAX_TOKENS_MINI = 800  # activitySummary 300자 + nextFocusPoint 150자 (실측 618~631)
+_MAX_TOKENS_BRANDING = 250  # brandingStatement 60자 + brandingPattern 짧음 (실측 101~113)
+_MAX_TOKENS_NARRATIVE = 600  # narrativeSummary 300자 (실측 507~525)
+_MAX_TOKENS_STRENGTHS = 700  # strengths 2~3개 x (title 15 + desc 100 + ids) (실측 624)
+_MAX_TOKENS_INTERVIEW = 500  # interviewQuestions 2~3개 x (question + ids)
+_MAX_TOKENS_HIGHLIGHTS = 600  # experienceHighlights 2~3개 x 80자 (실측 474~490)
 
 
 # ── 공용 헬퍼 ────────────────────────────────────────────────────────────────
@@ -137,7 +137,10 @@ async def _call_with_retry(
     except ReportValidationError as first_err:
         logger.warning("report.validation_failed", extra={"attempt": 1, "reason": str(first_err)})
         retry_raw = await _call_llm(
-            llm, model, system, max_tokens,
+            llm,
+            model,
+            system,
+            max_tokens,
             [
                 {"role": "user", "content": _USER_TRIGGER},
                 {"role": "assistant", "content": first_raw},
@@ -161,7 +164,8 @@ def _format_records(records: list[StarRecord]) -> str:
     for r in records:
         tags = ", ".join(r.detail_tags)
         lines.append(
-            f"[id: {r.star_record_id}] 역량: {r.competency} | 태그: {tags} | 작성일: {r.completed_at}\n"
+            f"[id: {r.star_record_id}] 역량: {r.competency} | 태그: {tags}"
+            f" | 작성일: {r.completed_at}\n"
             f"S/T: {r.situation_task}\n"
             f"A: {r.action}\n"
             f"R: {r.result}"
@@ -263,9 +267,7 @@ async def run_narrative(
     req: AiReportRequest, llm: LLMClient, model: str
 ) -> AiCareerNarrativeResponse:
     system = _render(_PROMPT_NARRATIVE, _base_vars(req))
-    summary = await _call_with_retry(
-        llm, model, system, _MAX_TOKENS_NARRATIVE, _parse_narrative
-    )
+    summary = await _call_with_retry(llm, model, system, _MAX_TOKENS_NARRATIVE, _parse_narrative)
     logger.info("report.narrative.done", extra={"nickname": req.nickname})
     return AiCareerNarrativeResponse(narrative_summary=summary)
 
@@ -297,9 +299,7 @@ def _parse_strengths(raw: str, valid_ids: set[int]) -> list[dict[str, Any]]:
     return result
 
 
-def _parse_interview(
-    raw: str, valid_ids: set[int]
-) -> list[dict[str, Any]]:
+def _parse_interview(raw: str, valid_ids: set[int]) -> list[dict[str, Any]]:
     p = _parse_json(raw)
     items = p.get("interviewQuestions")
     if not isinstance(items, list) or not (2 <= len(items) <= 3):
