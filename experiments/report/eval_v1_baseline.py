@@ -140,9 +140,7 @@ async def _run_endpoint(
     }
 
 
-async def _eval_one(
-    inner_llm: LLMClient, model: str, case: dict[str, Any]
-) -> dict[str, Any]:
+async def _eval_one(inner_llm: LLMClient, model: str, case: dict[str, Any]) -> dict[str, Any]:
     req = AiReportRequest.model_validate(case["input"])
     tracker = _LLMTracker(inner_llm)
     case_type = case.get("type", "career")
@@ -174,9 +172,9 @@ def _status(ep: dict[str, Any]) -> str:
 
 def _print_results(case_results: list[dict[str, Any]]) -> None:
     for case in case_results:
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"[{case['id']}] ({case.get('type', 'career')}) {case['title']}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         for ep in case["endpoints"]:
             status = _status(ep)
@@ -227,9 +225,9 @@ def _print_output(endpoint: str, output: dict[str, Any]) -> None:
         print(f"    narrativeSummary ({len(ns)}자): {ns[:100]}...")
     elif endpoint == "strengths_and_interview":
         for i, s in enumerate(output.get("strengths", []), 1):
-            print(f"    강점{i}: {s.get('title','')} — {s.get('description','')[:60]}")
+            print(f"    강점{i}: {s.get('title', '')} — {s.get('description', '')[:60]}")
         for i, q in enumerate(output.get("interviewQuestions", []), 1):
-            print(f"    질문{i}: {q.get('question','')[:80]}")
+            print(f"    질문{i}: {q.get('question', '')[:80]}")
     elif endpoint == "highlights":
         for i, h in enumerate(output.get("experienceHighlights", []), 1):
             print(f"    하이라이트{i} ({len(h)}자): {h}")
@@ -238,9 +236,7 @@ def _print_output(endpoint: str, output: dict[str, Any]) -> None:
 # ── 저장 ─────────────────────────────────────────────────────────────────────
 
 
-def _save_raw(
-    case_results: list[dict[str, Any]], variant: str, model: str, ran_at: str
-) -> Path:
+def _save_raw(case_results: list[dict[str, Any]], variant: str, model: str, ran_at: str) -> Path:
     _RESULTS_DIR.mkdir(exist_ok=True)
     path = _RESULTS_DIR / f"{ran_at}_{variant}.json"
     path.write_text(
@@ -253,9 +249,7 @@ def _save_raw(
     return path
 
 
-def _build_endpoint_subtable(
-    case_results: list[dict[str, Any]], endpoints: list[str]
-) -> str:
+def _build_endpoint_subtable(case_results: list[dict[str, Any]], endpoints: list[str]) -> str:
     n = len(case_results)
     agg: dict[str, dict[str, Any]] = {
         ep: {"ok": 0, "lat": [], "in": [], "out": [], "cost": [], "corrective": 0}
