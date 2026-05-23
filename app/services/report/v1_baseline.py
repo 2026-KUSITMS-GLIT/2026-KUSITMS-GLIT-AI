@@ -222,7 +222,7 @@ async def run_mini(req: AiReportRequest, llm: LLMClient, model: str) -> AiMiniRe
     vars["missingHighTags"] = ", ".join(missing) if missing else "없음"
     system = _render(_PROMPT_MINI, vars)
     activity, focus = await _call_with_retry(llm, model, system, _MAX_TOKENS_MINI, _parse_mini)
-    logger.info("report.mini.done", extra={"nickname": req.nickname})
+    logger.info("report.mini.done")
     return AiMiniReportResponse(
         activity_summary=activity,
         next_focus_point=focus,
@@ -248,7 +248,7 @@ async def run_branding(
     statement, pattern = await _call_with_retry(
         llm, model, system, _MAX_TOKENS_BRANDING, _parse_branding
     )
-    logger.info("report.branding.done", extra={"nickname": req.nickname})
+    logger.info("report.branding.done")
     return AiCareerBrandingResponse(
         branding_statement=statement,
         branding_pattern=pattern,
@@ -269,7 +269,7 @@ async def run_narrative(
 ) -> AiCareerNarrativeResponse:
     system = _render(_PROMPT_NARRATIVE, _base_vars(req))
     summary = await _call_with_retry(llm, model, system, _MAX_TOKENS_NARRATIVE, _parse_narrative)
-    logger.info("report.narrative.done", extra={"nickname": req.nickname})
+    logger.info("report.narrative.done")
     return AiCareerNarrativeResponse(narrative_summary=summary)
 
 
@@ -386,7 +386,7 @@ async def run_strengths_and_interview(
         for q in interview_data
     ]
 
-    logger.info("report.strengths_interview.done", extra={"nickname": req.nickname})
+    logger.info("report.strengths_interview.done")
     return AiCareerStrengthsAndInterviewResponse(
         strengths=strengths,
         interview_questions=interview_questions,
@@ -421,5 +421,5 @@ async def run_highlights(
     highlights = await _call_with_retry(
         llm, model, system, _MAX_TOKENS_HIGHLIGHTS, _parse_highlights
     )
-    logger.info("report.highlights.done", extra={"nickname": req.nickname})
+    logger.info("report.highlights.done")
     return AiCareerHighlightsResponse(experience_highlights=highlights)
