@@ -25,6 +25,7 @@ from app.services._clients.llm_client import LLMClient, WorkloadType
 from app.services.report._compute import (
     build_evidences,
     competency_frequency,
+    missing_high_tags,
     top_detail_tag_stats,
     top_detail_tags,
 )
@@ -211,7 +212,10 @@ def _parse_mini(raw: str) -> tuple[str, str]:
 
 
 async def run_mini(req: AiReportRequest, llm: LLMClient, model: str) -> AiMiniReportResponse:
-    system = _render(_PROMPT_MINI, _base_vars(req))
+    missing = missing_high_tags(req.records, req.job)
+    vars = _base_vars(req)
+    vars["missingHighTags"] = ", ".join(missing) if missing else "없음"
+    system = _render(_PROMPT_MINI, vars)
     activity, focus = await _call_with_retry(llm, model, system, _MAX_TOKENS_MINI, _parse_mini)
     logger.info("report.mini.done", extra={"nickname": req.nickname})
     return AiMiniReportResponse(
