@@ -54,6 +54,7 @@ def _display_path(path: Path) -> str:
     except ValueError:
         return str(path)
 
+
 _PLACEHOLDER_KEYS = frozenset({"", "dev-no-api-key", "sk-ant-"})
 _CASE_DELAY_SECS = 75  # 케이스 간 대기 — Tier-1 Haiku 50K TPM 초과 방지
 
