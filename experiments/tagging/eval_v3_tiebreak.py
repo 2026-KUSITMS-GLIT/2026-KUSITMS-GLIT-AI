@@ -586,7 +586,7 @@ async def main() -> None:
 
     ran_at = datetime.now(UTC).strftime("%Y-%m-%dT%H%M%SZ")
     saved_json = _save_raw(results, settings.tagging_variant, settings.anthropic_model, ran_at)
-    print(f"\nRaw saved → {saved_json.relative_to(Path.cwd())}")
+    print(f"\nRaw saved → {_rel(saved_json)}")
 
     md_path = _HERE / f"{ran_at[:10]}_{settings.tagging_variant}.md"
     ctx = _summary_context(
