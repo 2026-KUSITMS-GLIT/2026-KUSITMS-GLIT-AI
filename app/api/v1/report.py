@@ -69,7 +69,10 @@ async def create_mini_report(
         logger.warning("report.mini.failed", extra={"stage": "validation", "reason": str(exc)})
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+            detail={
+                "code": "REPORT_GENERATION_FAILED",
+                "message": "두 번의 시도 모두 응답이 형식을 만족하지 못했습니다.",
+            },
         ) from exc
     except _LLM_ERRORS as exc:
         _handle_llm_exc(exc)
@@ -89,7 +92,10 @@ async def create_career_branding(
         logger.warning("report.branding.failed", extra={"stage": "validation", "reason": str(exc)})
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+            detail={
+                "code": "REPORT_GENERATION_FAILED",
+                "message": "두 번의 시도 모두 응답이 형식을 만족하지 못했습니다.",
+            },
         ) from exc
     except _LLM_ERRORS as exc:
         _handle_llm_exc(exc)
@@ -109,7 +115,10 @@ async def create_career_narrative(
         logger.warning("report.narrative.failed", extra={"stage": "validation", "reason": str(exc)})
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+            detail={
+                "code": "REPORT_GENERATION_FAILED",
+                "message": "두 번의 시도 모두 응답이 형식을 만족하지 못했습니다.",
+            },
         ) from exc
     except _LLM_ERRORS as exc:
         _handle_llm_exc(exc)
@@ -131,7 +140,10 @@ async def create_career_strengths_and_interview(
         logger.warning("report.strengths.failed", extra={"stage": "validation", "reason": str(exc)})
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+            detail={
+                "code": "REPORT_GENERATION_FAILED",
+                "message": "두 번의 시도 모두 응답이 형식을 만족하지 못했습니다.",
+            },
         ) from exc
     except _LLM_ERRORS as exc:
         _handle_llm_exc(exc)
@@ -155,7 +167,10 @@ async def create_career_highlights(
         )
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"code": "REPORT_GENERATION_FAILED", "message": str(exc)},
+            detail={
+                "code": "REPORT_GENERATION_FAILED",
+                "message": "두 번의 시도 모두 응답이 형식을 만족하지 못했습니다.",
+            },
         ) from exc
     except _LLM_ERRORS as exc:
         _handle_llm_exc(exc)
