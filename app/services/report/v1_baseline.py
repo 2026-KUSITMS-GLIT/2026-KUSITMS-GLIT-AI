@@ -92,7 +92,7 @@ def _require_str(
         raise ReportValidationError(f"'{key}' 키 누락 또는 빈 문자열")
     if max_len is not None and len(val) > max_len:
         raise ReportValidationError(
-            f"'{key}' 길이 초과({len(val)}자 > {max_len}자): \"{val}\" — {max_len}자 이내로 줄여라"
+            f"'{key}' 길이 초과({len(val)}자 > {max_len}자) — {max_len}자 이내로 줄여라"
         )
     return val
 
