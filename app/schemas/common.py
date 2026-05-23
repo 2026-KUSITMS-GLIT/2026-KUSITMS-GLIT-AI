@@ -42,6 +42,13 @@ JOB_ROLE_LABELS_KO: dict[JobRole, str] = {
 }
 """프롬프트 변수 치환 등에서 쓰는 한글 라벨. tags.txt 가중치 표 헤더와 동일."""
 
+USER_STATUS_LABELS_KO: dict[UserStatus, str] = {
+    UserStatus.STUDENT: "재학 중",
+    UserStatus.JOB_SEEKER: "취업 준비 중",
+    UserStatus.EMPLOYED: "재직 중",
+}
+"""프롬프트 변수 치환에서 쓰는 한글 라벨."""
+
 
 PRIMARY_CATEGORY_LABELS_KO: dict[PrimaryCategory, str] = {
     PrimaryCategory.DISCOVERY_ANALYSIS: "발견·분석",
