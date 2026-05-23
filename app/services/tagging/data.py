@@ -92,7 +92,7 @@ TAGS_BY_CATEGORY: dict[PrimaryCategory, frozenset[str]] = {
             "#QA테스트",
         }
     ),
-    PrimaryCategory.GROWTH: frozenset(
+    PrimaryCategory.REFLECTION_GROWTH: frozenset(
         {
             "#툴활용",
             "#프로젝트회고",
