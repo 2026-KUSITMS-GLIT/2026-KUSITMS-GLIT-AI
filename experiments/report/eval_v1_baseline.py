@@ -47,6 +47,13 @@ _FIXTURES = _HERE / "fixtures" / "eval_set_v1.jsonl"
 _RESULTS_DIR = _HERE / "results"
 _TEMPLATE_PATH = _HERE / "_template.md"
 
+
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(Path.cwd()))
+    except ValueError:
+        return str(path)
+
 _PLACEHOLDER_KEYS = frozenset({"", "dev-no-api-key", "sk-ant-"})
 _CASE_DELAY_SECS = 75  # 케이스 간 대기 — Tier-1 Haiku 50K TPM 초과 방지
 
@@ -373,18 +380,18 @@ def _upsert_md(
 
     if not out_path.exists():
         out_path.write_text(rendered, encoding="utf-8")
-        return f"created → {out_path.relative_to(Path.cwd())}"
+        return f"created → {_display_path(out_path)}"
 
     existing = out_path.read_text(encoding="utf-8")
     if _METRIC_BLOCK_RE.search(existing):
         updated = _METRIC_BLOCK_RE.sub(lambda _m: new_block, existing, count=1)
         out_path.write_text(updated, encoding="utf-8")
-        return f"updated (인사이트 보존) → {out_path.relative_to(Path.cwd())}"
+        return f"updated (인사이트 보존) → {_display_path(out_path)}"
 
     ts = datetime.now(UTC).strftime("%Y-%m-%dT%H%M%SZ")
     alt = out_path.with_name(f"{out_path.stem}__autorendered_{ts}{out_path.suffix}")
     alt.write_text(rendered, encoding="utf-8")
-    return f"conflict. alt 생성 → {alt.relative_to(Path.cwd())}"
+    return f"conflict. alt 생성 → {_display_path(alt)}"
 
 
 # ── main ──────────────────────────────────────────────────────────────────────
@@ -419,7 +426,7 @@ async def main() -> None:
 
     ran_at = datetime.now(UTC).strftime("%Y-%m-%dT%H%M%SZ")
     saved_json = _save_raw(case_results, "v1_baseline", settings.anthropic_model, ran_at)
-    print(f"\nRaw saved → {saved_json.relative_to(Path.cwd())}")
+    print(f"\nRaw saved → {_display_path(saved_json)}")
 
     md_path = _HERE / f"{ran_at[:10]}_v1_baseline.md"
     status = _upsert_md(
