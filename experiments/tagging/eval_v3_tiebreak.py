@@ -131,6 +131,18 @@ def _body_len(req: TaggingRequest) -> int:
     return len(req.situation_task) + len(req.action) + len(req.result)
 
 
+def _mask_llm_error(e: BaseException) -> str:
+    """LLM 에러 메시지에서 org UUID/request_id 같은 식별자를 가린다.
+
+    벤더 응답 원문을 그대로 결과 JSON 에 남기면 ``org:``·``request_id`` 가 git 에
+    영구 박힌다. 클래스명 + 마스킹된 메시지만 보존.
+    """
+    raw = f"{type(e).__name__}: {e}"
+    raw = re.sub(r"org:\s*[0-9a-fA-F-]{8,}", "org: REDACTED", raw)
+    raw = re.sub(r"req_[A-Za-z0-9]+", "req_REDACTED", raw)
+    return raw
+
+
 def _assign_len_buckets(results: list[dict[str, Any]]) -> None:
     """body_len tertile 로 ``len_bucket`` 필드 in-place 설정.
 
@@ -163,7 +175,7 @@ async def _eval_one(inner_llm: LLMClient, model: str, case: dict[str, Any]) -> d
     except TaggingValidationError as e:
         parse_err = str(e)
     except LLMError as e:
-        llm_err = f"{type(e).__name__}: {e}"
+        llm_err = _mask_llm_error(e)
     total_latency_ms = int((time.perf_counter() - start) * 1000)
 
     total_in = sum(c["input_tokens"] for c in tracker.calls)
