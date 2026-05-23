@@ -104,7 +104,11 @@ class _LLMTracker:
 
 
 def _load_fixtures(path: Path) -> list[dict[str, Any]]:
-    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def _recall(actual: list[str], target: list[str]) -> tuple[int, float]:
@@ -525,7 +529,8 @@ def _save_raw(results: list[dict[str, Any]], variant: str, model: str, ran_at: s
             },
             ensure_ascii=False,
             indent=2,
-        )
+        ),
+        encoding="utf-8",
     )
     return path
 
