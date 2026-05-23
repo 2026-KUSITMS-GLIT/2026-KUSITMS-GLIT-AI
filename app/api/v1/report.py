@@ -51,9 +51,24 @@ def _handle_llm_exc(exc: Exception) -> NoReturn:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="LLM rate limited",
         ) from exc
+    if isinstance(exc, LLMUpstreamUnavailableError):
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="LLM upstream unavailable",
+        ) from exc
+    if isinstance(exc, LLMAuthError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="LLM auth configuration error",
+        ) from exc
+    if isinstance(exc, LLMBadRequestError):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="LLM request was rejected",
+        ) from exc
     raise HTTPException(
-        status_code=status.HTTP_502_BAD_GATEWAY,
-        detail="LLM upstream unavailable",
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        detail="Unexpected LLM error",
     ) from exc
 
 
