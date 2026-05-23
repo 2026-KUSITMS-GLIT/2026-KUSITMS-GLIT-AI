@@ -12,8 +12,10 @@ _생성: `{{RAN_AT}}` · raw: [{{RAW_JSON_NAME}}](results/{{RAW_JSON_NAME}})_
 | --- | --- |
 | 모델 | `{{MODEL}}` |
 | variant | `{{VARIANT}}` |
-| 케이스 수 | {{N_CASES}} |
-| 평균 일치율 | **{{AVG_SCORE}}%** (exact {{EXACT}} · partial {{PARTIAL}} · none {{NONE}}) |
+| 케이스 수 | {{N_CASES}} (파싱 성공 {{N_OK}}) |
+| 평균 must 회수율 | **{{AVG_MUST_RECALL}}%** (must 전체 충족 {{N_FULL_MUST}}/{{N_OK}}) |
+| 평균 accept 회수율 | {{AVG_ACCEPT_RECALL}}% |
+| 평균 풀 외 비율 | {{AVG_OOF_RATE}}% |
 | 평균 응답시간 | {{AVG_LATENCY}}ms (corrective 포함 합산) |
 | 평균 입력 토큰 | {{AVG_INPUT}} (corrective 포함 합산) |
 | 평균 출력 토큰 | {{AVG_OUTPUT}} |
@@ -27,29 +29,38 @@ _생성: `{{RAN_AT}}` · raw: [{{RAW_JSON_NAME}}](results/{{RAW_JSON_NAME}})_
 
 {{CASE_TABLE}}
 
-(굵게: `expected ∩ actual` — 표면 매치)
+(actual 강조: **must 정답** · *accept 정답* · 일반=풀외. `⚠️` = 직군 모호 케이스)
 
-### 직군별 평균 일치율
+### 직군별
 
 {{ROLE_TABLE}}
 
-### 카테고리별 평균 일치율
+### 카테고리별
 
 {{CATEGORY_TABLE}}
+
+### 길이별 (ST+A+R 합산 글자수 tertile)
+
+{{LENGTH_TABLE}}
+
+### 직군 모호 vs 비모호
+
+{{AMBIGUOUS_TABLE}}
 
 <!-- AUTO:END METRICS -->
 
 ## 요약
 
-> TODO (1~2줄): 결과 핵심 정리. 평균 일치율 · corrective 발생 여부 · 이전 variant 대비 변화 등.
+> TODO (1~2줄): must/accept 회수율 · 풀외율 · 직군 모호 영향 · 이전 variant 대비 변화 핵심 정리.
 
 ## 관찰
 
-> TODO: 케이스별 raw response 보면서 인사이트 정리. 자주 유용한 항목:
-> - 어느 케이스가 expected 와 크게 달랐는지, 의미적으로는 합리적인지
+> TODO: 케이스별 raw response 보면서 인사이트 정리. 유용한 항목:
+> - must miss 가 발생한 케이스 패턴 (의미적으로는 가까운 accept 로 대체했는지, 완전히 빗나갔는지)
+> - 풀 외 태그가 나온 케이스 — 어떤 태그를 골랐고 왜 합리적인지/아닌지
+> - 직군 모호 케이스 (P-PA-04, DS-DA-04) 의 직군 가중치 처리 흐름
 > - corrective 발생 패턴 (코드블록 / 갯수 / 풀-외 / 기타)
-> - 직군 / 카테고리별 편차 해석
-> - 일치율 metric 의 표면적 한계 (semantic vs surface)
+> - 직군 / 카테고리 / 길이별 편차 해석
 
 ## 결정
 
