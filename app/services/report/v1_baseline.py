@@ -9,7 +9,7 @@ from typing import Any
 import orjson
 
 from app.core.logging import get_logger
-from app.schemas.common import JOB_ROLE_LABELS_KO
+from app.schemas.common import JOB_ROLE_LABELS_KO, USER_STATUS_LABELS_KO
 from app.schemas.report import (
     AiCareerBrandingResponse,
     AiCareerHighlightsResponse,
@@ -193,6 +193,7 @@ def _base_vars(req: AiReportRequest) -> dict[str, str]:
     return {
         "nickname": req.nickname,
         "job": JOB_ROLE_LABELS_KO[req.job],
+        "status": USER_STATUS_LABELS_KO[req.status],
         "period": f"{req.record_period.from_} ~ {req.record_period.to}",
         "totalCount": str(req.total_count),
         "records": _format_records(req.records),

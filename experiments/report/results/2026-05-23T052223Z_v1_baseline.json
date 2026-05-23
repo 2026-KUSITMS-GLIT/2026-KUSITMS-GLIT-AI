@@ -1,0 +1,656 @@
+{
+  "variant": "v1_baseline",
+  "model": "claude-haiku-4-5-20251001",
+  "ran_at": "2026-05-23T052223Z",
+  "cases": [
+    {
+      "id": "case-mini-01",
+      "title": "기획자 — 초기 커리어 균형 10개 기록",
+      "type": "mini",
+      "endpoints": [
+        {
+          "endpoint": "mini",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 7432,
+          "input_tokens": 4974,
+          "output_tokens": 343,
+          "cost_usd": 0.0066890000000000005,
+          "output": {
+            "activitySummary": "서연님은 불확실한 상황에서도 신속하게 핵심을 파악하고 실행으로 옮기는 기획자예요. 사용자 인터뷰·경쟁사 분석·데이터 추출 같은 근거 기반 의사결정을 앞세우고, 팀 간 이견이 생기면 워크숍이나 매트릭스로 공통 이해를 만들어내는 방식을 일관되게 보여줘요. 더불어 필요한 스킬을 스스로 학습해 팀의 병목을 해결하는 주도성도 두드러져요.",
+            "nextFocusPoint": "기획 실행 과정에서 예상과 달랐던 결과나 팀과의 갈등을 어떻게 되돌아봤는지 기록해보면 어때요? 또는 장기적인 커리어 방향에 대해 스스로 어떤 선택을 했는지 담아보면 더 깊이 있는 성장 기록이 될 거예요.",
+            "competencyFrequency": [
+              {
+                "competency": "PLANNING_EXECUTION",
+                "count": 2
+              },
+              {
+                "competency": "DISCOVERY_ANALYSIS",
+                "count": 2
+              },
+              {
+                "competency": "COLLABORATION",
+                "count": 2
+              },
+              {
+                "competency": "PROBLEM_SOLVING",
+                "count": 2
+              },
+              {
+                "competency": "GROWTH",
+                "count": 2
+              }
+            ],
+            "topDetailTags": [
+              "#우선순위설정",
+              "#기획구조화",
+              "#인사이트도출"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-mini-02",
+      "title": "개발자 — 초기 커리어 균형 10개 기록",
+      "type": "mini",
+      "endpoints": [
+        {
+          "endpoint": "mini",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 4589,
+          "input_tokens": 4881,
+          "output_tokens": 388,
+          "cost_usd": 0.006821,
+          "output": {
+            "activitySummary": "민준님은 성능 병목을 데이터 기반으로 추적하고 구조적 설계로 근본 원인을 해결하는 방식으로 일해왔어요. 로그인 응답 지연, 쿼리 성능, CPU 사용률 같은 문제를 도구와 분석으로 정확히 진단하고, 동시에 알림 시스템 같은 신규 기능도 확장 가능하게 설계해왔습니다. 또한 협업 프로세스와 배포 자동화 같은 팀 전체의 작업 방식까지 개선하는 주도성이 돋보여요.",
+            "nextFocusPoint": "성능 최적화와 기술 개선만큼이나 변화하는 요구사항에 어떻게 대응했는지 기록해보면 어때요? 예를 들어 요구사항이 자주 바뀌었을 때 설계를 어떻게 유연하게 가져갔는지, 혹은 팀 문화나 프로세스를 바꿀 때 어떤 저항을 마주쳤고 어떻게 설득했는지를 담아보면 좋겠어요.",
+            "competencyFrequency": [
+              {
+                "competency": "PROBLEM_SOLVING",
+                "count": 2
+              },
+              {
+                "competency": "DISCOVERY_ANALYSIS",
+                "count": 2
+              },
+              {
+                "competency": "PLANNING_EXECUTION",
+                "count": 2
+              },
+              {
+                "competency": "COLLABORATION",
+                "count": 2
+              },
+              {
+                "competency": "GROWTH",
+                "count": 2
+              }
+            ],
+            "topDetailTags": [
+              "#가설검증",
+              "#데이터해석",
+              "#리스크관리"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-mini-03",
+      "title": "디자이너 — 초기 커리어 균형 10개 기록",
+      "type": "mini",
+      "endpoints": [
+        {
+          "endpoint": "mini",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 4459,
+          "input_tokens": 4926,
+          "output_tokens": 374,
+          "cost_usd": 0.006796,
+          "output": {
+            "activitySummary": "유나님은 사용자 중심의 설계로 시작해 데이터 기반 개선으로 마무리하는 순환적 업무 방식을 일관되게 보여왔어요. 요구사항 정리부터 사용성 테스트, 히트맵 분석까지 문제를 다각도로 검증한 뒤 설계에 반영하고, 개선 효과를 측정하는 식으로 작동해요. 동시에 팀 표준화와 협업 효율화에도 주도적으로 기여하며 개인 역량 강화와 조직 성장을 함께 추진하는 모습이 나타나요.",
+            "nextFocusPoint": "이번 기간 동안 여러 프로젝트를 추진하면서 우선순위 판단이나 일정 조율 과정에서 어떤 선택과 트레이드오프가 있었는지 기록해보면 어때요? 또는 팀 내에서 새로운 업무 방식을 제안했을 때 동료의 반발이나 저항을 어떻게 극복했는지 담아보면 좋겠어요.",
+            "competencyFrequency": [
+              {
+                "competency": "PLANNING_EXECUTION",
+                "count": 2
+              },
+              {
+                "competency": "DISCOVERY_ANALYSIS",
+                "count": 2
+              },
+              {
+                "competency": "COLLABORATION",
+                "count": 2
+              },
+              {
+                "competency": "PROBLEM_SOLVING",
+                "count": 2
+              },
+              {
+                "competency": "GROWTH",
+                "count": 2
+              }
+            ],
+            "topDetailTags": [
+              "#UX설계",
+              "#반복개선",
+              "#사용성테스트"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-career-01",
+      "title": "기획자 — 복수 프로젝트 20개 기록",
+      "type": "career",
+      "endpoints": [
+        {
+          "endpoint": "branding",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 3128,
+          "input_tokens": 15461,
+          "output_tokens": 210,
+          "cost_usd": 0.016511,
+          "output": {
+            "brandingStatement": "지민님은 복잡한 상황을 구조화하고 검증하는 '체계화 기획자'입니다.",
+            "brandingPattern": "불명확한 상황을 문서와 데이터로 정의하고 팀 전체가 같은 기준으로 움직이도록 만드는 방식",
+            "topDetailTags": [
+              {
+                "tag": "#관계자소통",
+                "count": 4
+              },
+              {
+                "tag": "#기획구조화",
+                "count": 4
+              },
+              {
+                "tag": "#데이터해석",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "narrative",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 2764,
+          "input_tokens": 7703,
+          "output_tokens": 230,
+          "cost_usd": 0.008853,
+          "output": {
+            "narrativeSummary": "지민님은 불명확한 상황 앞에서 항상 먼저 구조화하고 검증하는 일하는 방식을 일관되게 유지해왔어요. 이해관계자 소통부터 데이터 분석, 체계화까지 각 단계를 체계적으로 설계한 후 실행하면서 팀 전체가 따를 표준을 만들어내는 패턴이 반복돼요. 초기에 막혔던 상황들을 기획 구조화와 관계자소통으로 풀어내고, 후반부에는 스스로 학습해 팀의 역량을 높이는 방향으로 성장했어요."
+          }
+        },
+        {
+          "endpoint": "strengths_and_interview",
+          "ok": false,
+          "parse_error": "'title' 길이 초과(17자 > 15자) — 15자 이내로 줄여라",
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 5939,
+          "input_tokens": 16772,
+          "output_tokens": 608,
+          "cost_usd": 0.019812,
+          "output": null
+        },
+        {
+          "endpoint": "highlights",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 6540,
+          "input_tokens": 15725,
+          "output_tokens": 498,
+          "cost_usd": 0.018215,
+          "output": {
+            "experienceHighlights": [
+              "6명의 이해관계자 상충 요구를 5가지로 압축하고 우선순위 매트릭스로 정리해 2주 만에 전원 서면 합의를 이끌어냈습니다.",
+              "GA와 Mixpanel 분석으로 리텐션 이탈 원인을 특정하고 온보딩 개선 후 다음 달 리텐션을 12%p 상승시켰습니다.",
+              "SQL을 2주간 독학해 데이터팀 의존 없이 주간 리포트를 자력으로 생성하게 됐고 팀 SQL 스터디를 주도해 5명을 참여시켰습니다."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-career-03",
+      "title": "디자이너 — 복수 프로젝트 20개 기록",
+      "type": "career",
+      "endpoints": [
+        {
+          "endpoint": "branding",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 1812,
+          "input_tokens": 7647,
+          "output_tokens": 106,
+          "cost_usd": 0.008177,
+          "output": {
+            "brandingStatement": "다은님은 문제의 원인을 파악하고 설계로 해결하는 '분석형 디자이너'입니다.",
+            "brandingPattern": "사용자 행동을 관찰해 근본 원인을 찾고, 구조적 설계로 문제를 개선하는 방식",
+            "topDetailTags": [
+              {
+                "tag": "#UX설계",
+                "count": 5
+              },
+              {
+                "tag": "#관계자소통",
+                "count": 3
+              },
+              {
+                "tag": "#사용자리서치",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "narrative",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 3481,
+          "input_tokens": 7726,
+          "output_tokens": 266,
+          "cost_usd": 0.009056,
+          "output": {
+            "narrativeSummary": "다은님은 불확실한 상황에서 먼저 구조를 잡고 실행하는 일관된 패턴을 보여왔어요. 기획 변수가 커도 Low-fi와 가변 영역으로 대응하고, 사용자 데이터가 부족하면 직접 리서치를 진행하며, 팀 역량 부족은 독학으로 해결하는 방식이 반복되고 있어요. 특히 #직군간협업과 #관계자소통을 통해 개발·기획·마케팅과의 마찰을 선제적으로 줄이면서, 개인의 설계 역량뿐 아니라 팀 프로세스와 시스템을 함께 발전시키는 리더십을 갖춰가고 있어요."
+          }
+        },
+        {
+          "endpoint": "strengths_and_interview",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 9330,
+          "input_tokens": 16198,
+          "output_tokens": 851,
+          "cost_usd": 0.020453,
+          "output": {
+            "strengths": [
+              {
+                "title": "복잡도 우선순위 설계력",
+                "description": "요구사항이 복잡할수록 핵심과 비핵심을 분리하고 단계적으로 접근하는 방식이 일관돼요. 데이터와 사용자 행동을 기반으로 설계 순서를 정의합니다.",
+                "evidences": [
+                  {
+                    "id": 1,
+                    "projectName": "신규 서비스 설계",
+                    "scrumTitle": "전체 화면 Low-fi 핸드오프 완료",
+                    "createdAt": "01.10"
+                  },
+                  {
+                    "id": 11,
+                    "projectName": "리뉴얼 프로젝트",
+                    "scrumTitle": "핵심 화면 설계 우선순위 확정",
+                    "createdAt": "01.22"
+                  },
+                  {
+                    "id": 16,
+                    "projectName": "필터 UI 개선",
+                    "scrumTitle": "필터 구조 설계 완료",
+                    "createdAt": "02.14"
+                  }
+                ]
+              },
+              {
+                "title": "협업 갈등 구조 개선력",
+                "description": "커뮤니케이션 문제를 개인 노력이 아닌 명세·프로세스·세션 같은 구조로 풀려는 접근이 반복돼요. 이미 완성된 작업도 맥락 공유로 재작업을 최소화합니다.",
+                "evidences": [
+                  {
+                    "id": 3,
+                    "projectName": "협업 개선",
+                    "scrumTitle": "Figma 인터랙션 명세 추가 완료",
+                    "createdAt": "01.28"
+                  },
+                  {
+                    "id": 13,
+                    "projectName": "리뉴얼 프로젝트",
+                    "scrumTitle": "기획 변경 범위 조율 완료",
+                    "createdAt": "03.03"
+                  },
+                  {
+                    "id": 18,
+                    "projectName": "리뉴얼 프로젝트",
+                    "scrumTitle": "신규 PM과 디자인 방향 조율 완료",
+                    "createdAt": "04.12"
+                  }
+                ]
+              },
+              {
+                "title": "빠른 학습 적용 실행력",
+                "description": "팀에 없는 역량이 필요하면 즉시 독학 후 실제 프로젝트에 적용하는 패턴이 일관돼요. 애니메이션·다국어·데이터 시각화 등 새 영역을 빠르게 습득해 가이드까지 정리합니다.",
+                "evidences": [
+                  {
+                    "id": 5,
+                    "projectName": "모션 디자인",
+                    "scrumTitle": "핵심 화면 애니메이션 4개 적용 완료",
+                    "createdAt": "02.18"
+                  },
+                  {
+                    "id": 10,
+                    "projectName": "다국어 대응",
+                    "scrumTitle": "3개 언어 동시 출시 완료",
+                    "createdAt": "04.03"
+                  },
+                  {
+                    "id": 20,
+                    "projectName": "데이터 시각화",
+                    "scrumTitle": "대시보드 화면 설계 완료",
+                    "createdAt": "04.24"
+                  }
+                ]
+              }
+            ],
+            "interviewQuestions": [
+              {
+                "question": "QA 단계 디자인 수정이 60% 감소했다고 하셨는데, 감소 전후의 구체적인 수정 건수가 어떻게 되나요?",
+                "evidences": [
+                  {
+                    "id": 3,
+                    "projectName": "협업 개선",
+                    "scrumTitle": "Figma 인터랙션 명세 추가 완료",
+                    "createdAt": "01.28"
+                  }
+                ]
+              },
+              {
+                "question": "복잡한 필터 UI를 기본·고급으로 분리했을 때, 사용자가 고급 필터를 발견하지 못하는 문제는 없었나요?",
+                "evidences": [
+                  {
+                    "id": 16,
+                    "projectName": "필터 UI 개선",
+                    "scrumTitle": "필터 구조 설계 완료",
+                    "createdAt": "02.14"
+                  }
+                ]
+              },
+              {
+                "question": "3주 만에 After Effects와 Lottie를 독학해 4개 화면에 적용했을 때, 결과물 품질을 어떻게 검증하셨나요?",
+                "evidences": [
+                  {
+                    "id": 5,
+                    "projectName": "모션 디자인",
+                    "scrumTitle": "핵심 화면 애니메이션 4개 적용 완료",
+                    "createdAt": "02.18"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "highlights",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 5825,
+          "input_tokens": 15699,
+          "output_tokens": 410,
+          "cost_usd": 0.017749,
+          "output": {
+            "experienceHighlights": [
+              "기획 미확정 상태에서 개발 일정이 잡혔을 때 Low-fi와 가변 영역으로 구분 핸드오프해 병렬 진행을 가능하게 했습니다.",
+              "사용성 테스트 7명 진행으로 기능 발견 실패 원인을 파악하고 네비게이션 개편 후 핵심 기능 진입률을 34% 상승시켰습니다.",
+              "Figma 명세 강화와 개발팀 확인 세션을 도입해 QA 단계 디자인 수정을 60% 감소시켰습니다."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "case-career-02",
+      "title": "개발자 — 백엔드 기술 역량 20개 기록",
+      "type": "career",
+      "endpoints": [
+        {
+          "endpoint": "branding",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 1998,
+          "input_tokens": 7529,
+          "output_tokens": 103,
+          "cost_usd": 0.008044,
+          "output": {
+            "brandingStatement": "준혁님은 복잡한 기술 문제를 구조화·분석·개선하는 '문제해결형 개발자'입니다.",
+            "brandingPattern": "성능 병목을 데이터로 파악하고 단계적 개선안을 설계해 실행하는 방식",
+            "topDetailTags": [
+              {
+                "tag": "#데이터해석",
+                "count": 4
+              },
+              {
+                "tag": "#리스크관리",
+                "count": 4
+              },
+              {
+                "tag": "#프로세스개선",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "narrative",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 5434,
+          "input_tokens": 15578,
+          "output_tokens": 513,
+          "cost_usd": 0.018143,
+          "output": {
+            "narrativeSummary": "준혁님은 성능 병목과 기술 부채를 발견하는 데서 끝나지 않고, 근본 원인을 체계적으로 분석한 후 팀 전체가 따를 수 있는 표준과 프로세스로 정착시키는 방식을 일관되게 보여왔어요. 초기 성과개선부터 시작해 APM 도입, CI/CD 파이프라인 구축, TDD 문화 정착에 이르기까지 개별 문제 해결을 팀의 작업 방식 자체로 승격시켜왔어요. #기획구조화와 #지식공유를 통해 불확실성을 줄이고 팀의 자율성을 높이는 리더십이 선명하게 드러나요."
+          }
+        },
+        {
+          "endpoint": "strengths_and_interview",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": true,
+          "latency_ms": 11981,
+          "input_tokens": 26255,
+          "output_tokens": 1218,
+          "cost_usd": 0.032345,
+          "output": {
+            "strengths": [
+              {
+                "title": "성능 병목 추적 분석력",
+                "description": "복잡한 성능 문제를 데이터 기반으로 추적해 원인을 특정하는 방식이 일관돼요. 프로파일링, 쿼리 분석, 메모리 덤프 등 도구를 체계적으로 활용해요.",
+                "evidences": [
+                  {
+                    "id": 1,
+                    "projectName": "API 성능 개선",
+                    "scrumTitle": "레거시 API 응답 시간 개선 완료",
+                    "createdAt": "01.08"
+                  },
+                  {
+                    "id": 2,
+                    "projectName": "DB 성능 개선",
+                    "scrumTitle": "N+1 쿼리 문제 발견 및 수정 완료",
+                    "createdAt": "01.20"
+                  },
+                  {
+                    "id": 6,
+                    "projectName": "DB 성능 개선",
+                    "scrumTitle": "리포트 조회 인덱스 최적화 완료",
+                    "createdAt": "02.25"
+                  },
+                  {
+                    "id": 7,
+                    "projectName": "서버 안정화",
+                    "scrumTitle": "메모리 누수 원인 파악 및 수정 완료",
+                    "createdAt": "03.05"
+                  }
+                ]
+              },
+              {
+                "title": "구조적 개선 설계 능력",
+                "description": "기술 부채나 아키텍처 문제를 단순히 수정하지 않고 단계적 계획과 리스크 관리를 포함한 설계로 접근하는 패턴이 반복돼요.",
+                "evidences": [
+                  {
+                    "id": 3,
+                    "projectName": "MSA 전환",
+                    "scrumTitle": "MSA 전환 로드맵 설계 완료",
+                    "createdAt": "01.30"
+                  },
+                  {
+                    "id": 8,
+                    "projectName": "DB 마이그레이션",
+                    "scrumTitle": "레거시 DB 마이그레이션 계획 완성",
+                    "createdAt": "03.12"
+                  },
+                  {
+                    "id": 13,
+                    "projectName": "리팩토링",
+                    "scrumTitle": "서비스 레이어 모듈화 계획 수립 완료",
+                    "createdAt": "04.14"
+                  },
+                  {
+                    "id": 18,
+                    "projectName": "배포 자동화",
+                    "scrumTitle": "CI/CD 파이프라인 구축 완료",
+                    "createdAt": "03.08"
+                  }
+                ]
+              },
+              {
+                "title": "팀 역량 강화 주도력",
+                "description": "필요한 기술을 독학 후 팀 내 발표와 문서화로 전파하고, 프로세스 표준화로 정착시키는 방식을 일관되게 실행해요.",
+                "evidences": [
+                  {
+                    "id": 4,
+                    "projectName": "코드 품질 개선",
+                    "scrumTitle": "코드 리뷰 프로세스 표준화 완료",
+                    "createdAt": "02.10"
+                  },
+                  {
+                    "id": 5,
+                    "projectName": "비동기 처리",
+                    "scrumTitle": "Kotlin 코루틴 도입 및 팀 발표 완료",
+                    "createdAt": "02.18"
+                  },
+                  {
+                    "id": 10,
+                    "projectName": "테스트 문화",
+                    "scrumTitle": "TDD 도입 및 커버리지 40% 달성",
+                    "createdAt": "03.25"
+                  },
+                  {
+                    "id": 14,
+                    "projectName": "팀 온보딩",
+                    "scrumTitle": "신규 팀원 3명 온보딩 완료",
+                    "createdAt": "04.18"
+                  },
+                  {
+                    "id": 20,
+                    "projectName": "팀 역량 강화",
+                    "scrumTitle": "시스템 디자인 스터디 개설 및 첫 세션 완료",
+                    "createdAt": "04.25"
+                  }
+                ]
+              }
+            ],
+            "interviewQuestions": [
+              {
+                "question": "레거시 API 응답을 3초에서 0.3초로 개선하셨는데, 캐싱·쿼리 제거·비동기 중 가장 큰 효과를 낸 것은 무엇이었나요?",
+                "evidences": [
+                  {
+                    "id": 1,
+                    "projectName": "API 성능 개선",
+                    "scrumTitle": "레거시 API 응답 시간 개선 완료",
+                    "createdAt": "01.08"
+                  },
+                  {
+                    "id": 2,
+                    "projectName": "DB 성능 개선",
+                    "scrumTitle": "N+1 쿼리 문제 발견 및 수정 완료",
+                    "createdAt": "01.20"
+                  }
+                ]
+              },
+              {
+                "question": "MSA 전환 로드맵을 3단계로 설계하셨을 때, 각 단계 간 의존성 관리를 어떻게 했나요?",
+                "evidences": [
+                  {
+                    "id": 3,
+                    "projectName": "MSA 전환",
+                    "scrumTitle": "MSA 전환 로드맵 설계 완료",
+                    "createdAt": "01.30"
+                  },
+                  {
+                    "id": 8,
+                    "projectName": "DB 마이그레이션",
+                    "scrumTitle": "레거시 DB 마이그레이션 계획 완성",
+                    "createdAt": "03.12"
+                  }
+                ]
+              },
+              {
+                "question": "코루틴 도입 후 팀원 전원이 패턴을 사용하게 된 이유가 발표보다는 성과였다면, 발표 후 팀의 저항이나 질문이 있었나요?",
+                "evidences": [
+                  {
+                    "id": 5,
+                    "projectName": "비동기 처리",
+                    "scrumTitle": "Kotlin 코루틴 도입 및 팀 발표 완료",
+                    "createdAt": "02.18"
+                  },
+                  {
+                    "id": 14,
+                    "projectName": "팀 온보딩",
+                    "scrumTitle": "신규 팀원 3명 온보딩 완료",
+                    "createdAt": "04.18"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "endpoint": "highlights",
+          "ok": true,
+          "parse_error": null,
+          "llm_error": null,
+          "had_corrective": false,
+          "latency_ms": 2864,
+          "input_tokens": 7574,
+          "output_tokens": 184,
+          "cost_usd": 0.008494,
+          "output": {
+            "experienceHighlights": [
+              "레거시 API 응답 시간을 3초에서 0.3초로 개선하고 사용자 이탈률을 30% 감소시켰습니다.",
+              "팀 내 코드 리뷰 체크리스트를 작성하고 상세 리뷰 문화를 정착시켜 버그 발견율을 3배 높였습니다.",
+              "Kotlin 코루틴을 독학해 실무에 적용하고 팀 발표를 통해 전원이 패턴을 사용하도록 주도했습니다."
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
