@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
+from app.core.security import require_internal_token
 from app.schemas.report import (
     AiCareerBrandingResponse,
     AiCareerHighlightsResponse,
@@ -32,7 +33,11 @@ from app.services.report.exceptions import ReportValidationError
 
 logger = get_logger(__name__)
 
-router = APIRouter(prefix="/reports", tags=["reports"])
+router = APIRouter(
+    prefix="/reports",
+    tags=["reports"],
+    dependencies=[Depends(require_internal_token)],
+)
 
 _LLM_ERRORS = (LLMRateLimitedError, LLMUpstreamUnavailableError, LLMBadRequestError, LLMAuthError)
 

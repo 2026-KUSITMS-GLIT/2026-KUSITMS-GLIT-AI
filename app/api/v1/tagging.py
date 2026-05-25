@@ -20,6 +20,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
+from app.core.security import require_internal_token
 from app.schemas.tagging import TaggingRequest, TaggingResponse
 from app.services._clients.exceptions import (
     LLMAuthError,
@@ -33,7 +34,7 @@ from app.services.tagging.exceptions import TaggingValidationError
 
 logger = get_logger(__name__)
 
-router = APIRouter(tags=["tagging"])
+router = APIRouter(tags=["tagging"], dependencies=[Depends(require_internal_token)])
 
 
 def get_llm_client(request: Request) -> LLMClient:
