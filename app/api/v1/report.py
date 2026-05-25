@@ -33,7 +33,11 @@ from app.services.report.exceptions import ReportValidationError
 
 logger = get_logger(__name__)
 
-router = APIRouter(prefix="/reports", tags=["reports"], dependencies=[Depends(require_internal_token)])
+router = APIRouter(
+    prefix="/reports",
+    tags=["reports"],
+    dependencies=[Depends(require_internal_token)],
+)
 
 _LLM_ERRORS = (LLMRateLimitedError, LLMUpstreamUnavailableError, LLMBadRequestError, LLMAuthError)
 
