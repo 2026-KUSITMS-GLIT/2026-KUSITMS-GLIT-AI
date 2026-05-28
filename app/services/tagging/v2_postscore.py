@@ -61,8 +61,16 @@ _USER_TRIGGER = (
 )
 
 
-_MAX_TOKENS = 250
-"""v1 의 200 보다 +50 — 후보가 5~7개라 output 토큰 약간 증가."""
+_MAX_TOKENS = 350
+"""5~7개 후보 + JSON 오버헤드 + 도입어/공백 prefix 흡수 마진. 운영 실측 (issue #18)
+에서 1건이 250 으로 잘려 ``stop_reason=max_tokens`` 발생 → 안전 마진 추가."""
+
+
+_ASSISTANT_PREFILL = "{"
+"""1차/2차 호출 모두 assistant turn 으로 ``{`` 를 prefill 해 응답 첫 글자를 강제한다.
+Haiku 가 ``다음과 같습니다:`` 같은 도입어를 자주 붙여 ``char 0`` JSON 파싱 실패를
+유발하던 운영 이슈 (issue #18 — 24h 검증 실패 164회 중 95%) 대응. 응답 텍스트에
+``_ASSISTANT_PREFILL + raw`` 로 다시 합쳐 파싱한다."""
 
 
 _TOKEN_RE = re.compile(r"\{(jobRole|primaryCategory|situationTask|action|result)\}")
@@ -94,6 +102,24 @@ def _strip_code_fence(text: str) -> str:
     return text
 
 
+def _extract_json_payload(text: str) -> str:
+    """LLM 응답에서 JSON object 본문만 추출.
+
+    1) 백틱 코드 펜스 (1~3개) 가 둘러쌌으면 벗긴다.
+    2) 결과에서 첫 ``{`` 부터 마지막 ``}`` 까지 슬라이스해 반환. Haiku 가 응답 앞뒤에
+       도입어 (``다음과 같습니다:``) · markdown 헤딩 · 공백 같은 prefix/suffix 를 자주
+       붙여 ``^{`` 만 허용하면 운영 실패율이 과도하게 높다 (issue #18 — 24h 검증 실패
+       164회 중 95% 가 ``char 0`` JSON 파싱 실패).
+    3) 어느 단계도 매치 안 되면 원본 그대로 반환 — downstream parser 가 raise.
+    """
+    text = _strip_code_fence(text)
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end > start:
+        return text[start : end + 1]
+    return text
+
+
 def _parse_and_validate(raw: str) -> list[str]:
     """후보 검증 — 갯수 :data:`_CANDIDATE_MIN`~:data:`_CANDIDATE_MAX`, 풀 내, 중복 X.
 
@@ -102,7 +128,7 @@ def _parse_and_validate(raw: str) -> list[str]:
     프롬프트 명세("카테고리 무관, 풀 전체 열려 있다") 와 일치하도록 카테고리
     좁힘은 적용하지 않는다.
     """
-    text = _strip_code_fence(raw)
+    text = _extract_json_payload(raw)
     try:
         payload = orjson.loads(text)
     except orjson.JSONDecodeError as exc:
@@ -169,17 +195,25 @@ async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingRespons
         workload=WorkloadType.TAGGING,
         model=model,
         system=system,
-        messages=[{"role": "user", "content": _USER_TRIGGER}],
+        messages=[
+            {"role": "user", "content": _USER_TRIGGER},
+            {"role": "assistant", "content": _ASSISTANT_PREFILL},
+        ],
         max_tokens=_MAX_TOKENS,
     )
-    first_raw = _extract_text(first_msg.content)
+    first_raw = _ASSISTANT_PREFILL + _extract_text(first_msg.content)
 
     try:
         candidates = _parse_and_validate(first_raw)
     except TaggingValidationError as first_err:
         logger.warning(
             "tagging.validation_failed",
-            extra={**log_ctx, "attempt": 1, "reason": str(first_err)},
+            extra={
+                **log_ctx,
+                "attempt": 1,
+                "reason": str(first_err),
+                "raw_head": first_raw[:80],
+            },
         )
         retry_msg = await llm.create_message(
             workload=WorkloadType.TAGGING,
@@ -189,16 +223,22 @@ async def run(req: TaggingRequest, llm: LLMClient, model: str) -> TaggingRespons
                 {"role": "user", "content": _USER_TRIGGER},
                 {"role": "assistant", "content": first_raw},
                 {"role": "user", "content": _build_corrective_user_message(str(first_err))},
+                {"role": "assistant", "content": _ASSISTANT_PREFILL},
             ],
             max_tokens=_MAX_TOKENS,
         )
-        retry_raw = _extract_text(retry_msg.content)
+        retry_raw = _ASSISTANT_PREFILL + _extract_text(retry_msg.content)
         try:
             candidates = _parse_and_validate(retry_raw)
         except TaggingValidationError as retry_err:
             logger.warning(
                 "tagging.validation_failed",
-                extra={**log_ctx, "attempt": 2, "reason": str(retry_err)},
+                extra={
+                    **log_ctx,
+                    "attempt": 2,
+                    "reason": str(retry_err),
+                    "raw_head": retry_raw[:80],
+                },
             )
             raise
 
