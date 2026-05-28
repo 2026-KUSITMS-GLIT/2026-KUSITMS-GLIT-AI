@@ -30,6 +30,9 @@ from app.services._clients.exceptions import (
 )
 from app.services.tagging.exceptions import TaggingValidationError
 from app.services.tagging.v2_postscore import (
+    _extract_json_payload as _v2_extract_json_payload,
+)
+from app.services.tagging.v2_postscore import (
     _parse_and_validate as _v2_parse_and_validate,
 )
 from app.services.tagging.v2_postscore import (
@@ -51,9 +54,11 @@ _PAYLOAD: dict[str, Any] = {
 
 _PII_MARKERS = ("MAGICPII-ST-1234", "MAGICPII-A-5678", "MAGICPII-R-9012")
 
-# v2_postscore happy LLM 응답 — 5개 후보(모두 풀 내·중복 없음). DEVELOPER 가중치로
-# 5개 모두 High(3) 동점 → tie-break 입력 순서 top3 = ["#원인분석","#검증및테스트","#반복개선"].
-_HAPPY_LLM_RAW = '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결","#디버깅"]}'
+# v2_postscore happy LLM 응답 — assistant prefill('{') 적용 가정 (issue #18).
+# 코드가 prefill + raw 로 합쳐 `{"detailTags": [...]}` JSON 을 완성한다.
+# 5개 후보 모두 풀 내·중복 없음. DEVELOPER 가중치로 5개 모두 High(3) 동점 →
+# tie-break 입력 순서 top3 = ["#원인분석","#검증및테스트","#반복개선"].
+_HAPPY_LLM_RAW = '"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결","#디버깅"]}'
 _HAPPY_TOP3 = ["#원인분석", "#검증및테스트", "#반복개선"]
 
 
@@ -137,9 +142,10 @@ def test_v1_tagging_happy_path(client: TestClient, token: str) -> None:
 @respx.mock
 def test_v1_tagging_corrective_retry_recovers(client: TestClient, token: str) -> None:
     # 1차: 풀-외 + 갯수 미달 → 검증 실패. 2차: 풀 내 5개 → top3 자르고 응답.
+    # mock 응답은 모두 assistant prefill('{') 가정 (issue #18).
     route = respx.post(ANTHROPIC_URL).mock(
         side_effect=[
-            Response(200, json=_anthropic_msg('{"detailTags": ["#존재하지않는태그"]}')),
+            Response(200, json=_anthropic_msg('"detailTags": ["#존재하지않는태그"]}')),
             Response(200, json=_anthropic_msg(_HAPPY_LLM_RAW)),
         ]
     )
@@ -156,8 +162,8 @@ def test_v1_tagging_corrective_retry_recovers(client: TestClient, token: str) ->
 def test_v1_tagging_double_validation_failure_returns_422(client: TestClient, token: str) -> None:
     route = respx.post(ANTHROPIC_URL).mock(
         side_effect=[
-            Response(200, json=_anthropic_msg('{"detailTags": ["#없는태그A"]}')),
-            Response(200, json=_anthropic_msg('{"detailTags": ["#없는태그B"]}')),
+            Response(200, json=_anthropic_msg('"detailTags": ["#없는태그A"]}')),
+            Response(200, json=_anthropic_msg('"detailTags": ["#없는태그B"]}')),
         ]
     )
     r = client.post("/v1/tagging", json=_PAYLOAD, headers={"X-Internal-Token": token})
@@ -173,9 +179,9 @@ def test_v1_tagging_double_validation_failure_returns_422(client: TestClient, to
 @pytest.mark.parametrize(
     "bad_response",
     [
-        '{"detailTags": []}',
-        '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결"]}',
-        '{"detailTags": ["#A","#B","#C","#D","#E","#F","#G","#H"]}',
+        '"detailTags": []}',
+        '"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결"]}',
+        '"detailTags": ["#A","#B","#C","#D","#E","#F","#G","#H"]}',
     ],
     ids=["empty_under_min", "four_tags_under_min", "eight_tags_over_max"],
 )
@@ -266,6 +272,50 @@ def test_v2_postscore_strips_all_backtick_widths(wrapped: str) -> None:
     assert _v2_strip_code_fence(wrapped) == '{"detailTags": ["#문제해결"]}'
 
 
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ('{"detailTags": ["#문제해결"]}', '{"detailTags": ["#문제해결"]}'),
+        ('다음과 같습니다: {"detailTags": ["#문제해결"]}', '{"detailTags": ["#문제해결"]}'),
+        (
+            '# 결과\n{"detailTags": ["#문제해결"]}\n참고: ...',
+            '{"detailTags": ["#문제해결"]}',
+        ),
+        ('  \n{"detailTags": ["#문제해결"]}  ', '{"detailTags": ["#문제해결"]}'),
+        (
+            '```json\n{"detailTags": ["#문제해결"]}\n```',
+            '{"detailTags": ["#문제해결"]}',
+        ),
+        ("브레이스없음", "브레이스없음"),
+    ],
+    ids=[
+        "clean",
+        "korean_prefix",
+        "markdown_prefix_and_suffix",
+        "whitespace",
+        "code_fence",
+        "no_braces_passthrough",
+    ],
+)
+def test_v2_postscore_extracts_json_payload_from_messy_responses(raw: str, expected: str) -> None:
+    """도입어 / 헤딩 / 공백 / 코드펜스 prefix·suffix 를 흡수해 JSON object 본문만 슬라이스.
+
+    issue #18 — Haiku 가 ``다음과 같습니다:`` 같은 도입어를 자주 붙여 ``^{`` 만 허용하면
+    운영 실패율이 과도하게 높아짐. ``{`` ~ ``}`` 슬라이스 fallback 으로 흡수.
+    """
+    assert _v2_extract_json_payload(raw) == expected
+
+
+def test_v2_postscore_parse_and_validate_handles_intro_prefix() -> None:
+    """도입어가 붙은 응답도 정상 파싱 — _extract_json_payload 가 prefix 흡수."""
+    raw = (
+        "다음과 같습니다: "
+        '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결","#디버깅"]}'
+    )
+    tags = _v2_parse_and_validate(raw)
+    assert tags == ["#원인분석", "#검증및테스트", "#반복개선", "#문제해결", "#디버깅"]
+
+
 def test_v2_postscore_parse_accepts_5_to_7_candidates() -> None:
     """후보 갯수 5~7 범위는 통과."""
     five = '{"detailTags": ["#원인분석","#검증및테스트","#반복개선","#문제해결","#디버깅"]}'
@@ -349,8 +399,8 @@ def test_v1_tagging_does_not_log_star_body_on_validation_failure(
 ) -> None:
     respx.post(ANTHROPIC_URL).mock(
         side_effect=[
-            Response(200, json=_anthropic_msg('{"detailTags": ["#없는1"]}')),
-            Response(200, json=_anthropic_msg('{"detailTags": ["#없는2"]}')),
+            Response(200, json=_anthropic_msg('"detailTags": ["#없는1"]}')),
+            Response(200, json=_anthropic_msg('"detailTags": ["#없는2"]}')),
         ]
     )
     caplog.set_level(logging.INFO)
